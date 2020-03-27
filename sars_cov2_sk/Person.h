@@ -1,0 +1,57 @@
+#ifndef PERSON_H
+#define PERSON_H
+
+#include<vector>
+
+namespace sars_cov2_sk	{
+	class Person	{
+		private:	
+            float   m_health_state;   // from zero to one. Higher = more healthy
+            bool    m_is_ill;
+            bool    m_has_symptoms;
+            bool    m_is_imune;
+            bool    m_is_infectable;
+            bool    m_in_quarantine;
+            bool    m_needs_hospitalization;
+            bool    m_is_hospitalized;
+            bool    m_is_dead; // :-(
+            int     m_day_of_infection; // the day when the person got infected
+            std::vector<const sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
+
+            static int s_day_index;
+
+		public:
+            Person();
+
+            void Infect();
+
+            // Simulate evolution of healt state in a day (appearance of symptoms, need (not) to be hoslitalized)
+            // Does not include interaction with other people
+            void Evolve();
+
+            void Heal();
+
+            void Kill();
+
+            void PutToQuarantine();
+
+            void Hospitalize();
+
+            // Get Methods:
+            float HealthState()     const   {return m_health_state;};
+            bool IsIll()            const   {return m_is_ill;};
+            bool HasSymptoms()      const   {return m_has_symptoms;};
+            bool IsImune()          const   {return m_is_imune;};
+            bool IsInfectable()     const   {return m_is_infectable;};
+            bool InQuarantine()     const   {return m_in_quarantine;};
+            bool NeedsHospitalization() const   {return m_needs_hospitalization;};
+            bool IsHospitalized()       const   {return m_is_hospitalized;};
+            bool IsDead()           const   {return m_is_dead;};
+            const std::vector<const sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
+
+            static void SetDay(int day);
+
+	};
+}
+
+#endif

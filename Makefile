@@ -39,17 +39,23 @@ bin/Person.o:src/Person.cxx sars_cov2_sk/Person.h
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@ $< $(ROOTINC)
 
+bin/Household.o:src/Household.cxx sars_cov2_sk/Household.h
+	@echo "**"
+	@echo "** Compiling C++ Source: Household.cxx Household.h"
+	@echo "**"
+	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@ $< $(ROOTINC)
+
 bin/main.o:src/main.cxx
 	@echo "**"
 	@echo "** Compiling C++ Source"
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@ $< $(ROOTINC)
 
-bin/main:bin/main.o bin/Person.o
+bin/main:bin/main.o bin/Person.o bin/Household.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o $(LIBS)  
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o $(LIBS)  
 
 clean:
 	rm -rf bin/*.o main

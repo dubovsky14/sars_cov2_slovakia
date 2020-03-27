@@ -1,8 +1,9 @@
 #ifndef HOUSEHOLD_H
 #define HOUSEHOLD_H
 
+#include"../sars_cov2_sk/Person.h"
+
 #include<vector>
-#include<../sars_cov2_sk/Person.h>
 
 namespace sars_cov2_sk	{
     class Household  {
@@ -21,6 +22,6 @@ namespace sars_cov2_sk	{
             // Each pair of its inhabitants interacts once and with "probability" the infected person spreads the infection to a healthy person during this interaction
             void SpreadInfection(float probability);
 
-    }
-}
+    };
+};
 #endif

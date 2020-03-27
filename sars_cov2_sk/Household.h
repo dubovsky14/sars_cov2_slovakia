@@ -22,6 +22,7 @@ namespace sars_cov2_sk	{
             // Each pair of its inhabitants interacts once and with "probability" the infected person spreads the infection to a healthy person during this interaction
             void SpreadInfection(float probability);
 
+            static unsigned int GetRandomHouseholdNumber(float average_people_in_household);
     };
 };
 #endif

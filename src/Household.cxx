@@ -36,3 +36,16 @@ void Household::SpreadInfection(float probability)   {
         }
     }
 };
+
+unsigned int Household::GetRandomHouseholdNumber(float average_people_in_household) {
+    const float p = rand() / double(RAND_MAX);
+
+    // #TODO: For now just random numbers there. It needs to be improved.
+    if (p < 0.2)    return 1;
+    if (p < 0.45)   return 2;
+    if (p < 0.7)    return 3;
+    if (p < 0.9)    return 4;
+    if (p < 0.95)   return 5;
+    if (p < 0.98)   return 6;
+    return 7;
+};

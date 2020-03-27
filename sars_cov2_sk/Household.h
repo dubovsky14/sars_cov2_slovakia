@@ -20,7 +20,7 @@ namespace sars_cov2_sk	{
 
             // Simulate daily interations in household.
             // Each pair of its inhabitants interacts once and with "probability" the infected person spreads the infection to a healthy person during this interaction
-            void SpreadInfection(float probability);
+            void SpreadInfection(float probability = 0.4);
 
             unsigned int GetNumberOfInhabitants() const {return m_inhabitants.size();};
 

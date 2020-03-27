@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
+
 using namespace sars_cov2_sk;
 using namespace std;
 
@@ -16,6 +18,7 @@ int main(int argc, char* argv[])    {
     for (unsigned int x : cities_number_of_citizens)    {
         population_size += x;
     }
+
 
     vector<Person> population;
     for (int i = 0; i < population_size; i++)   {
@@ -35,7 +38,23 @@ int main(int argc, char* argv[])    {
         cout << "\t\t" << city.GetHouseholdVector()->size() << endl;
     }
 
-    cout << "Population created";
+    cout << "Population created\n";
+
+    // Infect 10 random people
+    for (int i = 0; i < 10; i++)    {
+        const unsigned int index = 0.99* population_size * rand() / double(RAND_MAX);
+        population.at(index).Infect();
+    }
+
+    for (unsigned int day = 0; day < 100; day++)    {
+        Person::SetDay(day);
+        for (PopolationCenter &city : cities)   {
+            city.SimulateDailySpread();
+        }
+    }
+
+
+    cout << "Simulation finished\n";
     cin.get();
 }
 

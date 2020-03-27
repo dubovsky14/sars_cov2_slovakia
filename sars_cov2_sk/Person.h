@@ -25,6 +25,8 @@ namespace sars_cov2_sk	{
 
             void Infect();
 
+            void AddContact(const sars_cov2_sk::Person *person)   {m_list_of_contacts.push_back(person);};
+
             // Simulate evolution of healt state in a day (appearance of symptoms, need (not) to be hoslitalized)
             // Does not include interaction with other people
             void Evolve();
@@ -50,6 +52,11 @@ namespace sars_cov2_sk	{
             const std::vector<const sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
 
             static void SetDay(int day);
+
+            // Simulate meeting of two people with a given transmission rate of virus.
+            // But we do not remember all people we met, so only a random part of these meetings is saved for later tracking
+            static void Meet(   sars_cov2_sk::Person *person1, sars_cov2_sk::Person *person2, 
+                                float transmission_probability = 0.1, float probability_to_remember = 0.8);
 
 	};
 }

@@ -36,3 +36,18 @@ void PopolationCenter::BuildAndFillHouseholds(float average_people_in_household)
         }
     }
 };
+
+void PopolationCenter::SimulateDailySpread(float transmission_probability_household, float transmission_probability_other)  {
+    SpreadInfectionInHouseholds(transmission_probability_household);
+    SimulateDailySpreadAmongInhabitantsAndTempOccupants(transmission_probability_other);
+};
+
+void PopolationCenter::SpreadInfectionInHouseholds(float probablity)    {
+    for (Household &household : m_households)   {
+        household.SpreadInfection(0.4);
+    }
+}
+
+void PopolationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float probability)    {
+    
+};

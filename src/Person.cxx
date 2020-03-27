@@ -85,3 +85,38 @@ void Person::Evolve()   {
 void Person::SetDay(int day) {
     s_day_index = day;
 };
+
+void Meet(Person *person1, Person *person2, float transmission_probability, float probability_to_remember)   {
+
+    // We do not remember all people we met ...
+    const bool remember = ((rand() / double(RAND_MAX)) < probability_to_remember);
+
+    // Do nothing if nobody is infected
+    if (!person1->IsIll() && !person2->IsIll()) {
+        return;
+    }
+
+    // if both of them are infected, just keep track of the contact
+    if (person1->IsIll() && person2->IsIll())   {
+        if (remember) person1->AddContact(person2);
+        if (remember) person2->AddContact(person1);
+    }
+
+    // If person is infected, we have to keep track of its contacts and spread the virus
+    if (person1->IsIll() && !person2->IsIll())   {
+        person1->AddContact(person2);
+        if ((rand() / double(RAND_MAX)) < transmission_probability)   {
+            person2->Infect();
+            if (remember) person2->AddContact(person1);
+        }
+    }
+
+    // If person is infected, we have to keep track of its contacts and spread the virus
+    if (!person1->IsIll() && person2->IsIll())   {
+        person2->AddContact(person1);
+        if ((rand() / double(RAND_MAX)) < transmission_probability)   {
+            person1->Infect();
+            if (remember) person1->AddContact(person1);
+        }
+    }
+};

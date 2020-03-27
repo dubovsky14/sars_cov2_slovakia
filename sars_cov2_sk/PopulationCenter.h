@@ -25,9 +25,13 @@ namespace sars_cov2_sk	{
             // The average_people_in_household is average ocuppance of a household in the city
             PopolationCenter(std::vector<Person> *country_population, unsigned int first_citizen_index, unsigned  int number_of_inhabitants, float average_people_in_household = 3.);
 
-            void SpreadInfectionInHouseholds(float probablity);
-
             const std::vector<Household> *GetHouseholdVector()  const {return &m_households;};
+
+            void SimulateDailySpread(float transmission_probability_household = 0.4, float transmission_probability_other = 0.1);
+
+            void SpreadInfectionInHouseholds(float probablity = 0.4);
+
+            void SimulateDailySpreadAmongInhabitantsAndTempOccupants(float probability = 0.1);
     };
 }
 #endif

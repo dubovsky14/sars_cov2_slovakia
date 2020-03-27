@@ -14,7 +14,7 @@ namespace sars_cov2_sk	{
             std::vector<Person *> m_temporary_ocupants;     // vector of people being in the city temporarily (comuters to work, visitors ...)
             std::vector<Household> m_households;
 
-            unsigned int number_of_inhabitants;
+            unsigned int m_number_of_inhabitants;
 
             // Called in the contructor. Takes people and move them randomly to households
             void BuildAndFillHouseholds(float average_people_in_household);
@@ -26,6 +26,8 @@ namespace sars_cov2_sk	{
             PopolationCenter(std::vector<Person> *country_population, unsigned int first_citizen_index, unsigned  int number_of_inhabitants, float average_people_in_household = 3.);
 
             void SpreadInfectionInHouseholds(float probablity);
+
+            const std::vector<Household> *GetHouseholdVector()  const {return &m_households;};
     };
 }
 #endif

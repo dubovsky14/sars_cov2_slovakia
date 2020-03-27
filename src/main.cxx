@@ -11,7 +11,7 @@ using namespace std;
 int main(int argc, char* argv[])    {
     Person::SetDay(0);
 
-    vector<unsigned int> cities_number_of_citizens = {700000, 400000, 100000, 80000, 50000};
+    vector<unsigned int> cities_number_of_citizens = {700000, 400000, 100000, 80000, 50000, 700000, 400000, 100000, 80000, 50000};
     int population_size = 0;
     for (unsigned int x : cities_number_of_citizens)    {
         population_size += x;
@@ -28,6 +28,11 @@ int main(int argc, char* argv[])    {
     int current_person_index = 0;
     for (unsigned int i = 0; i < cities_number_of_citizens.size(); i++) {
         cities.push_back(PopolationCenter(&population, current_person_index, cities_number_of_citizens.at(i), 3.));
+    }
+
+    cout << "Number of households in cities:\n";
+    for (const PopolationCenter &city : cities) {
+        cout << "\t\t" << city.GetHouseholdVector()->size() << endl;
     }
 
     cout << "Population created";

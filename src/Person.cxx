@@ -15,7 +15,7 @@ Person::Person() {
     m_is_ill            = false;
     m_has_symptoms      = false;
     m_is_imune          = false;
-    m_is_infectable     = false;
+    m_is_infective      = false;
     m_in_quarantine     = false;
     m_is_dead           = false;
     m_needs_hospitalization = false;
@@ -34,7 +34,7 @@ void Person::Kill()     {
     m_is_ill            = false;
     m_has_symptoms      = false;
     m_is_imune          = true;
-    m_is_infectable     = false;
+    m_is_infective      = false;
     m_in_quarantine     = true;
     m_is_dead           = true;
     m_needs_hospitalization = false;
@@ -47,7 +47,7 @@ void Person::Heal() {
     m_is_ill            = false;
     m_has_symptoms      = false;
     m_is_imune          = true;
-    m_is_infectable     = false;
+    m_is_infective      = false;
     m_needs_hospitalization = false;
     m_is_hospitalized   = false; 
     m_day_of_infection  = -1;
@@ -75,7 +75,7 @@ void Person::Evolve()   {
     const int length_of_infection = s_day_index - m_day_of_infection;
     switch (length_of_infection)    {
         case 3:
-            m_is_infectable = true;
+            m_is_infective = true;
             break;
         case 5:
             m_has_symptoms = true;
@@ -126,7 +126,7 @@ void Person::Meet(Person *person1, Person *person2, float transmission_probabili
     if (person1->IsIll() && !person2->IsIll())   {
         person1->AddContact(person2);
         if (RandomUniform() < transmission_probability)   {
-            person2->Infect();
+            if (person1->IsInfective())    person2->Infect();
             if (remember) person2->AddContact(person1);
         }
         return;
@@ -136,7 +136,7 @@ void Person::Meet(Person *person1, Person *person2, float transmission_probabili
     if (!person1->IsIll() && person2->IsIll())   {
         person2->AddContact(person1);
         if (RandomUniform() < transmission_probability)   {
-            person1->Infect();
+            if (person2->IsInfective())    person1->Infect();
             if (remember) person1->AddContact(person1);
         }
         return;

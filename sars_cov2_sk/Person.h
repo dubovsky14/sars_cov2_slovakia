@@ -11,7 +11,7 @@ namespace sars_cov2_sk	{
             bool    m_is_ill;
             bool    m_has_symptoms;
             bool    m_is_imune;
-            bool    m_is_infectable;
+            bool    m_is_infective;
             bool    m_in_quarantine;
             bool    m_needs_hospitalization;
             bool    m_is_hospitalized;
@@ -46,7 +46,7 @@ namespace sars_cov2_sk	{
             bool IsIll()            const   {return m_is_ill;};
             bool HasSymptoms()      const   {return m_has_symptoms;};
             bool IsImune()          const   {return m_is_imune;};
-            bool IsInfectable()     const   {return m_is_infectable;};
+            bool IsInfective()      const   {return m_is_infective;};
             bool InQuarantine()     const   {return m_in_quarantine;};
             bool NeedsHospitalization() const   {return m_needs_hospitalization;};
             bool IsHospitalized()       const   {return m_is_hospitalized;};

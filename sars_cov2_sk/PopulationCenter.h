@@ -43,6 +43,8 @@ namespace sars_cov2_sk	{
 
             const std::vector<sars_cov2_sk::Person *> *GetInhabitants()   const {return &m_inhabitants; };
 
+            const unsigned int GetNumberOfInhabitants() const {return m_number_of_inhabitants;};
+
             // Factory method for both population (vector<Person>) and cities (vector<PopulationCenter>)
             // Requires number of inhabitants and names of cities as input
             // City and population vector are firstly cleared out, then the are filled again

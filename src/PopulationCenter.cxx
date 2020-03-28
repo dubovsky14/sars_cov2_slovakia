@@ -78,7 +78,6 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     
 };
 
-
 void PopulationCenter::EvolveInhabitants()    {
     for (Person *person : m_inhabitants)   {
         person->Evolve();

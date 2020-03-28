@@ -2,6 +2,7 @@
 #define PERSON_H
 
 #include<vector>
+#include "../sars_cov2_sk/Constants.h"
 
 namespace sars_cov2_sk	{
 	class Person	{
@@ -23,6 +24,7 @@ namespace sars_cov2_sk	{
 		public:
             Person();
 
+            // Infect the person if not immune or ill. If immune or ill, do nothing.
             void Infect();
 
             void AddContact(const sars_cov2_sk::Person *person)   {m_list_of_contacts.push_back(person);};
@@ -56,8 +58,11 @@ namespace sars_cov2_sk	{
             // Simulate meeting of two people with a given transmission rate of virus.
             // But we do not remember all people we met, so only a random part of these meetings is saved for later tracking
             static void Meet(   sars_cov2_sk::Person *person1, sars_cov2_sk::Person *person2, 
-                                float transmission_probability = 0.1, float probability_to_remember = 0.8);
+                                float transmission_probability = TRANSMISSION_PROB_OUT, float probability_to_remember = 0.8);
 
+            static int GetNumberOfInfectedPersonsInPopulation(const std::vector<sars_cov2_sk::Person *> &population);
+
+            static int GetNumberOfInfectedPersonsInPopulation(const std::vector<sars_cov2_sk::Person> &population);
 	};
 }
 

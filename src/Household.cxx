@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <stdlib.h>
+#include <iostream>
 
 using namespace std;
 using namespace sars_cov2_sk;
@@ -32,7 +33,7 @@ void Household::SpreadInfection(float probability)   {
             }
 
             if (RandomUniform() < probability)  {
-                person1->Infect();
+                person2->Infect();
             }
         }
     }

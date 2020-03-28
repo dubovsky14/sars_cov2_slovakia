@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <stdlib.h>
 
 using namespace sars_cov2_sk;
@@ -15,28 +16,18 @@ int main(int argc, char* argv[])    {
     Person::SetDay(0);
 
     vector<unsigned int> cities_number_of_citizens = {700000, 400000, 100000, 80000, 50000, 700000, 400000, 100000, 80000, 50000};
+    vector<string> names;
+    for (unsigned int i = 0; i < cities_number_of_citizens.size(); i++)    {
+        names.push_back("City_" + std::to_string(i));
+    }
+    vector<PopulationCenter> cities;
+    vector<Person> population;
+
+    PopulationCenter::CityAndPersonsFactory(cities_number_of_citizens, names, &population, &cities);
+
     int population_size = 0;
     for (unsigned int x : cities_number_of_citizens)    {
         population_size += x;
-    }
-
-
-    vector<Person> population;
-    for (int i = 0; i < population_size; i++)   {
-        if (i % 1000000 == 0)
-            cout << i << "//" << population_size << endl;
-        population.push_back(Person());
-    }
-
-    vector<PopolationCenter> cities;
-    int current_person_index = 0;
-    for (unsigned int i = 0; i < cities_number_of_citizens.size(); i++) {
-        cities.push_back(PopolationCenter(&population, current_person_index, cities_number_of_citizens.at(i), 3.));
-    }
-
-    cout << "Number of households in cities:\n";
-    for (const PopolationCenter &city : cities) {
-        cout << "\t\t" << city.GetHouseholdVector()->size() << endl;
     }
 
     cout << "Population created\n";
@@ -47,15 +38,16 @@ int main(int argc, char* argv[])    {
         population.at(index).Infect();
     }
 
-    for (unsigned int day = 0; day < 100; day++)    {
-        cout << "\tday " << day << endl;
+    cout << "Running the simulation.\n";
+    cout << "day \t\t#infected people\n";
+    for (unsigned int day = 0; day < 1000; day++)    {
+        cout << day << "\t\t" << Person::GetNumberOfInfectedPersonsInPopulation(population) <<  endl;
         Person::SetDay(day);
-        for (PopolationCenter &city : cities)   {
+        for (PopulationCenter &city : cities)   {
             city.SimulateDailySpread();
+            //cout << "\t\t" << city.GetName() << "\t\t" << Person::GetNumberOfInfectedPersonsInPopulation(*city.GetInhabitants()) << endl;
         }
     }
-
-
 
     cout << "Simulation finished\n";
     cin.get();

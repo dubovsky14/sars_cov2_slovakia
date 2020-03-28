@@ -10,7 +10,7 @@
 using namespace std;
 using namespace sars_cov2_sk;
 
-PopolationCenter::PopolationCenter( vector<Person> *country_population, unsigned int first_citizen_index, 
+PopulationCenter::PopulationCenter( vector<Person> *country_population, unsigned int first_citizen_index, 
                                     unsigned int number_of_inhabitants, float average_people_in_household) {
     const unsigned int last_citizen_index = first_citizen_index + number_of_inhabitants;
     if (country_population->size() < last_citizen_index)    {
@@ -25,7 +25,7 @@ PopolationCenter::PopolationCenter( vector<Person> *country_population, unsigned
     BuildAndFillHouseholds(average_people_in_household);
 }
 
-void PopolationCenter::BuildAndFillHouseholds(float average_people_in_household)  {
+void PopulationCenter::BuildAndFillHouseholds(float average_people_in_household)  {
     unsigned int current_person = 0;
     while (current_person < m_number_of_inhabitants)   {
         m_households.push_back(Household());
@@ -38,29 +38,31 @@ void PopolationCenter::BuildAndFillHouseholds(float average_people_in_household)
     }
 };
 
-void PopolationCenter::SimulateDailySpread(float transmission_probability_household, float transmission_probability_other)  {
+void PopulationCenter::SimulateDailySpread(float transmission_probability_household, float transmission_probability_other)  {
+    EvolveInhabitants();
     SpreadInfectionInHouseholds(transmission_probability_household);
-    SimulateDailySpreadAmongInhabitantsAndTempOccupants(transmission_probability_other);
+    SimulateDailySpreadAmongInhabitantsAndTempOccupants(5, transmission_probability_other);
 };
 
-void PopolationCenter::SpreadInfectionInHouseholds(float probablity)    {
+void PopulationCenter::SpreadInfectionInHouseholds(float probablity)    {
     for (Household &household : m_households)   {
-        household.SpreadInfection(0.4);
+        household.SpreadInfection(probablity);
     }
 }
 
-void PopolationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float average_interactions_per_person, float probability)    {
+void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float average_interactions_per_person, float probability)    {
     const unsigned int number_of_temporary_occupants = m_temporary_occupants.size();
 
     for (Person *person : m_inhabitants)    {
         // sampling from exponential distribution
         // /2 is there in order to not double count meetings, +1 are there to avoid 0 and 1 in logarithm, 0.5 is there instead of rounding,
-        const unsigned int interactions = (average_interactions_per_person/2)*log(RandomUniform()) + 0.5;
+        const unsigned int interactions = -(average_interactions_per_person/2)*log(RandomUniform()) + 0.5;
+
         for (unsigned int i = 0; i < interactions; i++) {
             unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);
 
             // Interaction with inhabitants of the city
-            if (person2_index < number_of_temporary_occupants)  {
+            if (person2_index < m_number_of_inhabitants)  {
                 Person::Meet(person, m_inhabitants.at(person2_index), probability, 0.8);
             }
             else    // Interaction with temporary occupants
@@ -74,4 +76,36 @@ void PopolationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
         }
     }
     
+};
+
+
+void PopulationCenter::EvolveInhabitants()    {
+    for (Person *person : m_inhabitants)   {
+        person->Evolve();
+    }
+}
+
+void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &number_of_inhabitants, const vector<string> &names,
+                                                vector<Person> *population,
+                                                vector<PopulationCenter> *cities)    {
+
+    // Firstly calculate population size
+    int population_size = 0;
+    for (unsigned int x : number_of_inhabitants)    {
+        population_size += x;
+    }
+
+    // Create population
+    for (int i = 0; i < population_size; i++)   {
+        if (i % 1000000 == 0)
+            cout << i << "/" << population_size << endl;
+            population->push_back(Person());
+    }
+
+    // Move people to cities
+    int current_person_index = 0;
+    for (unsigned int i = 0; i < number_of_inhabitants.size(); i++) {
+        cities->push_back(PopulationCenter(population, current_person_index, number_of_inhabitants.at(i), 3.));
+        current_person_index += number_of_inhabitants.at(i);
+    }
 };

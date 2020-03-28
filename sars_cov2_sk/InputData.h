@@ -1,11 +1,11 @@
-#ifndef INPUT_INFO_H
-#define INPUT_INFO_H
+#ifndef INPUT_DATA_H
+#define INPUT_DATA_H
 
 #include<vector>
 #include<string>
 
 namespace sars_cov2_sk	{
-    class InputInfo  {
+    class InputData  {
         private:
             std::string                 m_text_file_municipalities;
             std::vector<unsigned int>   m_municipality_id;
@@ -14,7 +14,7 @@ namespace sars_cov2_sk	{
             std::vector<std::string>    m_municipality_name;
 
         public:
-            InputInfo(const std::string &municipality_info_text_file);
+            InputData(const std::string &municipality_info_text_file);
 
             void ReadMunicipalityFile();
 

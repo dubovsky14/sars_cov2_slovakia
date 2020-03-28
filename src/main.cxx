@@ -1,7 +1,7 @@
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/PopulationCenter.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
-#include "../sars_cov2_sk/InputInfo.h"
+#include "../sars_cov2_sk/InputData.h"
 
 
 #include <iostream>
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])    {
     //    names.push_back("City_" + std::to_string(i));
     //}
 
-    InputInfo input_info("data/municipalities.txt");
+    InputData input_info("data/municipalities.txt");
     vector<unsigned int> cities_number_of_citizens = input_info.GetMunicipPopulations();
     vector<string> names = input_info.GetMunicipNames(); 
 

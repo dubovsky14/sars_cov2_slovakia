@@ -27,7 +27,7 @@ namespace sars_cov2_sk	{
             // Infect the person if not immune or ill. If immune or ill, do nothing.
             void Infect();
 
-            void AddContact(const sars_cov2_sk::Person *person)   {m_list_of_contacts.push_back(person);};
+            void AddContact(const sars_cov2_sk::Person *person);
 
             // Simulate evolution of healt state in a day (appearance of symptoms, need (not) to be hoslitalized)
             // Does not include interaction with other people

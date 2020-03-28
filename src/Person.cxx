@@ -29,6 +29,14 @@ void Person::Infect()   {
         m_day_of_infection  = s_day_index;
     }
 }
+void Person::AddContact(const sars_cov2_sk::Person *person)   {
+    for (const Person *p : m_list_of_contacts){
+        if (p == person) {
+            return; // Do not add the same contact twice
+        }
+    }
+    m_list_of_contacts.push_back(person);
+}
 
 void Person::Kill()     {
     m_is_ill            = false;

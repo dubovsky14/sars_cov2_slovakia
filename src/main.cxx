@@ -15,22 +15,18 @@ using namespace std;
 
 int main(int argc, char* argv[])    {
 
-    string s = "500011	;	77048	;	Nitra	;";
-    vector<string> splitted = InputInfo::SplitAndStripString(s, ";");
 
-    for (string x : splitted){
-        cout << x << endl;
-    }
 
-    return 0;
+    //vector<unsigned int> cities_number_of_citizens = {700000, 400000, 100000, 80000, 50000, 700000, 400000, 100000, 80000, 50000};
+    //vector<string> names;
+    //for (unsigned int i = 0; i < cities_number_of_citizens.size(); i++)    {
+    //    names.push_back("City_" + std::to_string(i));
+    //}
 
-    Person::SetDay(0);
+    InputInfo input_info("data/municipalities.txt");
+    vector<unsigned int> cities_number_of_citizens = input_info.GetMunicipPopulations();
+    vector<string> names = input_info.GetMunicipNames(); 
 
-    vector<unsigned int> cities_number_of_citizens = {700000, 400000, 100000, 80000, 50000, 700000, 400000, 100000, 80000, 50000};
-    vector<string> names;
-    for (unsigned int i = 0; i < cities_number_of_citizens.size(); i++)    {
-        names.push_back("City_" + std::to_string(i));
-    }
     vector<PopulationCenter> cities;
     vector<Person> population;
 
@@ -50,6 +46,8 @@ int main(int argc, char* argv[])    {
     }
 
     cout << "Running the simulation.\n";
+    cout << "Number of municipalities: " << cities.size()   << endl;
+    cout << "Total population: "         << population_size << endl;
     cout << "day \t\t#infected people\n";
     for (unsigned int day = 0; day < 1000; day++)    {
         Person::SetDay(day);

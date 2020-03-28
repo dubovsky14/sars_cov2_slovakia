@@ -53,6 +53,7 @@ void PopulationCenter::SpreadInfectionInHouseholds(float probablity)    {
 void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float average_interactions_per_person, float probability)    {
     const unsigned int number_of_temporary_occupants = m_temporary_occupants.size();
 
+    // Meetings initiated by inhabitants
     for (Person *person : m_inhabitants)    {
         // sampling from exponential distribution
         // /2 is there in order to not double count meetings, +1 are there to avoid 0 and 1 in logarithm, 0.5 is there instead of rounding,
@@ -75,13 +76,44 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
             }
         }
     }
-    
+
+    // Meetings initiated by temporary occupants
+    for (Person *person : m_temporary_occupants)    {
+        // sampling from exponential distribution
+        // /2 is there in order to not double count meetings, +1 are there to avoid 0 and 1 in logarithm, 0.5 is there instead of rounding,
+        const unsigned int interactions = -(average_interactions_per_person/2)*log(RandomUniform()) + 0.5;
+
+        for (unsigned int i = 0; i < interactions; i++) {
+            unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);
+
+            // Interaction with inhabitants of the city
+            if (person2_index < m_number_of_inhabitants)  {
+                Person::Meet(person, m_inhabitants.at(person2_index), probability, 0.8);
+            }
+            else    // Interaction with temporary occupants
+            {
+                person2_index -= m_number_of_inhabitants;
+                if (person2_index >= number_of_temporary_occupants)
+                    continue; // if this happens, somethins is really wrong ...
+
+                Person::Meet(person, m_temporary_occupants.at(person2_index), probability, 0.8);
+            }
+        }
+    }
 };
 
 void PopulationCenter::EvolveInhabitants()    {
     for (Person *person : m_inhabitants)   {
         person->Evolve();
     }
+}
+
+void PopulationCenter::AddTemporaryOccupant(sars_cov2_sk::Person *person)   {
+    m_temporary_occupants.push_back(person);
+}
+
+void PopulationCenter::RemoveAllTemporaryOccupants()   {
+    m_temporary_occupants.clear();
 }
 
 void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &number_of_inhabitants, const vector<string> &names,

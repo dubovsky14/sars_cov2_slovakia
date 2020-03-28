@@ -53,6 +53,8 @@ namespace sars_cov2_sk	{
             bool IsDead()           const   {return m_is_dead;};
             const std::vector<const sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
 
+            void ForgetContacts();
+
             static void SetDay(int day);
 
             // Simulate meeting of two people with a given transmission rate of virus.

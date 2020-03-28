@@ -40,7 +40,6 @@ void Person::Kill()     {
     m_needs_hospitalization = false;
     m_is_hospitalized   = false; 
     m_day_of_infection  = -1;
-    cout << "Someone died.\n";  
 }
 
 void Person::Heal() {
@@ -53,7 +52,7 @@ void Person::Heal() {
     m_day_of_infection  = -1;
 
     // Temporary fix in order to save memory and speed up the code
-    m_list_of_contacts.clear();
+    ForgetContacts();
 }
 
 // #TODO: Check if there is an available bed in hospital
@@ -94,6 +93,11 @@ void Person::Evolve()   {
             Heal();
             break;
     }
+};
+
+void Person::ForgetContacts()   {
+    m_list_of_contacts.clear();
+    m_list_of_contacts.shrink_to_fit();
 };
 
 void Person::SetDay(int day) {

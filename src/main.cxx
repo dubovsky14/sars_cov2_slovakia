@@ -41,8 +41,13 @@ int main(int argc, char* argv[])    {
     cout << "Running the simulation.\n";
     cout << "day \t\t#infected people\n";
     for (unsigned int day = 0; day < 1000; day++)    {
-        cout << day << "\t\t" << Person::GetNumberOfInfectedPersonsInPopulation(population) <<  endl;
         Person::SetDay(day);
+        const unsigned int number_of_ill = Person::GetNumberOfInfectedPersonsInPopulation(population);
+        cout << day << "\t\t" << number_of_ill <<  endl;
+        if (number_of_ill == 0) {
+            break;
+        }
+
         for (PopulationCenter &city : cities)   {
             city.SimulateDailySpread();
             //cout << "\t\t" << city.GetName() << "\t\t" << Person::GetNumberOfInfectedPersonsInPopulation(*city.GetInhabitants()) << endl;

@@ -89,6 +89,9 @@ void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &numb
                                                 vector<Person> *population,
                                                 vector<PopulationCenter> *cities)    {
 
+    population->clear();
+    cities->clear();
+
     // Firstly calculate population size
     int population_size = 0;
     for (unsigned int x : number_of_inhabitants)    {

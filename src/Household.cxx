@@ -11,7 +11,7 @@ using namespace sars_cov2_sk;
 
 bool Household::Infected() const    {
     for (const Person *person : m_inhabitants){
-        if (person->IsInfectable() && !person->IsHospitalized()) {
+        if (person->IsInfective() && !person->IsHospitalized()) {
             return true;
         }
     }
@@ -22,7 +22,7 @@ void Household::SpreadInfection(float probability)   {
     // person1 is the source of infection, person2 get infected
     for (Person *person1 : m_inhabitants)    {
         // Can't infect other people if not-infected, hospitalized or dead ...
-        if (!(person1->IsInfectable() && !person1->IsHospitalized() && !person1->IsDead()))    {
+        if (!(person1->IsInfective() && !person1->IsHospitalized() && !person1->IsDead()))    {
             continue;
         }
 

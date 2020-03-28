@@ -1,5 +1,6 @@
 #include "../sars_cov2_sk/Household.h"
 #include "../sars_cov2_sk/Person.h"
+#include "../sars_cov2_sk/HelperFunctions.h"
 
 #include <vector>
 #include <stdlib.h>
@@ -30,7 +31,7 @@ void Household::SpreadInfection(float probability)   {
                 continue;
             }
 
-            if ((rand() / double(RAND_MAX)) < probability)  {
+            if (RandomUniform() < probability)  {
                 person1->Infect();
             }
         }
@@ -38,7 +39,7 @@ void Household::SpreadInfection(float probability)   {
 };
 
 unsigned int Household::GetRandomHouseholdNumber(float average_people_in_household) {
-    const float p = rand() / double(RAND_MAX);
+    const float p = RandomUniform();
 
     // #TODO: For now just random numbers there. It needs to be improved.
     if (p < 0.2)    return 1;

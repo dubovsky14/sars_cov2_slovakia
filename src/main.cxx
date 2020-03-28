@@ -1,5 +1,6 @@
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/PopulationCenter.h"
+#include "../sars_cov2_sk/HelperFunctions.h"
 
 
 #include <iostream>
@@ -42,16 +43,18 @@ int main(int argc, char* argv[])    {
 
     // Infect 10 random people
     for (int i = 0; i < 10; i++)    {
-        const unsigned int index = 0.99* population_size * rand() / double(RAND_MAX);
+        const unsigned int index = 0.99* population_size * RandomUniform();
         population.at(index).Infect();
     }
 
     for (unsigned int day = 0; day < 100; day++)    {
+        cout << "\tday " << day << endl;
         Person::SetDay(day);
         for (PopolationCenter &city : cities)   {
             city.SimulateDailySpread();
         }
     }
+
 
 
     cout << "Simulation finished\n";

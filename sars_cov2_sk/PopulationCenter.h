@@ -11,7 +11,7 @@ namespace sars_cov2_sk	{
         private:
             std::string name;
             std::vector<Person *> m_inhabitants;            // vector of people living (or already buried ...) in the city
-            std::vector<Person *> m_temporary_ocupants;     // vector of people being in the city temporarily (comuters to work, visitors ...)
+            std::vector<Person *> m_temporary_occupants;    // nope, not Russians ... just people being in the city temporarily (comuters to work, visitors ...)
             std::vector<Household> m_households;
 
             unsigned int m_number_of_inhabitants;
@@ -31,7 +31,7 @@ namespace sars_cov2_sk	{
 
             void SpreadInfectionInHouseholds(float probablity = 0.4);
 
-            void SimulateDailySpreadAmongInhabitantsAndTempOccupants(float probability = 0.1);
+            void SimulateDailySpreadAmongInhabitantsAndTempOccupants(float average_interactions_per_person, float probability = 0.1);
     };
 }
 #endif

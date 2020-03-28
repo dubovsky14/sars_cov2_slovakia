@@ -1,4 +1,5 @@
 #include "../sars_cov2_sk/Person.h"
+#include "../sars_cov2_sk/HelperFunctions.h"
 
 #include <vector>
 #include <stdlib.h>
@@ -9,7 +10,7 @@ using namespace sars_cov2_sk;
 int Person::s_day_index = 0;
 
 Person::Person() {
-    m_health_state      = rand() / double(RAND_MAX);
+    m_health_state      = RandomUniform();
     m_is_ill            = false;
     m_has_symptoms      = false;
     m_is_imune          = false;
@@ -86,10 +87,10 @@ void Person::SetDay(int day) {
     s_day_index = day;
 };
 
-void Meet(Person *person1, Person *person2, float transmission_probability, float probability_to_remember)   {
+void Person::Meet(Person *person1, Person *person2, float transmission_probability, float probability_to_remember)   {
 
     // We do not remember all people we met ...
-    const bool remember = ((rand() / double(RAND_MAX)) < probability_to_remember);
+    const bool remember = RandomUniform() < probability_to_remember;
 
     // Do nothing if nobody is infected
     if (!person1->IsIll() && !person2->IsIll()) {
@@ -105,7 +106,7 @@ void Meet(Person *person1, Person *person2, float transmission_probability, floa
     // If person is infected, we have to keep track of its contacts and spread the virus
     if (person1->IsIll() && !person2->IsIll())   {
         person1->AddContact(person2);
-        if ((rand() / double(RAND_MAX)) < transmission_probability)   {
+        if (RandomUniform() < transmission_probability)   {
             person2->Infect();
             if (remember) person2->AddContact(person1);
         }
@@ -114,7 +115,7 @@ void Meet(Person *person1, Person *person2, float transmission_probability, floa
     // If person is infected, we have to keep track of its contacts and spread the virus
     if (!person1->IsIll() && person2->IsIll())   {
         person2->AddContact(person1);
-        if ((rand() / double(RAND_MAX)) < transmission_probability)   {
+        if (RandomUniform() < transmission_probability)   {
             person1->Infect();
             if (remember) person1->AddContact(person1);
         }

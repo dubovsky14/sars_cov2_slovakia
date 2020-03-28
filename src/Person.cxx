@@ -113,9 +113,10 @@ void Person::SetDay(int day) {
 };
 
 void Person::Meet(Person *person1, Person *person2, float transmission_probability, float probability_to_remember)   {
-
-    // We do not remember all people we met ...
-    const bool remember = RandomUniform() < probability_to_remember;
+    // You can't meet yourself. But this situation might happen in the code, although it's very unlikely
+    if (person1 == person2) {
+        return;
+    }
 
     // If one of the persons is in quarantine, the meeting cannot happen
     if (person1->InQuarantine() || person2->InQuarantine()) {
@@ -126,6 +127,9 @@ void Person::Meet(Person *person1, Person *person2, float transmission_probabili
     if (!person1->IsIll() && !person2->IsIll()) {
         return;
     }
+
+    // We do not remember all people we met ...
+    const bool remember = RandomUniform() < probability_to_remember;
 
     // if both of them are infected, just keep track of the contact
     if (person1->IsIll() && person2->IsIll())   {

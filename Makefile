@@ -26,13 +26,6 @@ INCFLAGS=$(DEBUG) $(ROOTINC) -I$(INCDIR)
 
 all: bin/main
 
-#bin/dict.cxx:sars_cov2_sk/linkdef.h
-#	@echo "**"
-#	@echo "** Creating Root dictionary"
-#	@echo "**"
-#	rootcint -f bin/dict.cxx -c sars_cov2_sk/linkdef.h
-
-
 bin/Person.o:src/Person.cxx sars_cov2_sk/Person.h
 	@echo "**"
 	@echo "** Compiling C++ Source: Person.cxx Person.h"

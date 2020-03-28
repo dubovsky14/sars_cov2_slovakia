@@ -1,6 +1,7 @@
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/PopulationCenter.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
+#include "../sars_cov2_sk/InputInfo.h"
 
 
 #include <iostream>
@@ -13,6 +14,16 @@ using namespace std;
 
 
 int main(int argc, char* argv[])    {
+
+    string s = "500011	;	77048	;	Nitra	;";
+    vector<string> splitted = InputInfo::SplitAndStripString(s, ";");
+
+    for (string x : splitted){
+        cout << x << endl;
+    }
+
+    return 0;
+
     Person::SetDay(0);
 
     vector<unsigned int> cities_number_of_citizens = {700000, 400000, 100000, 80000, 50000, 700000, 400000, 100000, 80000, 50000};

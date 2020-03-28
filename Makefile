@@ -50,17 +50,23 @@ bin/HelperFunctions.o:src/HelperFunctions.cxx sars_cov2_sk/HelperFunctions.h
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@ $< $(ROOTINC)
 
+bin/InputInfo.o:src/InputInfo.cxx sars_cov2_sk/InputInfo.h
+	@echo "**"
+	@echo "** Compiling C++ Source: InputInfo.cxx InputInfo.h"
+	@echo "**"
+	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@ $< $(ROOTINC)
+
 bin/main.o:src/main.cxx
 	@echo "**"
 	@echo "** Compiling C++ Source"
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@ $< $(ROOTINC)
 
-bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o
+bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputInfo.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o $(LIBS)  
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputInfo.o $(LIBS)  
 
 clean:
 	rm -rf bin/*.o main

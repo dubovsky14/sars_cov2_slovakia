@@ -39,6 +39,7 @@ namespace sars_cov2_sk	{
             std::vector<unsigned int>   GetMunicipPopulations() const   { return m_municipality_number_of_inhabitants;};
             std::vector<unsigned int>   GetMunicipInfected() const      { return m_municipality_number_of_infected;};
             std::vector<std::string>    GetMunicipNames() const         { return m_municipality_name;};
+            const std::vector< std::vector <unsigned int> > *GetMigrations() const {return &m_migrations;};
 
             static bool ValidLine(std::string line);
     };

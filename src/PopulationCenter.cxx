@@ -120,6 +120,20 @@ void PopulationCenter::RemoveAllTemporaryOccupants()   {
     m_temporary_occupants.clear();
 }
 
+void PopulationCenter::SendTravelersToCity(PopulationCenter *destination_city, unsigned int number_of_travelers) const    {
+    for (unsigned int i_traveler = 0; i_traveler < number_of_travelers; i_traveler++)   {
+        unsigned int index_in_origin_city = m_number_of_inhabitants*RandomUniform();
+        destination_city->AddTemporaryOccupant(m_inhabitants.at(index_in_origin_city));
+    }
+};
+
+void PopulationCenter::SendTravelersToAllCities(vector<PopulationCenter> *cities) const    {
+    for (unsigned int i_city = 0; i_city < cities->size(); i_city++)   {
+        // Sampling with poisson would be incredibly slow here ... in average this should be also fine enough
+        this->SendTravelersToCity(&cities->at(i_city), m_migrations->at(i_city));
+    }
+};
+
 void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &number_of_inhabitants, const vector<string> &names,
                                                 vector<Person> *population,
                                                 vector<PopulationCenter> *cities)    {
@@ -147,3 +161,9 @@ void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &numb
         current_person_index += number_of_inhabitants.at(i);
     }
 };
+
+void PopulationCenter::SetMigrations(const vector <vector <unsigned int >> *migrations, vector<PopulationCenter> *cities)   {
+    for (unsigned int i_city = 0; i_city < migrations->size(); i_city++)   {
+        cities->at(i_city).SetTravelMigrations(&migrations->at(i_city));
+    }
+}

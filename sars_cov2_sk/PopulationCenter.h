@@ -18,8 +18,8 @@ namespace sars_cov2_sk	{
 
             unsigned int m_number_of_inhabitants;
 
-            // Number of people traveling to this city from another cities
-            int *m_migrations = nullptr;
+            // Number of people traveling from this city to another cities
+            const std::vector<unsigned int> *m_migrations = nullptr;
 
             // Called in the contructor. Takes people and move them randomly to households
             void BuildAndFillHouseholds(float average_people_in_household);
@@ -60,6 +60,12 @@ namespace sars_cov2_sk	{
             void RemoveAllTemporaryOccupants();
 
             const unsigned int GetNumberOfInhabitants() const {return m_number_of_inhabitants;};
+            
+            void SetTravelMigrations(const std::vector<unsigned int> *migrations)   { m_migrations = migrations;};
+
+            void SendTravelersToCity(sars_cov2_sk::PopulationCenter *destination_city, unsigned int number_of_travelers) const;
+
+            void SendTravelersToAllCities(std::vector<sars_cov2_sk::PopulationCenter> *destination_city) const;
 
             // Factory method for both population (vector<Person>) and cities (vector<PopulationCenter>)
             // Requires number of inhabitants and names of cities as input
@@ -67,6 +73,8 @@ namespace sars_cov2_sk	{
             static void CityAndPersonsFactory(  const std::vector<unsigned int> &number_of_inhabitants, const std::vector<std::string> &names,
                                                 std::vector<sars_cov2_sk::Person> *population,
                                                 std::vector<sars_cov2_sk::PopulationCenter> *cities);
+
+            static void SetMigrations(const std::vector <std::vector <unsigned int >> *migrations, std::vector<sars_cov2_sk::PopulationCenter> *cities);
     };
 }
 #endif

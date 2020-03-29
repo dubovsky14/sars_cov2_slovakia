@@ -21,6 +21,7 @@ int main(int argc, char* argv[])    {
     vector<Person> population;
 
     PopulationCenter::CityAndPersonsFactory(cities_number_of_citizens, names, &population, &cities);
+    PopulationCenter::SetMigrations(input_info.GetMigrations(), &cities);
 
     int population_size = 0;
     for (unsigned int x : cities_number_of_citizens)    {
@@ -48,8 +49,15 @@ int main(int argc, char* argv[])    {
         }
 
         for (PopulationCenter &city : cities)   {
+            city.SendTravelersToAllCities(&cities);
+        }
+
+        for (PopulationCenter &city : cities)   {
             city.SimulateDailySpread();
             //cout << "\t\t" << city.GetName() << "\t\t" << Person::GetNumberOfInfectedPersonsInPopulation(*city.GetInhabitants()) << endl;
+        }
+        for (PopulationCenter &city : cities)   {
+            city.RemoveAllTemporaryOccupants();
         }
     }
 

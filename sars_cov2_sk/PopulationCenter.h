@@ -31,10 +31,13 @@ namespace sars_cov2_sk	{
 
             void SimulateDailySpread(float transmission_probability_household = TRANSMISSION_PROB_HOUSE, float transmission_probability_other = TRANSMISSION_PROB_OUT);
 
+            // Loop over all households, arrange meetings of all pairs of persons inside these.
             void SpreadInfectionInHouseholds(float probablity = TRANSMISSION_PROB_HOUSE);
 
+            // Simulate random meetings of people in a city (both those who live there and also of the travellers)
             void SimulateDailySpreadAmongInhabitantsAndTempOccupants(float average_interactions_per_person, float probability = TRANSMISSION_PROB_OUT);
 
+            // Simulate evolution of the disease of inhabitants (healing, getting hospitalized, dying ...). Does not include interactions with other people
             void EvolveInhabitants();
 
             void SetName(std::string &name) {m_name = name;};
@@ -43,8 +46,10 @@ namespace sars_cov2_sk	{
 
             const std::vector<sars_cov2_sk::Person *> *GetInhabitants()   const {return &m_inhabitants; };
 
+            // Add a traveller
             void AddTemporaryOccupant(sars_cov2_sk::Person *person);
 
+            // Remove all people who do not live in the city
             void RemoveAllTemporaryOccupants();
 
             const unsigned int GetNumberOfInhabitants() const {return m_number_of_inhabitants;};

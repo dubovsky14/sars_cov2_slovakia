@@ -56,7 +56,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     // Meetings initiated by inhabitants
     for (Person *person : m_inhabitants)    {
         // sampling from exponential distribution
-        // /2 is there in order to not double count meetings, +1 are there to avoid 0 and 1 in logarithm, 0.5 is there instead of rounding,
+        // /2 is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
         const unsigned int interactions = RandomPoisson(average_interactions_per_person/2.);
 
         for (unsigned int i = 0; i < interactions; i++) {
@@ -80,7 +80,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     // Meetings initiated by temporary occupants
     for (Person *person : m_temporary_occupants)    {
         // sampling from exponential distribution
-        // /2 is there in order to not double count meetings, +1 are there to avoid 0 and 1 in logarithm, 0.5 is there instead of rounding,
+        // /2 is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
         const unsigned int interactions = RandomPoisson(average_interactions_per_person/2.);
 
         for (unsigned int i = 0; i < interactions; i++) {

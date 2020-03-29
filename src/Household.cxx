@@ -27,9 +27,9 @@ void Household::SpreadInfection(float probability)   {
         }
 
         for (Person *person2 : m_inhabitants) {
-             // you can't infect yourself
+             // each meeting happens only once (p1 <==> p2 and p2 <==> p1 is the same, we shouldn't repeat it)
             if (person2 == person1) {
-                continue;
+                break;
             }
 
             Person::Meet(person1, person2, TRANSMISSION_PROB_HOUSE, 1.);

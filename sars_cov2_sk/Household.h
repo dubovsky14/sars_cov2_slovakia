@@ -25,6 +25,7 @@ namespace sars_cov2_sk	{
 
             unsigned int GetNumberOfInhabitants() const {return m_inhabitants.size();};
 
+            // Generate a random number with the distribution of household occupancy
             static unsigned int GetRandomHouseholdNumber(float average_people_in_household);
     };
 };

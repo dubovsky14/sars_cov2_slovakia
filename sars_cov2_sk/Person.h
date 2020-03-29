@@ -41,8 +41,10 @@ namespace sars_cov2_sk	{
 
             void Hospitalize();
 
-            // Get Methods:
+            // Variable characteristic for the person. It's from interval (0,1), where higher value means better health condition.
+            // Those with low health_state needs to be hospitalized and some of them die
             float HealthState()     const   {return m_health_state;};
+
             bool IsIll()            const   {return m_is_ill;};
             bool HasSymptoms()      const   {return m_has_symptoms;};
             bool IsImune()          const   {return m_is_imune;};
@@ -55,6 +57,8 @@ namespace sars_cov2_sk	{
 
             void ForgetContacts();
 
+            // Temporary solution (will be move to a separate singleton class).
+            // The class person needs to know the date in order to evolve status of people (hospitalization, appearance of symptoms ...)
             static void SetDay(int day);
 
             // Simulate meeting of two people with a given transmission rate of virus.

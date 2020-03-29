@@ -12,7 +12,9 @@ output_file = open(address_output_file, "w")
 
 for i in range(n_municip):
     for j in range(n_municip):
-        output_file.write(str(int(matrix[i][j])) + " ; ")
+        output_file.write(str(int(matrix[i][j])))
+        if (j+1 != n_municip):
+            output_file.write(" ; ")
     output_file.write("\n")
 
 output_file.close()

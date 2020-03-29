@@ -13,12 +13,20 @@ namespace sars_cov2_sk	{
             std::vector<unsigned int>   m_municipality_number_of_infected;
             std::vector<std::string>    m_municipality_name;
 
+            std::vector< std::vector <unsigned int> > m_migrations;
+
+            unsigned int                m_number_of_municipalities;
+
         public:
             InputData(const std::string &municipality_info_text_file);
 
             void ReadMunicipalityFile();
 
             void ReadLineOfConfig(std::string line);
+
+            void ReadMigrations();
+
+            void ReadLineOfMigrations(std::string line);
 
             static std::vector<std::string> SplitAndStripString(std::string input_string, const std::string &separator);
 
@@ -32,6 +40,7 @@ namespace sars_cov2_sk	{
             std::vector<unsigned int>   GetMunicipInfected() const      { return m_municipality_number_of_infected;};
             std::vector<std::string>    GetMunicipNames() const         { return m_municipality_name;};
 
+            static bool ValidLine(std::string line);
     };
 };
 #endif

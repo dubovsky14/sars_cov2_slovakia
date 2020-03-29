@@ -18,6 +18,9 @@ namespace sars_cov2_sk	{
 
             unsigned int m_number_of_inhabitants;
 
+            // Number of people traveling to this city from another cities
+            int *m_migrations = nullptr;
+
             // Called in the contructor. Takes people and move them randomly to households
             void BuildAndFillHouseholds(float average_people_in_household);
 
@@ -26,6 +29,8 @@ namespace sars_cov2_sk	{
             // Takes people from country_population between indexes (first_citizen_index) and (first_citizen_index+number_of_inhabitants) and move them to the city
             // The average_people_in_household is average ocuppance of a household in the city
             PopulationCenter(std::vector<Person> *country_population, unsigned int first_citizen_index, unsigned  int number_of_inhabitants, float average_people_in_household = 3.);
+
+            ~PopulationCenter();
 
             const std::vector<Household> *GetHouseholdVector()  const {return &m_households;};
 
@@ -43,6 +48,8 @@ namespace sars_cov2_sk	{
             void SetName(std::string &name) {m_name = name;};
 
             std::string GetName()   const {return m_name;};
+
+            inline Person *GetInhabitant(unsigned int index)    {return m_inhabitants.at(index);};
 
             const std::vector<sars_cov2_sk::Person *> *GetInhabitants()   const {return &m_inhabitants; };
 

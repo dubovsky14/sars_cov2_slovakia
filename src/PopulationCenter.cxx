@@ -25,6 +25,10 @@ PopulationCenter::PopulationCenter( vector<Person> *country_population, unsigned
     BuildAndFillHouseholds(average_people_in_household);
 }
 
+PopulationCenter::~PopulationCenter()   {
+    delete m_migrations;
+}
+
 void PopulationCenter::BuildAndFillHouseholds(float average_people_in_household)  {
     unsigned int current_person = 0;
     while (current_person < m_number_of_inhabitants)   {

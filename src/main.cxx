@@ -3,7 +3,6 @@
 #include "../sars_cov2_sk/HelperFunctions.h"
 #include "../sars_cov2_sk/InputData.h"
 
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -14,15 +13,6 @@ using namespace std;
 
 
 int main(int argc, char* argv[])    {
-
-
-
-    //vector<unsigned int> cities_number_of_citizens = {700000, 400000, 100000, 80000, 50000, 700000, 400000, 100000, 80000, 50000};
-    //vector<string> names;
-    //for (unsigned int i = 0; i < cities_number_of_citizens.size(); i++)    {
-    //    names.push_back("City_" + std::to_string(i));
-    //}
-
     InputData input_info("data/municipalities.txt");
     vector<unsigned int> cities_number_of_citizens = input_info.GetMunicipPopulations();
     vector<string> names = input_info.GetMunicipNames(); 

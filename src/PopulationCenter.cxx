@@ -57,7 +57,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     for (Person *person : m_inhabitants)    {
         // sampling from exponential distribution
         // /2 is there in order to not double count meetings, +1 are there to avoid 0 and 1 in logarithm, 0.5 is there instead of rounding,
-        const unsigned int interactions = -(average_interactions_per_person/2)*log(RandomUniform()) + 0.5;
+        const unsigned int interactions = RandomPoisson(average_interactions_per_person/2.);
 
         for (unsigned int i = 0; i < interactions; i++) {
             unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);
@@ -81,7 +81,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     for (Person *person : m_temporary_occupants)    {
         // sampling from exponential distribution
         // /2 is there in order to not double count meetings, +1 are there to avoid 0 and 1 in logarithm, 0.5 is there instead of rounding,
-        const unsigned int interactions = -(average_interactions_per_person/2)*log(RandomUniform()) + 0.5;
+        const unsigned int interactions = RandomPoisson(average_interactions_per_person/2.);
 
         for (unsigned int i = 0; i < interactions; i++) {
             unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);

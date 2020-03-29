@@ -32,9 +32,7 @@ void Household::SpreadInfection(float probability)   {
                 continue;
             }
 
-            if (RandomUniform() < probability)  {
-                person2->Infect();
-            }
+            Person::Meet(person1, person2, TRANSMISSION_PROB_HOUSE, 1.);
         }
     }
 };

@@ -129,6 +129,10 @@ void PopulationCenter::SendTravelersToCity(PopulationCenter *destination_city, u
 
 void PopulationCenter::SendTravelersToAllCities(vector<PopulationCenter> *cities) const    {
     for (unsigned int i_city = 0; i_city < cities->size(); i_city++)   {
+        // Can't send traveler to the city where he lives. 
+        if (&cities->at(i_city) == this)    {
+            continue;
+        }
         // Sampling with poisson would be incredibly slow here ... in average this should be also fine enough
         this->SendTravelersToCity(&cities->at(i_city), m_migrations->at(i_city));
     }
@@ -149,9 +153,7 @@ void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &numb
 
     // Create population
     for (int i = 0; i < population_size; i++)   {
-        if (i % 1000000 == 0)
-            cout << i << "/" << population_size << endl;
-            population->push_back(Person());
+        population->push_back(Person());
     }
 
     // Move people to cities

@@ -103,6 +103,10 @@ void Person::Evolve()   {
     }
 };
 
+bool Person::IsNewCase()        const   {
+    return (m_is_ill && (s_day_index == m_day_of_infection));
+};
+
 void Person::ForgetContacts()   {
     m_list_of_contacts.clear();
     m_list_of_contacts.shrink_to_fit();

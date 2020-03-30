@@ -53,6 +53,7 @@ namespace sars_cov2_sk	{
             bool NeedsHospitalization() const   {return m_needs_hospitalization;};
             bool IsHospitalized()       const   {return m_is_hospitalized;};
             bool IsDead()           const   {return m_is_dead;};
+            bool IsNewCase()        const;
             const std::vector<const sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
 
             void ForgetContacts();

@@ -24,6 +24,15 @@ namespace sars_cov2_sk	{
             // Called in the contructor. Takes people and move them randomly to households
             void BuildAndFillHouseholds(float average_people_in_household);
 
+            // Keep history of new cases, unaffected, infected, ...
+            std::vector<unsigned int> m_logging_unaffected;
+            std::vector<unsigned int> m_logging_infected;
+            std::vector<unsigned int> m_logging_immune;
+            std::vector<unsigned int> m_logging_dead;
+            std::vector<unsigned int> m_logging_new_cases;
+            std::vector<unsigned int> m_logging_new_hospitalized;
+
+
         public:
             // Creates population center (town) with "number_of_inhabitants" of people living here.
             // Takes people from country_population between indexes (first_citizen_index) and (first_citizen_index+number_of_inhabitants) and move them to the city
@@ -63,8 +72,12 @@ namespace sars_cov2_sk	{
             
             void SetTravelMigrations(const std::vector<unsigned int> *migrations)   { m_migrations = migrations;};
 
+            // Send number_of_travelers randomly chosen inhabitants to city destination_city
             void SendTravelersToCity(sars_cov2_sk::PopulationCenter *destination_city, unsigned int number_of_travelers) const;
 
+            // Loop over migrations to other municipalities. If there are N people in the matrix, it takes N (no smearing) people and move them to the city.
+            // Indexes of people are random (uniformly), but their overall number is fixed.
+            // The same person can travel to more cities in the same day
             void SendTravelersToAllCities(std::vector<sars_cov2_sk::PopulationCenter> *destination_city) const;
 
             // Factory method for both population (vector<Person>) and cities (vector<PopulationCenter>)

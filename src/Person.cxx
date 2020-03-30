@@ -14,7 +14,7 @@ Person::Person() {
     m_health_state      = RandomUniform();
     m_is_ill            = false;
     m_has_symptoms      = false;
-    m_is_imune          = false;
+    m_is_immune          = false;
     m_is_infective      = false;
     m_in_quarantine     = false;
     m_is_dead           = false;
@@ -24,7 +24,7 @@ Person::Person() {
 }
 
 void Person::Infect()   {
-    if (!m_is_imune && !m_is_ill)    {
+    if (!m_is_immune && !m_is_ill)    {
         m_is_ill            = true;
         m_day_of_infection  = s_day_index;
     }
@@ -41,7 +41,7 @@ void Person::AddContact(const sars_cov2_sk::Person *person)   {
 void Person::Kill()     {
     m_is_ill            = false;
     m_has_symptoms      = false;
-    m_is_imune          = true;
+    m_is_immune          = true;
     m_is_infective      = false;
     m_in_quarantine     = true;
     m_is_dead           = true;
@@ -53,7 +53,7 @@ void Person::Kill()     {
 void Person::Heal() {
     m_is_ill            = false;
     m_has_symptoms      = false;
-    m_is_imune          = true;
+    m_is_immune          = true;
     m_is_infective      = false;
     m_needs_hospitalization = false;
     m_is_hospitalized   = false; 

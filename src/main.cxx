@@ -2,6 +2,7 @@
 #include "../sars_cov2_sk/PopulationCenter.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
 #include "../sars_cov2_sk/InputData.h"
+#include "../sars_cov2_sk/Logging.h"
 
 #include <iostream>
 #include <vector>
@@ -58,8 +59,14 @@ int main(int argc, char* argv[])    {
         }
         for (PopulationCenter &city : cities)   {
             city.RemoveAllTemporaryOccupants();
+            city.SaveTheDayToHistory();
         }
     }
+
+    Logging logging("results/results.json");
+    for (const PopulationCenter &city : cities)   {
+        logging.DumpCityHistory(city);
+    }    
 
     cout << "Simulation finished\n";
     cin.get();

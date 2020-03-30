@@ -5,10 +5,14 @@
 #include "../sars_cov2_sk/Household.h"
 
 #include "../sars_cov2_sk/Constants.h"
+#include "../sars_cov2_sk/Logging.h"
 
 #include <vector>
 #include <string>
+
 namespace sars_cov2_sk	{
+    class Logging;
+
     class PopulationCenter  {
         private:
             std::string m_name;
@@ -24,14 +28,20 @@ namespace sars_cov2_sk	{
             // Called in the contructor. Takes people and move them randomly to households
             void BuildAndFillHouseholds(float average_people_in_household);
 
+
+            float m_longitude = 0;
+            float m_latitude = 0;
+
             // Keep history of new cases, unaffected, infected, ...
+            std::vector<unsigned int> m_logging_days;
             std::vector<unsigned int> m_logging_unaffected;
             std::vector<unsigned int> m_logging_infected;
             std::vector<unsigned int> m_logging_immune;
             std::vector<unsigned int> m_logging_dead;
             std::vector<unsigned int> m_logging_new_cases;
-            std::vector<unsigned int> m_logging_new_hospitalized;
+            std::vector<unsigned int> m_logging_hospitalized;
 
+            friend class sars_cov2_sk::Logging;
 
         public:
             // Creates population center (town) with "number_of_inhabitants" of people living here.
@@ -54,7 +64,7 @@ namespace sars_cov2_sk	{
             // Simulate evolution of the disease of inhabitants (healing, getting hospitalized, dying ...). Does not include interactions with other people
             void EvolveInhabitants();
 
-            void SetName(std::string &name) {m_name = name;};
+            void SetName(const std::string &name) {m_name = name;};
 
             std::string GetName()   const {return m_name;};
 
@@ -79,6 +89,8 @@ namespace sars_cov2_sk	{
             // Indexes of people are random (uniformly), but their overall number is fixed.
             // The same person can travel to more cities in the same day
             void SendTravelersToAllCities(std::vector<sars_cov2_sk::PopulationCenter> *destination_city) const;
+
+            void SaveTheDayToHistory();
 
             // Factory method for both population (vector<Person>) and cities (vector<PopulationCenter>)
             // Requires number of inhabitants and names of cities as input

@@ -10,7 +10,7 @@ namespace sars_cov2_sk	{
             float   m_health_state;   // from zero to one. Higher = more healthy
             bool    m_is_ill;
             bool    m_has_symptoms;
-            bool    m_is_imune;
+            bool    m_is_immune;
             bool    m_is_infective;
             bool    m_in_quarantine;
             bool    m_needs_hospitalization;
@@ -46,8 +46,9 @@ namespace sars_cov2_sk	{
             float HealthState()     const   {return m_health_state;};
 
             bool IsIll()            const   {return m_is_ill;};
+            bool IsUnaffected()     const   {return !m_is_ill && !m_is_dead && !m_is_immune;};
             bool HasSymptoms()      const   {return m_has_symptoms;};
-            bool IsImune()          const   {return m_is_imune;};
+            bool IsImmune()         const   {return m_is_immune;};
             bool IsInfective()      const   {return m_is_infective;};
             bool InQuarantine()     const   {return m_in_quarantine;};
             bool NeedsHospitalization() const   {return m_needs_hospitalization;};
@@ -70,6 +71,8 @@ namespace sars_cov2_sk	{
             static int GetNumberOfInfectedPersonsInPopulation(const std::vector<sars_cov2_sk::Person *> &population);
 
             static int GetNumberOfInfectedPersonsInPopulation(const std::vector<sars_cov2_sk::Person> &population);
+
+            static int GetDay() {return s_day_index;};
 	};
 }
 

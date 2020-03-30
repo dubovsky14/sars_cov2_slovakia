@@ -138,6 +138,32 @@ void PopulationCenter::SendTravelersToAllCities(vector<PopulationCenter> *cities
     }
 };
 
+void PopulationCenter::SaveTheDayToHistory()    {
+    unsigned int unaffected         = 0;
+    unsigned int infected           = 0;
+    unsigned int immune             = 0;
+    unsigned int dead               = 0;
+    unsigned int new_cases          = 0;
+    unsigned int hospitalized       = 0;
+
+    for (const Person *person : m_inhabitants)  {
+        if (person->IsUnaffected())     unaffected++;
+        if (person->IsIll())            infected++;
+        if (person->IsImmune())         immune++;
+        if (person->IsDead())           dead++;
+        if (person->IsNewCase())        new_cases++;
+        if (person->IsHospitalized())   hospitalized++;
+    }
+
+    m_logging_days          .push_back(Person::GetDay());
+    m_logging_unaffected    .push_back(unaffected  );
+    m_logging_infected      .push_back(infected    );
+    m_logging_immune        .push_back(immune      );
+    m_logging_dead          .push_back(dead        );
+    m_logging_new_cases     .push_back(new_cases   );
+    m_logging_hospitalized  .push_back(hospitalized);
+};
+
 void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &number_of_inhabitants, const vector<string> &names,
                                                 vector<Person> *population,
                                                 vector<PopulationCenter> *cities)    {
@@ -160,6 +186,7 @@ void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &numb
     int current_person_index = 0;
     for (unsigned int i = 0; i < number_of_inhabitants.size(); i++) {
         cities->push_back(PopulationCenter(population, current_person_index, number_of_inhabitants.at(i), 3.));
+        cities->back().SetName(names.at(i));
         current_person_index += number_of_inhabitants.at(i);
     }
 };

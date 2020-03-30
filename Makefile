@@ -12,6 +12,12 @@ INCFLAGS=$(DEBUG) -I$(INCDIR)
 
 all: bin/main
 
+bin/Logging.o:src/Logging.cxx sars_cov2_sk/Logging.h
+	@echo "**"
+	@echo "** Compiling C++ Source: Logging.cxx Logging.h"
+	@echo "**"
+	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
+
 bin/Person.o:src/Person.cxx sars_cov2_sk/Person.h
 	@echo "**"
 	@echo "** Compiling C++ Source: Person.cxx Person.h"
@@ -54,11 +60,11 @@ bin/main.o:src/main.cxx
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
-bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o
+bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o
 
 clean:
 	rm -rf bin/*.o main

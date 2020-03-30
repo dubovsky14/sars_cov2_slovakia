@@ -39,6 +39,8 @@ namespace sars_cov2_sk	{
 
             void PutToQuarantine();
 
+            void ReleseFromToQuarantine();
+
             void Hospitalize();
 
             // Variable characteristic for the person. It's from interval (0,1), where higher value means better health condition.

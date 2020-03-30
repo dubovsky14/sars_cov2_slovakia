@@ -17,12 +17,14 @@ namespace sars_cov2_sk	{
             std::ofstream   m_log_file;
 
             void DumpVector(const std::string &indent, const std::string &variable_name, const std::vector<unsigned int> &numbers, bool comma_terminated);
-            
+ 
+            void DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool comma_terminated);
+
         public:
             Logging(const std::string &out_adress);
             ~Logging();
 
-            void DumpCityHistory(const sars_cov2_sk::PopulationCenter &city);
+            void DumpHistoryToJson(const std::vector<sars_cov2_sk::PopulationCenter> &cities);
     };
 };
 #endif

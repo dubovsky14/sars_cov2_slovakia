@@ -59,6 +59,8 @@ void Person::Heal() {
     m_is_hospitalized   = false; 
     m_day_of_infection  = -1;
 
+    ReleseFromToQuarantine();
+
     // Temporary fix in order to save memory and speed up the code
     ForgetContacts();
 }
@@ -73,6 +75,10 @@ void Person::PutToQuarantine()  {
     m_in_quarantine = true;
 }
 
+void Person::ReleseFromToQuarantine()   {
+    m_in_quarantine = false;
+};
+
 // #TODO: Improve the method (for now everything is deterministic)
 void Person::Evolve()   {
     if (!m_is_ill || m_is_dead) {
@@ -81,20 +87,26 @@ void Person::Evolve()   {
 
     const int length_of_infection = s_day_index - m_day_of_infection;
     switch (length_of_infection)    {
-        case 3:
+        case 6:
             m_is_infective = true;
             break;
-        case 5:
+        case 8:
             m_has_symptoms = true;
             break;        
         case 12:
-            if (m_health_state < 0.1) 
+            if (m_health_state < 0.1) {
                 m_needs_hospitalization = true;
                 Hospitalize();
-            break;    
+            }
+            break;
+        case 15:
+            if (m_health_state > 0.6)   {
+                Heal();
+            }
         case 17:
-            if (m_needs_hospitalization && !m_is_hospitalized)
+            if (m_needs_hospitalization && !m_is_hospitalized)  {
                 Kill();
+            }
             break;
 
         case 20:

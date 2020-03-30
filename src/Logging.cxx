@@ -32,7 +32,7 @@ void Logging::DumpVector(const std::string &indent, const std::string &variable_
     m_log_file << "\n";
 };
 
-void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city)   {
+void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool comma_terminated)   {
     string indent = "    ";
     m_log_file << indent << "\"" << city.m_name << "\" : {\n";
     m_log_file << indent << indent << "\"size\" : "         << city.m_number_of_inhabitants << ",\n";
@@ -47,8 +47,16 @@ void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city)   {
     DumpVector(indent+indent, "new_cases",          city.m_logging_new_cases,   true);
     DumpVector(indent+indent, "hospitalized",       city.m_logging_hospitalized,false);
 
-    m_log_file << "},\n";
+    if (comma_terminated)   m_log_file << indent << "},\n";
+    else                    m_log_file << indent << "}\n";
 };
+
+void Logging::DumpHistoryToJson(const vector<PopulationCenter> &cities) {
+    for (unsigned int i = 0; i < cities.size(); i++)    {
+        if (i + 1 == cities.size())     DumpCityHistory(cities.at(i), false);
+        else                            DumpCityHistory(cities.at(i), true);
+    }
+}
 
 
     

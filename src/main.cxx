@@ -64,9 +64,7 @@ int main(int argc, char* argv[])    {
     }
 
     Logging logging("results/results.json");
-    for (const PopulationCenter &city : cities)   {
-        logging.DumpCityHistory(city);
-    }    
+    logging.DumpHistoryToJson(cities);  
 
     cout << "Simulation finished\n";
     cin.get();

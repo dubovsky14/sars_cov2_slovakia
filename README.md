@@ -3,9 +3,9 @@ Still under heavy development.
 Compile and run:
 ```
 
-mkdir data/sensitive resutls bin
+mkdir data/sensitive results bin
 
-python python/ConvertPickeToTextFile.py <part to the pickle file> data/sensitive/migrations.txt
+python python/ConvertPickeToTextFile.py <path to the pickle file> data/sensitive/migrations.txt
 
 make
 

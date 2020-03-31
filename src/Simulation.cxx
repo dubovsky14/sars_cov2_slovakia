@@ -35,7 +35,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     cout << "Population created\n";
 
     // Infect 10 random people
-    for (int i = 0; i < 10; i++)    {
+    for (int i = 0; i < 100; i++)    {
         const unsigned int index = 0.99* population_size * RandomUniform();
         population.at(index).Infect();
     }
@@ -65,6 +65,6 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
         }
     }
 
-    Logging logging("results/results.json");
+    Logging logging(ConfigParser::GetResultFileAddress());
     logging.DumpHistoryToJson(cities);  
 }

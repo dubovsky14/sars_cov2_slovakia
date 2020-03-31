@@ -165,7 +165,7 @@ void Person::Meet(Person *person1, Person *person2, float transmission_probabili
             if (remember) person2->AddContact(person1);
         }
         if (spread_virus || ConfigParser::GetTrackingOption() == all)   {
-            person1->AddContact(person2);
+            if (remember) person1->AddContact(person2);
         }
         return;
     }
@@ -180,7 +180,7 @@ void Person::Meet(Person *person1, Person *person2, float transmission_probabili
 
         // if tracking == all, save the contact, other options are considered by AddContact() method itself
         if (spread_virus || ConfigParser::GetTrackingOption() == all)   {
-            person2->AddContact(person2);
+            if (remember) person2->AddContact(person2);
         }
         return;
     }

@@ -46,7 +46,7 @@ void PopulationCenter::BuildAndFillHouseholds(float average_people_in_household)
 void PopulationCenter::SimulateDailySpread(float transmission_probability_household, float transmission_probability_other)  {
     EvolveInhabitants();
     SpreadInfectionInHouseholds(transmission_probability_household);
-    SimulateDailySpreadAmongInhabitantsAndTempOccupants(5, transmission_probability_other);
+    SimulateDailySpreadAmongInhabitantsAndTempOccupants(ConfigParser::GetAverageNumberOfCityInteractions(), transmission_probability_other);
 };
 
 void PopulationCenter::SpreadInfectionInHouseholds(float probablity)    {

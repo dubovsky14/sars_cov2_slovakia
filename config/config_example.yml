@@ -1,0 +1,24 @@
+
+population:
+  mean_stochastic_interactions: 22
+  probability_to_remember_random_meeting: 0.8
+
+virus:
+  transmission_probability: 0.022
+  transmission_probability_household: 0.3
+  infectious_days_mean: 6.5
+  infectious_days_std: 1
+
+# not yet implemented
+infectious_start: 5
+
+# not yet implemented
+hospitalization_start: 10
+
+# not yet implemented
+hospitalization_percentage: 0.1
+
+migration_matrix_txt: data/sensitive/migrations.txt
+populations_file_txt: data/municipalities.txt
+
+result_file: results/results.json

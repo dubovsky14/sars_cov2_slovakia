@@ -54,17 +54,23 @@ bin/RandomGeneratorPoisson.o:src/RandomGeneratorPoisson.cxx sars_cov2_sk/RandomG
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
+bin/ConfigParser.o:src/ConfigParser.cxx sars_cov2_sk/ConfigParser.h
+	@echo "**"
+	@echo "** Compiling C++ Source: ConfigParser.cxx ConfigParser.h"
+	@echo "**"
+	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
+
 bin/main.o:src/main.cxx
 	@echo "**"
 	@echo "** Compiling C++ Source"
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
-bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o
+bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o bin/ConfigParser.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o bin/ConfigParser.o
 
 clean:
 	rm -rf bin/*.o main

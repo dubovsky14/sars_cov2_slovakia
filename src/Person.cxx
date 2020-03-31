@@ -22,6 +22,8 @@ Person::Person() {
     m_needs_hospitalization = false;
     m_is_hospitalized   = false; 
     m_day_of_infection  = -1;
+
+    m_infective_period  = RandomGauss(ConfigParser::GetInfectiousDaysMean(),ConfigParser::GetInfectiousDaysStd());
 }
 
 void Person::Infect()   {
@@ -89,32 +91,12 @@ void Person::Evolve()   {
     }
 
     const int length_of_infection = s_day_index - m_day_of_infection;
-    switch (length_of_infection)    {
-        case 6:
-            m_is_infective = true;
-            break;
-        case 8:
-            m_has_symptoms = true;
-            break;        
-        case 12:
-            if (m_health_state < 0.1) {
-                m_needs_hospitalization = true;
-                Hospitalize();
-            }
-            break;
-        case 15:
-            if (m_health_state > 0.6)   {
-                Heal();
-            }
-        case 17:
-            if (m_needs_hospitalization && !m_is_hospitalized)  {
-                Kill();
-            }
-            break;
 
-        case 20:
-            Heal();
-            break;
+    if (length_of_infection == 5)   {
+        m_is_infective = true;
+    }
+    if (length_of_infection == 5+m_infective_period)    {
+        Heal();
     }
 };
 

@@ -7,6 +7,8 @@ namespace sars_cov2_sk	{
     double RandomUniform();
 
     unsigned int RandomPoisson(float mean_value);
+
+    float RandomGauss(float mean, float sigma);
 }
 
 #endif

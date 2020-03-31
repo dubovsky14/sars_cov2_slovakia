@@ -48,9 +48,9 @@ bin/InputData.o:src/InputData.cxx sars_cov2_sk/InputData.h
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
-bin/RandomGeneratorPoisson.o:src/RandomGeneratorPoisson.cxx sars_cov2_sk/RandomGeneratorPoisson.h
+bin/RandomGenerators.o:src/RandomGenerators.cxx sars_cov2_sk/RandomGenerators.h
 	@echo "**"
-	@echo "** Compiling C++ Source: RandomGeneratorPoisson.cxx RandomGeneratorPoisson.h"
+	@echo "** Compiling C++ Source: RandomGenerators.cxx RandomGenerators.h"
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
@@ -72,11 +72,11 @@ bin/main.o:src/main.cxx
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
-bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o
+bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o
 
 clean:
 	rm -rf bin/*.o main

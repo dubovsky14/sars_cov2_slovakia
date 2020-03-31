@@ -1,5 +1,5 @@
 #include "../sars_cov2_sk/HelperFunctions.h"
-#include "../sars_cov2_sk/RandomGeneratorPoisson.h"
+#include "../sars_cov2_sk/RandomGenerators.h"
 
 #include <stdlib.h>
 #include <cmath>
@@ -10,5 +10,9 @@ double sars_cov2_sk::RandomUniform()  {
 }
 
 unsigned int sars_cov2_sk::RandomPoisson(float mean_value)  {
-    return RandomGeneratorPoisson::Poisson(mean_value);
+    return sars_cov2_sk::RandomGeneratorPoisson::Poisson(mean_value);
+}
+
+float sars_cov2_sk::RandomGauss(float mean,float sigma)  {
+    return sars_cov2_sk::RandomGeneratorGauss::Gauss(mean, sigma);
 }

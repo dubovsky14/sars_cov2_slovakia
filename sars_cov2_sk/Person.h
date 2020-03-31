@@ -18,6 +18,8 @@ namespace sars_cov2_sk	{
             int     m_day_of_infection; // the day when the person got infected
             std::vector<const sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
 
+            int     m_infective_period;
+
             static int s_day_index;
 
 		public:

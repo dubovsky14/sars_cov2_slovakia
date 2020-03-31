@@ -4,7 +4,6 @@
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/Household.h"
 
-#include "../sars_cov2_sk/Constants.h"
 #include "../sars_cov2_sk/Logging.h"
 
 #include <vector>
@@ -53,13 +52,13 @@ namespace sars_cov2_sk	{
 
             const std::vector<Household> *GetHouseholdVector()  const {return &m_households;};
 
-            void SimulateDailySpread(float transmission_probability_household = TRANSMISSION_PROB_HOUSE, float transmission_probability_other = TRANSMISSION_PROB_OUT);
+            void SimulateDailySpread(float transmission_probability_household, float transmission_probability_other);
 
             // Loop over all households, arrange meetings of all pairs of persons inside these.
-            void SpreadInfectionInHouseholds(float probablity = TRANSMISSION_PROB_HOUSE);
+            void SpreadInfectionInHouseholds(float probablity);
 
             // Simulate random meetings of people in a city (both those who live there and also of the travellers)
-            void SimulateDailySpreadAmongInhabitantsAndTempOccupants(float average_interactions_per_person, float probability = TRANSMISSION_PROB_OUT);
+            void SimulateDailySpreadAmongInhabitantsAndTempOccupants(float average_interactions_per_person, float probability);
 
             // Simulate evolution of the disease of inhabitants (healing, getting hospitalized, dying ...). Does not include interactions with other people
             void EvolveInhabitants();

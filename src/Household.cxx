@@ -1,6 +1,7 @@
 #include "../sars_cov2_sk/Household.h"
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
+#include "../sars_cov2_sk/ConfigParser.h"
 
 #include <vector>
 #include <stdlib.h>
@@ -32,7 +33,7 @@ void Household::SpreadInfection(float probability)   {
                 break;
             }
 
-            Person::Meet(person1, person2, TRANSMISSION_PROB_HOUSE, 1.);
+            Person::Meet(person1, person2, probability, 1.);
         }
     }
 };

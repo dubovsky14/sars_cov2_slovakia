@@ -47,31 +47,47 @@ void ConfigParser::ReadLineOfConfig(string line)  {
 
 string ConfigParser::GetStringValue(const std::string &key)  {
     std::map<string, string>::iterator it = m_map.find(key);
-    if (it != m_map.end())  {
+    if (it == m_map.end())  {
         throw "Expression \"" + key + "\" not defined in config file. Please fix it!";
     }
     return m_map[key];
 };
 
 int   ConfigParser::GetIntValue   (const std::string &key)  {
-    string value = GetStringValue(key);
+    const string value = GetStringValue(key);
     try {
-        return std::stoi(key);
+        return std::stoi(value);
     }
     catch (...) {
-        throw ("Expression \"" + key + "\" is not defined in config file must be numberical integer value. Please fix it!");
+        throw ("Expression \"" + key + "\" defined in config file must be numberical integer value. Please fix it!");
     }
 };
 
 float ConfigParser::GetFloatValue (const std::string &key)  {
-    string value = GetStringValue(key);
+    const string value = GetStringValue(key);
     try {
-        return std::stod(key);
+        return std::stod(value);
     }
     catch (...) {
-        throw ("Expression \"" + key + "\" is not defined in config file must be floating point numerical value. Please fix it!");
+        throw ("Expression \"" + key + "\" defined in config file must be floating point numerical value. Please fix it!");
     }
 };
+
+void ConfigParser::SetTrackingOption() {
+    const string tracking_string = GetStringValue("tracking");
+    if (tracking_string == "disabled")          {
+        m_tracking_option = disabled;
+    }
+    else if (tracking_string == "infected_only") {
+        m_tracking_option = infected_only;
+    }
+    else if (tracking_string == "all")  {
+        m_tracking_option = all;
+    } 
+    else {
+        throw("Value for tracking has to be one of the following: disabled, all, infected_only. Please fix it in the config!");
+    }
+}
 
 
 vector<string> ConfigParser::SplitAndStripString(string input_string, const string &separator) {

@@ -1,4 +1,5 @@
 #include "../sars_cov2_sk/InputData.h"
+#include "../sars_cov2_sk/ConfigParser.h"
 
 #include <iostream>
 #include <fstream>
@@ -49,7 +50,7 @@ void InputData::ReadLineOfConfig(string line)  {
 
 void InputData::ReadMigrations()    {
     string line;
-    ifstream input_file ("data/sensitive/migrations.txt");
+    ifstream input_file (ConfigParser::GetMigrationMatrixAddress());
     if (input_file.is_open())    {
         while ( getline (input_file,line) )        {
             ReadLineOfMigrations(line);

@@ -4,7 +4,7 @@ MAC     = Darwin
 
 BASEDIR  = .
 
-DEBUG=-g -Wall -ggdb -O3 -std=c++11
+DEBUG=-g -Wall -ggdb -O3 -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0
 
 INCDIR=$(PWD) 
 
@@ -60,17 +60,23 @@ bin/ConfigParser.o:src/ConfigParser.cxx sars_cov2_sk/ConfigParser.h
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
+bin/Simulation.o:src/Simulation.cxx sars_cov2_sk/Simulation.h
+	@echo "**"
+	@echo "** Compiling C++ Source: Simulation.cxx Simulation.h"
+	@echo "**"
+	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
+
 bin/main.o:src/main.cxx
 	@echo "**"
 	@echo "** Compiling C++ Source"
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
-bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o bin/ConfigParser.o
+bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o bin/ConfigParser.o
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGeneratorPoisson.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o
 
 clean:
 	rm -rf bin/*.o main

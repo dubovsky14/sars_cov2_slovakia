@@ -6,6 +6,7 @@
 #include <map>
 
 namespace sars_cov2_sk  {
+    enum TrackingOption {disabled, all, infected_only};
     // singleton
     class ConfigParser  {
         private:
@@ -22,6 +23,8 @@ namespace sars_cov2_sk  {
             float m_hospitalization_start;     
             float m_hospitalization_percentage;
 
+            sars_cov2_sk::TrackingOption m_tracking_option;
+
             std::string m_migration_matrix_address;
             std::string m_municipalities_file;
             std::string m_result_file; 
@@ -37,6 +40,7 @@ namespace sars_cov2_sk  {
             std::string GetStringValue(const std::string &key);
             int         GetIntValue   (const std::string &key);
             float       GetFloatValue (const std::string &key);
+            void        SetTrackingOption();
 
             static std::vector<std::string> SplitAndStripString(std::string input_string, const std::string &separator);
             static std::vector<std::string> SplitString(std::string input_string, const std::string &separator);
@@ -69,8 +73,10 @@ namespace sars_cov2_sk  {
             static float GetHospitalizationPercentage()         {Check(); return s_singleton_instance->m_hospitalization_percentage;};
 
             static std::string GetMigrationMatrixAddress()    {Check(); return s_singleton_instance->m_migration_matrix_address;};
-            static std::string GetMunicipalitiesFileAddress() {Check(); return s_singleton_instance->m_result_file;};
+            static std::string GetMunicipalitiesFileAddress() {Check(); return s_singleton_instance->m_municipalities_file;};
             static std::string GetResultFileAddress()         {Check(); return s_singleton_instance->m_result_file;};
+
+            static sars_cov2_sk::TrackingOption GetTrackingOption()   {Check(); return s_singleton_instance->m_tracking_option;};
 
     };
 }

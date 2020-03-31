@@ -2,6 +2,7 @@
 #include "../sars_cov2_sk/Household.h"
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
+#include "../sars_cov2_sk/ConfigParser.h"
 
 #include <vector>
 #include <iostream>

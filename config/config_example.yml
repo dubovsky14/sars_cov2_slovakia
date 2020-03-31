@@ -22,3 +22,6 @@ migration_matrix_txt: data/sensitive/migrations.txt
 populations_file_txt: data/municipalities.txt
 
 result_file: results/results.json
+
+# tracking of contants (disabled, infected-only, all)
+tracking: disabled

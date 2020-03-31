@@ -1,5 +1,6 @@
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
+#include "../sars_cov2_sk/ConfigParser.h"
 
 #include <vector>
 #include <stdlib.h>
@@ -30,6 +31,8 @@ void Person::Infect()   {
     }
 }
 void Person::AddContact(const sars_cov2_sk::Person *person)   {
+    if (ConfigParser::GetTrackingOption() == disabled) return;
+
     for (const Person *p : m_list_of_contacts){
         if (p == person) {
             return; // Do not add the same contact twice
@@ -156,20 +159,28 @@ void Person::Meet(Person *person1, Person *person2, float transmission_probabili
 
     // If person is infected, we have to keep track of its contacts and spread the virus
     if (person1->IsIll() && !person2->IsIll())   {
-        person1->AddContact(person2);
-        if (RandomUniform() < transmission_probability)   {
+        const bool spread_virus = RandomUniform() < transmission_probability;
+        if (spread_virus)   {
             if (person1->IsInfective())    person2->Infect();
             if (remember) person2->AddContact(person1);
+        }
+        if (spread_virus || ConfigParser::GetTrackingOption() == all)   {
+            person1->AddContact(person2);
         }
         return;
     }
 
     // If person is infected, we have to keep track of its contacts and spread the virus
     if (!person1->IsIll() && person2->IsIll())   {
-        person2->AddContact(person1);
-        if (RandomUniform() < transmission_probability)   {
+        const bool spread_virus = RandomUniform() < transmission_probability;
+        if (spread_virus)   {
             if (person2->IsInfective())    person1->Infect();
             if (remember) person1->AddContact(person1);
+        }
+
+        // if tracking == all, save the contact, other options are considered by AddContact() method itself
+        if (spread_virus || ConfigParser::GetTrackingOption() == all)   {
+            person2->AddContact(person2);
         }
         return;
     }

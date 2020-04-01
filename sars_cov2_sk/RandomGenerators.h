@@ -13,11 +13,12 @@ namespace sars_cov2_sk  {
 
             static RandomGeneratorPoisson *s_singleton_instance;
 
-        public:
-            static unsigned int Poisson(float mean_value);
             float m_mean_value;
             float m_lower_limit;
             float m_upper_limit;
+            
+        public:
+            static unsigned int Poisson(float mean_value);
     };
 
     class RandomGeneratorGauss    {

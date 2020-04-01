@@ -92,10 +92,10 @@ void Person::Evolve()   {
 
     const int length_of_infection = s_day_index - m_day_of_infection;
 
-    if (length_of_infection == ConfigParser::GetInfectiousStart())   {
+    if (length_of_infection == int(ConfigParser::GetInfectiousStart()))   {
         m_is_infective = true;
     }
-    if (length_of_infection == ConfigParser::GetInfectiousStart()+m_infective_period)    {
+    if (length_of_infection == int(ConfigParser::GetInfectiousStart()+m_infective_period))    {
         Heal();
     }
 };

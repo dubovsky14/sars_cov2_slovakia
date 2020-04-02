@@ -50,12 +50,11 @@ namespace sars_cov2_sk  {
 
             void InitializeValues();
 
-        public:
-            static void InitializeConfig(const std::string &config_address);
-
             // Throw exception if config is not initialized
             static void Check();
 
+        public:
+            static void InitializeConfig(const std::string &config_address);
 
             // The lines bellow could be replaced by one Get function accessing a dictionary
             // But it would be slower and we need to call it few milion times per simulated day.

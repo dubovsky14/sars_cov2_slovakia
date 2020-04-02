@@ -17,9 +17,6 @@ namespace sars_cov2_sk	{
 
             unsigned int                m_number_of_municipalities;
 
-        public:
-            InputData(const std::string &municipality_info_text_file);
-
             void ReadMunicipalityFile();
 
             void ReadLineOfConfig(std::string line);
@@ -34,6 +31,11 @@ namespace sars_cov2_sk	{
 
             static void StripString(std::string *input_string, const std::string &chars_to_remove = " \n\t\r");
 
+            static bool ValidLine(std::string line);
+
+        public:
+            InputData(const std::string &municipality_info_text_file);
+
             // I know that this is not optimal, but we run it only once, so I don't care ...
             std::vector<unsigned int>   GetMunicipIds() const           { return m_municipality_id;};
             std::vector<unsigned int>   GetMunicipPopulations() const   { return m_municipality_number_of_inhabitants;};
@@ -41,7 +43,6 @@ namespace sars_cov2_sk	{
             std::vector<std::string>    GetMunicipNames() const         { return m_municipality_name;};
             const std::vector< std::vector <unsigned int> > *GetMigrations() const {return &m_migrations;};
 
-            static bool ValidLine(std::string line);
     };
 };
 #endif

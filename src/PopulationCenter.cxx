@@ -27,7 +27,7 @@ PopulationCenter::PopulationCenter( vector<Person> *country_population, unsigned
 }
 
 PopulationCenter::~PopulationCenter()   {
-    delete m_migrations;
+
 }
 
 void PopulationCenter::RandomlyInfectNInhabitants(unsigned int number_of_infected)    {

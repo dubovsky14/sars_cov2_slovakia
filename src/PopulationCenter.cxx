@@ -162,6 +162,7 @@ void PopulationCenter::SaveTheDayToHistory()    {
     unsigned int dead               = 0;
     unsigned int new_cases          = 0;
     unsigned int hospitalized       = 0;
+    unsigned int infective          = 0;
 
     for (const Person *person : m_inhabitants)  {
         if (person->IsUnaffected())     unaffected++;
@@ -170,6 +171,7 @@ void PopulationCenter::SaveTheDayToHistory()    {
         if (person->IsDead())           dead++;
         if (person->IsNewCase())        new_cases++;
         if (person->IsHospitalized())   hospitalized++;
+        if (person->IsInfective())      infective++;
     }
 
     m_logging_days          .push_back(Person::GetDay());
@@ -179,6 +181,7 @@ void PopulationCenter::SaveTheDayToHistory()    {
     m_logging_dead          .push_back(dead        );
     m_logging_new_cases     .push_back(new_cases   );
     m_logging_hospitalized  .push_back(hospitalized);
+    m_logging_infective     .push_back(infective);
 };
 
 void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &number_of_inhabitants, const vector<string> &names,

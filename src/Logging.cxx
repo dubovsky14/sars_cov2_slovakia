@@ -42,6 +42,7 @@ void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool c
     DumpVector(indent+indent, "simulation_days",    city.m_logging_days,        true);
     DumpVector(indent+indent, "unaffected",         city.m_logging_unaffected,  true);
     DumpVector(indent+indent, "infected",           city.m_logging_infected,    true);
+    DumpVector(indent+indent, "infective",          city.m_logging_infective,   true);
     DumpVector(indent+indent, "immune",             city.m_logging_immune,      true);
     DumpVector(indent+indent, "dead",               city.m_logging_dead,        true);
     DumpVector(indent+indent, "new_cases",          city.m_logging_new_cases,   true);

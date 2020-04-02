@@ -23,11 +23,14 @@ namespace sars_cov2_sk  {
             float m_hospitalization_start;     
             float m_hospitalization_percentage;
 
+            int   m_infected_initial;
+
             sars_cov2_sk::TrackingOption m_tracking_option;
 
             std::string m_migration_matrix_address;
             std::string m_municipalities_file;
             std::string m_result_file; 
+            std::string m_infected_file;
 
             std::map<std::string, std::string> m_map;   // Note for python developers -> this is the same as dictionary in python
 
@@ -74,6 +77,8 @@ namespace sars_cov2_sk  {
             static std::string GetMigrationMatrixAddress()    {Check(); return s_singleton_instance->m_migration_matrix_address;};
             static std::string GetMunicipalitiesFileAddress() {Check(); return s_singleton_instance->m_municipalities_file;};
             static std::string GetResultFileAddress()         {Check(); return s_singleton_instance->m_result_file;};
+            static std::string GetInfectedFileAddress()       {Check(); return s_singleton_instance->m_infected_file;};
+            static int GetInfectedInitial()                   {Check(); return s_singleton_instance->m_infected_initial;};
 
             static sars_cov2_sk::TrackingOption GetTrackingOption()   {Check(); return s_singleton_instance->m_tracking_option;};
 

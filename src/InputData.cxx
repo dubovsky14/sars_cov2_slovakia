@@ -13,6 +13,9 @@ InputData::InputData(const std::string &municipality_info_text_file)    {
     m_text_file_municipalities = municipality_info_text_file;
     ReadMunicipalityFile();
     ReadMigrations();
+    if (ConfigParser::GetInfectedInitial() < 0) {
+        ReadNumberOfInfected();
+    }
 };
 
 void InputData::ReadMunicipalityFile()  {
@@ -80,6 +83,61 @@ void InputData::ReadLineOfMigrations(string line)  {
         numbers.push_back(stoi(x));
     }
     m_migrations.push_back(numbers);
+}
+
+void InputData::ReadNumberOfInfected()    {
+    // Set number of infected in each municip. to zero at the begining
+    m_municipality_number_of_infected.clear();
+    for (unsigned int i = 0; i < m_municipality_number_of_inhabitants.size(); i++) {
+        m_municipality_number_of_infected.push_back(0);
+    }
+
+    string line;
+    ifstream input_file (ConfigParser::GetInfectedFileAddress());
+    if (input_file.is_open())    {
+        while ( getline (input_file,line) )        {
+            ReadLineOfInfected(line);
+        }
+        input_file.close();
+    }
+    else    {
+        throw "Unable to open file text file with number of infected people in municipalities!";     
+    } 
+}
+
+void InputData::ReadLineOfInfected(string line)  {
+    StripString(&line);
+    if (!ValidLine(line)) return; // Enable comments
+    vector<string> elements = SplitAndStripString(line, ":");
+
+
+    if (elements.size() != 2)   {
+        throw ("Invalid content of file with number of infected people. Each line must have firstly municip. name or ID followed by : and then by number of infected people!\n");
+    }
+
+    // Check if the number after : is really positive int
+    if ((elements.at(1).find_first_not_of( "0123456789" ) != std::string::npos))   {
+        throw "Invalid content of the following line in number of infected file: \"" + line + "\"";
+    }
+    const bool first_element_is_id = (elements.at(0).find_first_not_of( "0123456789" ) == std::string::npos);
+    if (first_element_is_id)    {
+        const unsigned int munic_id = stoi(elements.at(0));
+        for (unsigned int i = 0; i < m_municipality_id.size(); i++) {
+            if (m_municipality_id.at(i) == munic_id)    {
+                m_municipality_number_of_infected.at(i) = stoi(elements.at(1));
+                return;
+            }
+        }
+    }
+    else    {
+        for (unsigned int i = 0; i < m_municipality_id.size(); i++) {
+            if (m_municipality_name.at(i) == elements.at(0))    {
+                m_municipality_number_of_infected.at(i) = stoi(elements.at(1));
+                return;
+            }
+        }        
+    }
+    throw "I wasn't able to find municipality with name/ID : \"" + elements.at(0) + "\"";
 }
 
 vector<string> InputData::SplitAndStripString(string input_string, const string &separator) {

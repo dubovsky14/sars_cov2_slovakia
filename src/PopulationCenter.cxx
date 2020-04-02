@@ -30,6 +30,24 @@ PopulationCenter::~PopulationCenter()   {
     delete m_migrations;
 }
 
+void PopulationCenter::RandomlyInfectNInhabitants(unsigned int number_of_infected)    {
+    if (number_of_infected > m_number_of_inhabitants)   {
+        throw "You asked me to infected more people than the number of inhabitants in the city " + m_name;
+    }
+
+    unsigned int infected_already = 0;
+    while (infected_already < number_of_infected)   {
+        const unsigned int index = (this->GetNumberOfInhabitants()-1)*RandomUniform();
+        if (m_inhabitants.at(index)->IsIll())   {
+            continue;
+        }
+        else {
+            m_inhabitants.at(index)->Infect();
+            infected_already++;
+        }
+    }
+}
+
 void PopulationCenter::BuildAndFillHouseholds(float average_people_in_household)  {
     unsigned int current_person = 0;
     while (current_person < m_number_of_inhabitants)   {

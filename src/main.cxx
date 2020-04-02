@@ -25,5 +25,8 @@ int main(int argc, char* argv[])    {
     catch (string e)   {
         cout << e << endl;
     }
+    catch (char const *e)   {
+        cout << e << endl;
+    }
 }
 

@@ -1,0 +1,4 @@
+#municipality (either name of ID) : number of infected
+528595	:	20
+Trnava  :   6
+Nitra : 10

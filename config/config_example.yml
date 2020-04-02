@@ -23,5 +23,11 @@ populations_file_txt: data/municipalities.txt
 
 result_file: results/results.json
 
+# numerical number of inital number of infected at the simulation start (will be selected randomly in this case). If not defined, the text file with number of infected will be used.
+#initial_number_of_infected: 150
+
+# test file with number of infected people in municipalities
+infected_distribution_file: data/infected.txt
+
 # tracking of contants (disabled, infected-only, all)
 tracking: disabled

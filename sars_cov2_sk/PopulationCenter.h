@@ -50,6 +50,8 @@ namespace sars_cov2_sk	{
 
             ~PopulationCenter();
 
+            void RandomlyInfectNInhabitants(unsigned int number_of_infected);
+
             const std::vector<Household> *GetHouseholdVector()  const {return &m_households;};
 
             void SimulateDailySpread(float transmission_probability_household, float transmission_probability_other);

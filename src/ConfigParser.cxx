@@ -136,6 +136,15 @@ void ConfigParser::InitializeValues()   {
     m_infectious_start                          = GetFloatValue("infectious_start");
     m_hospitalization_start                     = GetFloatValue("hospitalization_start");
     m_hospitalization_percentage                = GetFloatValue("hospitalization_percentage");
+
+    // Number of infected can be either defined in the config centraly for whole country, or in the text file with number of infected in municipalities
+    try {
+        m_infected_initial = GetIntValue("initial_number_of_infected");
+    }
+    catch (string e) {
+        m_infected_initial = -1;
+        m_infected_file                             = GetStringValue("infected_distribution_file");
+    }
 };
 
 void ConfigParser::Check()    {

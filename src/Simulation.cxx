@@ -34,10 +34,24 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
 
     cout << "Population created\n";
 
-    // Infect 10 random people
-    for (int i = 0; i < 100; i++)    {
-        const unsigned int index = 0.99* population_size * RandomUniform();
-        population.at(index).Infect();
+    if (ConfigParser::GetInfectedInitial() > 0) {
+        int infected_already = 0;
+        while (infected_already < ConfigParser::GetInfectedInitial())    {
+            const unsigned int index = (population_size-1)*RandomUniform();
+            if (population.at(index).IsIll())   {
+                continue;
+            }
+            else {
+                population.at(index).Infect();
+                infected_already++;
+            }
+        }
+    }
+    else {
+        vector <unsigned int> numbers_of_infected = input_info.GetMunicipInfected();
+        for (unsigned int i_city = 0; i_city < cities.size(); i_city++) {
+            cities.at(i_city).RandomlyInfectNInhabitants(numbers_of_infected.at(i_city));
+        }
     }
 
     cout << "Running the simulation.\n";

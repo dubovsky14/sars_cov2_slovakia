@@ -25,6 +25,10 @@ namespace sars_cov2_sk	{
 
             void ReadLineOfMigrations(std::string line);
 
+            void ReadNumberOfInfected();
+
+            void ReadLineOfInfected(std::string line);
+
             static std::vector<std::string> SplitAndStripString(std::string input_string, const std::string &separator);
 
             static std::vector<std::string> SplitString(std::string input_string, const std::string &separator);

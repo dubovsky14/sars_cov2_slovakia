@@ -22,8 +22,8 @@ bool Household::Infected() const    {
 void Household::SpreadInfection(float probability)   {
     // person1 is the source of infection, person2 get infected
     for (Person *person1 : m_inhabitants)    {
-        // Can't infect other people if not-infected, hospitalized or dead ...
-        if (!(person1->IsInfective() && !person1->IsHospitalized() && !person1->IsDead()))    {
+        // Can't infect other people if hospitalized or dead ...
+        if (!person1->IsHospitalized() && !person1->IsDead())    {
             continue;
         }
 
@@ -31,6 +31,16 @@ void Household::SpreadInfection(float probability)   {
              // each meeting happens only once (p1 <==> p2 and p2 <==> p1 is the same, we shouldn't repeat it)
             if (person2 == person1) {
                 break;
+            }
+
+            // If both persons are healthy, do nothing
+            if (!person1->IsIll() && !person2->IsIll())   {
+                continue;
+            }
+
+            // Can't infect other people if hospitalized or dead ...
+            if (!person2->IsHospitalized() && !person2->IsDead())    {
+                continue;
             }
 
             Person::Meet(person1, person2, probability, 1.);

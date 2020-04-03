@@ -22,6 +22,7 @@ Person::Person() {
     m_needs_hospitalization = false;
     m_is_hospitalized   = false; 
     m_day_of_infection  = -1;
+    m_had_positive_test = false;
 
     m_infective_period  = RandomGauss(ConfigParser::GetInfectiousDaysMean(),ConfigParser::GetInfectiousDaysStd());
 }
@@ -32,15 +33,18 @@ void Person::Infect()   {
         m_day_of_infection  = s_day_index;
     }
 }
-void Person::AddContact(const sars_cov2_sk::Person *person)   {
-    if (ConfigParser::GetTrackingOption() == disabled) return;
-
-    for (const Person *p : m_list_of_contacts){
-        if (p == person) {
-            return; // Do not add the same contact twice
-        }
+void Person::AddContact(sars_cov2_sk::Person *person)   {
+    if (ConfigParser::GetTrackingOption() == disabled)  {
+        return;
     }
-    m_list_of_contacts.push_back(person);
+    if (ConfigParser::GetTrackingOption() == infected_only  &&
+        !(person->IsIll() && this->IsIll())) {
+            return;
+    }
+
+    if (!IsInVector(m_list_of_contacts, person))    {
+        m_list_of_contacts.push_back(person);
+    }
 }
 
 void Person::Kill()     {

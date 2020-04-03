@@ -30,4 +30,4 @@ result_file: results/results.json
 infected_distribution_file: data/infected.txt
 
 # tracking of contants (disabled, infected-only, all)
-tracking: disabled
+tracking: infected-only

@@ -15,8 +15,9 @@ namespace sars_cov2_sk	{
             bool    m_needs_hospitalization;
             bool    m_is_hospitalized;
             bool    m_is_dead; // :-(
+            bool    m_had_positive_test;
             int     m_day_of_infection; // the day when the person got infected
-            std::vector<const sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
+            std::vector<sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
 
             int     m_infective_period;
 
@@ -28,7 +29,7 @@ namespace sars_cov2_sk	{
             // Infect the person if not immune or ill. If immune or ill, do nothing.
             void Infect();
 
-            void AddContact(const sars_cov2_sk::Person *person);
+            void AddContact(sars_cov2_sk::Person *person);
 
             // Simulate evolution of healt state in a day (appearance of symptoms, need (not) to be hoslitalized)
             // Does not include interaction with other people
@@ -44,6 +45,8 @@ namespace sars_cov2_sk	{
 
             void Hospitalize();
 
+            void SetTestResult(bool test_result)    {m_had_positive_test = test_result;};
+
             // Variable characteristic for the person. It's from interval (0,1), where higher value means better health condition.
             // Those with low health_state needs to be hospitalized and some of them die
             float HealthState()     const   {return m_health_state;};
@@ -58,7 +61,8 @@ namespace sars_cov2_sk	{
             bool IsHospitalized()       const   {return m_is_hospitalized;};
             bool IsDead()           const   {return m_is_dead;};
             bool IsNewCase()        const;
-            const std::vector<const sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
+            bool PositivelyTesed()  const {return m_had_positive_test;};
+            const std::vector<sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
 
             void ForgetContacts();
 

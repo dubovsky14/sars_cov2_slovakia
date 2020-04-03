@@ -66,17 +66,23 @@ bin/Simulation.o:src/Simulation.cxx sars_cov2_sk/Simulation.h
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
+bin/CovidTest.o:src/CovidTest.cxx sars_cov2_sk/CovidTest.h
+	@echo "**"
+	@echo "** Compiling C++ Source: CovidTest.cxx CovidTest.h"
+	@echo "**"
+	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
+
 bin/main.o:src/main.cxx
 	@echo "**"
 	@echo "** Compiling C++ Source"
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
-bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o
+bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o
 
 clean:
 	rm -rf bin/*.o main

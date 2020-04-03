@@ -123,6 +123,7 @@ bool ConfigParser::ValidLine(string line)   {
 };
 
 void ConfigParser::InitializeValues()   {
+    SetTrackingOption();
     m_transmission_prob_household               = GetFloatValue("transmission_probability_household");
     m_transmission_prob_city                    = GetFloatValue("transmission_probability");
     m_average_number_of_city_interactions       = GetFloatValue("mean_stochastic_interactions");

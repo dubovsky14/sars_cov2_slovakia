@@ -4,17 +4,20 @@
 #include<vector>
 
 namespace sars_cov2_sk	{
+    enum seir_status    {enum_susceptible, enum_exposed, enum_infective, enum_immune, enum_dead};
+    enum symptoms       {enum_asymptomatic, enum_mild_symptons, enum_serious_symptoms, enum_critical};
 	class Person	{
-		private:	
+		private:
+            // five possible values: enum_susceptible, enum_exposed, enum_infective, enum_immune, enum_dead;
+            seir_status m_seir_status;
+
+            int     m_age_category;
+
             float   m_health_state;   // from zero to one. Higher = more healthy
-            bool    m_is_ill;
             bool    m_has_symptoms;
-            bool    m_is_immune;
-            bool    m_is_infective;
             bool    m_in_quarantine;
             bool    m_needs_hospitalization;
             bool    m_is_hospitalized;
-            bool    m_is_dead; // :-(
             bool    m_had_positive_test;
             int     m_day_of_infection; // the day when the person got infected
             std::vector<sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
@@ -51,15 +54,15 @@ namespace sars_cov2_sk	{
             // Those with low health_state needs to be hospitalized and some of them die
             float HealthState()     const   {return m_health_state;};
 
-            bool IsIll()            const   {return m_is_ill;};
-            bool IsUnaffected()     const   {return !m_is_ill && !m_is_dead && !m_is_immune;};
+            bool IsIll()            const   {return m_seir_status == enum_exposed || m_seir_status == enum_infective;};
+            bool IsUnaffected()     const   {return m_seir_status == enum_susceptible;};
             bool HasSymptoms()      const   {return m_has_symptoms;};
-            bool IsImmune()         const   {return m_is_immune;};
-            bool IsInfective()      const   {return m_is_infective;};
+            bool IsImmune()         const   {return m_seir_status == enum_immune;};
+            bool IsInfective()      const   {return m_seir_status == enum_infective;};
             bool InQuarantine()     const   {return m_in_quarantine;};
             bool NeedsHospitalization() const   {return m_needs_hospitalization;};
             bool IsHospitalized()       const   {return m_is_hospitalized;};
-            bool IsDead()           const   {return m_is_dead;};
+            bool IsDead()           const   {return m_seir_status == enum_dead;};
             bool IsNewCase()        const;
             bool PositivelyTesed()  const {return m_had_positive_test;};
             const std::vector<sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
@@ -80,6 +83,9 @@ namespace sars_cov2_sk	{
             static int GetNumberOfInfectedPersonsInPopulation(const std::vector<sars_cov2_sk::Person> &population);
 
             static int GetDay() {return s_day_index;};
+
+            // Generates random integers with the same distribution as the age categories distribution in Slovakia
+            static int GenerateRandomAgeCategory();
 	};
 }
 

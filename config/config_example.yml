@@ -29,5 +29,8 @@ result_file: results/results.json
 # test file with number of infected people in municipalities
 infected_distribution_file: data/infected.txt
 
+# age distribution of people in country
+age_distribution_file: data/age_distribution.json
+
 # tracking of contants (disabled, infected-only, all)
 tracking: infected-only

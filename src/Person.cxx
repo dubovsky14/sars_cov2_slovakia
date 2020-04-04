@@ -1,6 +1,7 @@
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
 #include "../sars_cov2_sk/ConfigParser.h"
+#include "../sars_cov2_sk/InputData.h"
 
 #include <vector>
 #include <stdlib.h>
@@ -12,13 +13,12 @@ using namespace sars_cov2_sk;
 int Person::s_day_index = 0;
 
 Person::Person() {
+    m_age_category      = GenerateRandomAgeCategory();
     m_health_state      = RandomUniform();
-    m_is_ill            = false;
+    m_seir_status       = enum_susceptible;
+    
     m_has_symptoms      = false;
-    m_is_immune          = false;
-    m_is_infective      = false;
     m_in_quarantine     = false;
-    m_is_dead           = false;
     m_needs_hospitalization = false;
     m_is_hospitalized   = false; 
     m_day_of_infection  = -1;
@@ -28,8 +28,8 @@ Person::Person() {
 }
 
 void Person::Infect()   {
-    if (!m_is_immune && !m_is_ill)    {
-        m_is_ill            = true;
+    if (!IsIll())    {
+        m_seir_status       = enum_exposed;
         m_day_of_infection  = s_day_index;
     }
 }
@@ -48,25 +48,19 @@ void Person::AddContact(sars_cov2_sk::Person *person)   {
 }
 
 void Person::Kill()     {
-    m_is_ill            = false;
+    m_seir_status       = enum_dead;
     m_has_symptoms      = false;
-    m_is_immune          = true;
-    m_is_infective      = false;
     m_in_quarantine     = true;
-    m_is_dead           = true;
     m_needs_hospitalization = false;
     m_is_hospitalized   = false; 
     m_day_of_infection  = -1;
 }
 
 void Person::Heal() {
-    m_is_ill            = false;
+    m_seir_status       = enum_immune;
     m_has_symptoms      = false;
-    m_is_immune          = true;
-    m_is_infective      = false;
     m_needs_hospitalization = false;
-    m_is_hospitalized   = false; 
-    m_day_of_infection  = -1;
+    m_is_hospitalized   = false;
 
     ReleseFromToQuarantine();
 
@@ -90,14 +84,14 @@ void Person::ReleseFromToQuarantine()   {
 
 // #TODO: Improve the method (for now everything is deterministic)
 void Person::Evolve()   {
-    if (!m_is_ill || m_is_dead) {
+    if (!IsIll()) {
         return;
     }
 
     const int length_of_infection = s_day_index - m_day_of_infection;
 
     if (length_of_infection == int(ConfigParser::GetInfectiousStart()))   {
-        m_is_infective = true;
+        m_seir_status = enum_infective;
     }
     if (length_of_infection == int(ConfigParser::GetInfectiousStart()+m_infective_period))    {
         Heal();
@@ -105,7 +99,7 @@ void Person::Evolve()   {
 };
 
 bool Person::IsNewCase()        const   {
-    return (m_is_ill && (s_day_index == m_day_of_infection));
+    return (IsIll() && (s_day_index == m_day_of_infection));
 };
 
 void Person::ForgetContacts()   {
@@ -192,3 +186,15 @@ int Person::GetNumberOfInfectedPersonsInPopulation(const vector<Person> &populat
     }
     return infected;
 };
+
+int Person::GenerateRandomAgeCategory() {
+    const float rand = RandomUniform();
+    const vector<float> *age_distribution = InputData::GetAgeDistribution();
+    for (unsigned int i = 0; i < age_distribution->size(); i++)    {
+        if (rand < age_distribution->at(i))  {
+            return i;
+        }
+    }
+    // Something went wrong ...
+    return -1;
+}

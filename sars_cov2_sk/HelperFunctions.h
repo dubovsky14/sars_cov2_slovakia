@@ -3,6 +3,7 @@
 #define HELPER_FUNCTIONS_H
 
 #include <vector>
+#include <string>
 
 namespace sars_cov2_sk	{
     // Uniform distribution from (0,1) interval. 0 and 1 never happens.
@@ -20,7 +21,11 @@ namespace sars_cov2_sk	{
             }
         }
         return false;
-    } 
+    }
+
+    bool StringIsBool(const std::string &x);
+
+    bool StringIsFloat(const std::string &x);
 }
 
 #endif

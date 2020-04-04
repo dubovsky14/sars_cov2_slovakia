@@ -17,15 +17,16 @@ using namespace std;
 void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     ConfigParser::InitializeConfig(config_address);
 
-    InputData input_info(ConfigParser::GetMunicipalitiesFileAddress());
-    vector<unsigned int> cities_number_of_citizens = input_info.GetMunicipPopulations();
-    vector<string> names = input_info.GetMunicipNames(); 
+    InputData::Initialize();
+    
+    vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();
+    vector<string> names = InputData::GetMunicipNames(); 
 
     vector<PopulationCenter> cities;
     vector<Person> population;
 
     PopulationCenter::CityAndPersonsFactory(cities_number_of_citizens, names, &population, &cities);
-    PopulationCenter::SetMigrations(input_info.GetMigrations(), &cities);
+    PopulationCenter::SetMigrations(InputData::GetMigrations(), &cities);
 
     int population_size = 0;
     for (unsigned int x : cities_number_of_citizens)    {
@@ -48,7 +49,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
         }
     }
     else {
-        vector <unsigned int> numbers_of_infected = input_info.GetMunicipInfected();
+        vector <unsigned int> numbers_of_infected = InputData::GetMunicipInfected();
         for (unsigned int i_city = 0; i_city < cities.size(); i_city++) {
             cities.at(i_city).RandomlyInfectNInhabitants(numbers_of_infected.at(i_city));
         }

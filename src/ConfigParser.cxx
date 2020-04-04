@@ -89,7 +89,6 @@ void ConfigParser::SetTrackingOption() {
     }
 }
 
-
 vector<string> ConfigParser::SplitAndStripString(string input_string, const string &separator) {
     vector<string> result = SplitString(input_string, separator);
     for (string &x : result)    {

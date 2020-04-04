@@ -82,6 +82,11 @@ namespace sars_cov2_sk  {
 
             static sars_cov2_sk::TrackingOption GetTrackingOption()   {Check(); return s_singleton_instance->m_tracking_option;};
 
+            // If you need to access it only once, this is easier way (but more CPU intensive ...)
+            static std::string ReadStringValue(const std::string &key) {Check(); return s_singleton_instance->GetStringValue(key);};;
+            static int         ReadIntValue   (const std::string &key) {Check(); return s_singleton_instance->GetIntValue(key);};;
+            static float       ReadFloatValue (const std::string &key) {Check(); return s_singleton_instance->GetFloatValue(key);};;
+
     };
 }
 

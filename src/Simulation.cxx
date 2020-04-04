@@ -18,7 +18,33 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     ConfigParser::InitializeConfig(config_address);
 
     InputData::Initialize();
-    
+
+
+    const vector <float> *age_distribution = InputData::GetAgeSymptomatic();
+    for (unsigned int i = 0; i < age_distribution->size(); i++) {
+        cout << i*10 << "\t\t" << age_distribution->at(i) << endl;
+    }
+    cout << endl;
+
+    age_distribution = InputData::GetAgeHospitalized();
+    for (unsigned int i = 0; i < age_distribution->size(); i++) {
+        cout << i*10 << "\t\t" << age_distribution->at(i) << endl;
+    }
+    cout << endl;
+
+    age_distribution = InputData::GetAgeCritical();
+    for (unsigned int i = 0; i < age_distribution->size(); i++) {
+        cout << i*10 << "\t\t" << age_distribution->at(i) << endl;
+    }
+    cout << endl;
+
+    age_distribution = InputData::GetAgeFatal();
+    for (unsigned int i = 0; i < age_distribution->size(); i++) {
+        cout << i*10 << "\t\t" << age_distribution->at(i) << endl;
+    }
+    cout << endl;
+    return;
+
     vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();
     vector<string> names = InputData::GetMunicipNames(); 
 

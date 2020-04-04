@@ -25,6 +25,11 @@ namespace sars_cov2_sk	{
             // fraction of poeple in the age group or younger
             std::vector<float>          m_age_distribution;
 
+            std::vector<float>          m_age_symptomatic;
+            std::vector<float>          m_age_hospitalized;
+            std::vector<float>          m_age_critical;
+            std::vector<float>          m_age_fatal;
+
             unsigned int                m_number_of_municipalities;
 
             void ReadMunicipalityFile();
@@ -42,6 +47,10 @@ namespace sars_cov2_sk	{
             void ReadAgeDistribution();
 
             void ReadLineOfAgeDistributuon(std::string line);
+
+            void ReadAgeSymptomsFile();
+
+            std::vector<float> ReadAgeSymptomsProperty(const std::string &property);
 
             static std::vector<std::string> SplitAndStripString(std::string input_string, const std::string &separator);
 
@@ -62,6 +71,12 @@ namespace sars_cov2_sk	{
             static std::vector<std::string>    GetMunicipNames()        { Check(); return s_singleton_instance->m_municipality_name;};
             static const std::vector< std::vector <unsigned int> > *GetMigrations()   {Check(); return &s_singleton_instance->m_migrations;};
             static const std::vector<float>    *GetAgeDistribution()    { Check(); return &s_singleton_instance->m_age_distribution; };
+
+
+            static const std::vector<float>    *GetAgeSymptomatic()     { Check(); return &s_singleton_instance->m_age_symptomatic;};
+            static const std::vector<float>    *GetAgeHospitalized()    { Check(); return &s_singleton_instance->m_age_hospitalized;};
+            static const std::vector<float>    *GetAgeCritical()        { Check(); return &s_singleton_instance->m_age_critical;};
+            static const std::vector<float>    *GetAgeFatal()           { Check(); return &s_singleton_instance->m_age_fatal;};
     };
 };
 #endif

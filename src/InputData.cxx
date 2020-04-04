@@ -17,6 +17,7 @@ InputData::InputData()    {
     ReadMunicipalityFile();
     ReadMigrations();
     ReadAgeDistribution();
+    ReadAgeSymptomsFile();
     if (ConfigParser::GetInfectedInitial() < 0) {
         ReadNumberOfInfected();
     }
@@ -211,6 +212,88 @@ void InputData::ReadLineOfAgeDistributuon(std::string line) {
     if (elements.at(0) == "60")   m_age_distribution.at(6) = stod(elements.at(1));
     if (elements.at(0) == "70")   m_age_distribution.at(7) = stod(elements.at(1));
     if (elements.at(0) == "80")   m_age_distribution.at(8) = stod(elements.at(1));
+};
+
+
+void InputData::ReadAgeSymptomsFile()   {
+    m_age_symptomatic   = ReadAgeSymptomsProperty("symptomatic");
+    m_age_hospitalized  = ReadAgeSymptomsProperty("hospitalized");
+    m_age_critical      = ReadAgeSymptomsProperty("critical_care");
+    m_age_fatal         = ReadAgeSymptomsProperty("fatal");
+};
+
+vector<float> InputData::ReadAgeSymptomsProperty(const string &property)    {
+    string line;
+    ifstream input_file (ConfigParser::ReadStringValue("age_symptoms_file"));
+
+    bool reading_requested_value = false;
+    vector<float> result;
+    for (int i = 0; i < 9; i++) {
+        result.push_back(-1.);
+    }
+
+    if (input_file.is_open())    {
+        while ( getline (input_file,line) )        {
+            vector<string> elements = SplitAndStripString(line, ":");
+
+            // stop reading at the end of dictionary
+            if (elements.at(0).length() > 0 && reading_requested_value)  {
+                if (elements.at(0)[0] == '}')   {
+                    reading_requested_value = false;
+                    break;
+                }
+            }
+
+            if (elements.size() != 2) {
+                continue;
+            }
+
+            string key = elements.at(0);
+            StripString(&key, "\"");
+
+            // start reading
+            if (key == property)  {
+                reading_requested_value = true;
+                continue;
+            }
+
+            if (!reading_requested_value)   {
+                continue;
+            }
+
+            StripString(&elements.at(1), ", \t");
+            if (!StringIsFloat(elements.at(1)))  {
+                throw "I could not read the following line in age_symptoms_file config\n" + line;
+            }
+            const float value = stod(elements.at(1));
+            if (reading_requested_value)    {
+                if      (key == "0")    result.at(0) = value;
+                else if (key == "10")   result.at(1) = value;
+                else if (key == "20")   result.at(2) = value;
+                else if (key == "30")   result.at(3) = value;
+                else if (key == "40")   result.at(4) = value;
+                else if (key == "50")   result.at(5) = value;
+                else if (key == "60")   result.at(6) = value;
+                else if (key == "70")   result.at(7) = value;
+                else if (key == "80")   result.at(8) = value;   
+                else {
+                    throw "Unknown key appeared in age symptoms json while reading property \"" + property + "\", the key: \"" + key + "\"";
+                }             
+            }
+        }
+        input_file.close();
+    }
+    else    {
+        throw "Unable to open file text file with the age symptoms!";     
+    }
+
+    for (unsigned int i = 0; i < result.size(); i++)    {
+        if (result.at(i) < 0)  {
+            throw "I coult not read age symptom property \"" + property + "\" for age group " + to_string(i*10); 
+        }
+    }
+
+    return result;
 };
 
 vector<string> InputData::SplitAndStripString(string input_string, const string &separator) {

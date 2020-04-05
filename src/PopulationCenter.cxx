@@ -82,6 +82,12 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
         const unsigned int interactions = RandomPoisson(average_interactions_per_person/2.);
 
         for (unsigned int i = 0; i < interactions; i++) {
+            // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
+            if (person->GetNumberOfVisitedMunicipalities() > 1)    {
+                if (RandomUniform() < 1./person->GetNumberOfVisitedMunicipalities())  {
+                    continue;
+                }
+            }
             unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);
 
             // Interaction with inhabitants of the city
@@ -105,6 +111,10 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
         const unsigned int interactions = RandomPoisson(average_interactions_per_person/2.);
 
         for (unsigned int i = 0; i < interactions; i++) {
+            // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
+            if (RandomUniform() < 1./person->GetNumberOfVisitedMunicipalities())  {
+                continue;
+            }
             unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);
 
             // Interaction with inhabitants of the city
@@ -131,9 +141,13 @@ void PopulationCenter::EvolveInhabitants()    {
 
 void PopulationCenter::AddTemporaryOccupant(sars_cov2_sk::Person *person)   {
     m_temporary_occupants.push_back(person);
+    person->AddVisitedMunicipality();
 }
 
 void PopulationCenter::RemoveAllTemporaryOccupants()   {
+    for (Person *temporary_occupant : m_temporary_occupants)    {
+        temporary_occupant->RemoveVisitedMunicipality();
+    }
     m_temporary_occupants.clear();
 }
 

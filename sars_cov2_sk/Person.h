@@ -24,10 +24,21 @@ namespace sars_cov2_sk	{
             int     m_date_of_next_status_change;
             std::vector<sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
 
+            // Number of cities visited today, including the one where the person lives
+            int     m_visited_cities_today;
+
             static int s_day_index;
 
 		public:
             Person();
+
+            inline void AddVisitedMunicipality() {m_visited_cities_today++;};
+
+            inline void RemoveVisitedMunicipality() {m_visited_cities_today--;};
+
+            // Number of municipalities where person is present at the current day, including the one where it lives
+            // For travelers it's more than one
+            inline bool GetNumberOfVisitedMunicipalities() const {return m_visited_cities_today;};
 
             // Infect the person if not immune or ill. If immune or ill, do nothing.
             void Infect();

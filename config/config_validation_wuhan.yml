@@ -1,0 +1,45 @@
+
+population:
+  mean_stochastic_interactions: 15
+  probability_to_remember_random_meeting: 0.8
+
+virus:
+  transmission_probability: 0.0165
+  transmission_probability_household: 0.0
+  infectious_days_mean: 6.5
+  infectious_days_std: 1
+
+
+# mean time after which a person who contracted the virus
+# starts being infectious
+infectious_start_mean: 5
+infectious_start_std: 1
+
+# mean time after which a person who contracted the virus
+# starts needing hospitalization
+hospitalization_start_mean: 10
+hospitalization_start_std: 1.5
+
+hospitalization_length_mean: 8
+hospitalization_length_std: 1
+
+critical_care_start_mean: 6
+critical_care_start_std: 1.5
+
+critical_care_length_mean: 10
+critical_care_length_std: 1
+
+migration_matrix_txt: data/validation/migrations.txt
+populations_file_txt: data/validation/municipalities.txt
+
+result_file: results/validation_wuhan_test_0.2.json
+age_symptoms_file: data/age_symptoms.json
+
+# tracking of contants (disabled, infected_only, all)
+tracking: infected_only
+test_rate: 0.2
+
+# numerical number of inital number of infected at the simulation start (will be selected randomly in this case). If not defined, the text file with number of infected will be used.
+initial_number_of_infected: 162
+
+age_distribution_file: data/age_distribution.json

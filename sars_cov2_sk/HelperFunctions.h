@@ -13,6 +13,8 @@ namespace sars_cov2_sk	{
 
     float RandomGauss(float mean, float sigma);
 
+    float RandomExponential(float mean);
+
     template <class T> 
     bool IsInVector(std::vector<T> input_vector, T element) {
         for (T &x : input_vector)   {

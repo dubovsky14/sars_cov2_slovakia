@@ -16,21 +16,18 @@ Person::Person() {
     m_age_category      = GenerateRandomAgeCategory();
     m_health_state      = RandomUniform();
     m_seir_status       = enum_susceptible;
-    
-    m_has_symptoms      = false;
+
     m_in_quarantine     = false;
-    m_needs_hospitalization = false;
-    m_is_hospitalized   = false; 
+    m_is_hospitalized   = false;
     m_day_of_infection  = -1;
     m_had_positive_test = false;
-
-    m_infective_period  = RandomGauss(ConfigParser::GetInfectiousDaysMean(),ConfigParser::GetInfectiousDaysStd());
 }
 
 void Person::Infect()   {
     if (!IsIll())    {
-        m_seir_status       = enum_exposed;
-        m_day_of_infection  = s_day_index;
+        m_seir_status               = enum_exposed;
+        m_day_of_infection          = s_day_index;
+        m_date_of_next_status_change= s_day_index + int(RandomGauss(ConfigParser::InfectiousStartMean(), ConfigParser::InfectiousStartStd()));
     }
 }
 void Person::AddContact(sars_cov2_sk::Person *person)   {
@@ -49,17 +46,12 @@ void Person::AddContact(sars_cov2_sk::Person *person)   {
 
 void Person::Kill()     {
     m_seir_status       = enum_dead;
-    m_has_symptoms      = false;
     m_in_quarantine     = true;
-    m_needs_hospitalization = false;
-    m_is_hospitalized   = false; 
-    m_day_of_infection  = -1;
+    m_is_hospitalized   = false;
 }
 
 void Person::Heal() {
     m_seir_status       = enum_immune;
-    m_has_symptoms      = false;
-    m_needs_hospitalization = false;
     m_is_hospitalized   = false;
 
     ReleseFromToQuarantine();
@@ -69,9 +61,11 @@ void Person::Heal() {
 }
 
 // #TODO: Check if there is an available bed in hospital
-void Person::Hospitalize() {
+bool Person::Hospitalize() {
     m_is_hospitalized = true;
     PutToQuarantine();
+
+    return true; // true of there is a free hospital bed
 }
 
 void Person::PutToQuarantine()  {
@@ -88,14 +82,111 @@ void Person::Evolve()   {
         return;
     }
 
-    const int length_of_infection = s_day_index - m_day_of_infection;
+    if (m_seir_status == enum_exposed)  {
+        if (m_date_of_next_status_change <= s_day_index)    {
+            // Throwing a dice for symptoms
+            const float p = RandomUniform();
+            if (p < InputData::GetAgeSymptomatic()->at(m_age_category))   {
+                // person has symptoms and after some time it will need hospitalization
+                if (m_health_state < InputData::GetAgeHospitalized()->at(m_age_category))   {
+                    m_seir_status = enum_infective_symptomatic;
+                    m_date_of_next_status_change = m_day_of_infection + RandomGauss(ConfigParser::HospitalizationStartMean(),ConfigParser::HospitalizationStartStd());
+                }
+                // person has symptoms, but it will not need hospitalization
+                else  {
+                    m_seir_status = enum_infective_symptomatic;
+                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
+                }
+            }
+            else {
+                m_seir_status = enum_infective_asymptomatic;
+                m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
+            }
+        }
+        return;
+    }
 
-    if (length_of_infection == int(ConfigParser::GetInfectiousStart()))   {
-        m_seir_status = enum_infective;
+    if (m_seir_status == enum_infective_asymptomatic)    {
+        if (m_date_of_next_status_change <= s_day_index)    {
+            Heal();
+        }
+        return;
     }
-    if (length_of_infection == int(ConfigParser::GetInfectiousStart()+m_infective_period))    {
-        Heal();
+
+    if (m_seir_status == enum_infective_symptomatic)    {
+        if (m_date_of_next_status_change <= s_day_index)    {
+            // The person will recover without a need to be hospitalized
+            if (m_health_state > InputData::GetAgeHospitalized()->at(m_age_category))   {
+                Heal();
+            }
+            else {
+                m_seir_status = enum_needs_hospitalization;
+                Hospitalize();
+
+                // person will need critical care after some time
+                if (m_health_state < InputData::GetAgeCritical()->at(m_age_category))   {
+                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalStartMean(),ConfigParser::CriticalStartStd());
+                }
+                // person will recover without a need for critical care
+                else {
+                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::HospitalizationLengthMean(),ConfigParser::HospitalizationLengthStd());
+                }
+            }
+        }
+        return;
     }
+
+    if (m_seir_status == enum_needs_hospitalization)    {
+        if (m_date_of_next_status_change <= s_day_index)    {
+            // The person will recover without a need for critical care
+            if (m_health_state > InputData::GetAgeCritical()->at(m_age_category))   {
+                Heal();
+            }
+            else {
+                m_seir_status = enum_critical;
+
+                // person will die
+                if (m_health_state < InputData::GetAgeFatal()->at(m_age_category))   {
+                    m_date_of_next_status_change = s_day_index + RandomExponential(ConfigParser::CriticalLengthMean());
+                }
+                // person will survive
+                else {
+                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
+                }
+            }
+        }
+        return;
+    }
+
+    if (m_seir_status == enum_critical)  {
+        if (m_date_of_next_status_change <= s_day_index)    {
+            // person died
+            if (m_health_state < InputData::GetAgeFatal()->at(m_age_category))   {
+                Kill();
+            }
+            // person survived
+            else {
+                Heal();
+            }
+        }
+        return;
+    }
+};
+
+bool Person::IsIll()            const   {
+    return !(m_seir_status == enum_susceptible || m_seir_status == enum_immune || m_seir_status == enum_dead);
+};
+
+bool Person::HasSymptoms()      const   {
+    return (IsIll() && m_seir_status != enum_infective_asymptomatic);
+}
+
+bool Person::IsInfective()      const   {
+    return (IsIll() && !(m_seir_status == enum_exposed));
+};
+
+bool Person::NeedsHospitalization() const   {
+    return (m_seir_status == enum_needs_hospitalization || m_seir_status == enum_critical);
 };
 
 bool Person::IsNewCase()        const   {
@@ -188,13 +279,13 @@ int Person::GetNumberOfInfectedPersonsInPopulation(const vector<Person> &populat
 };
 
 int Person::GenerateRandomAgeCategory() {
-    const float rand = RandomUniform();
+    const double rand = RandomUniform();
     const vector<float> *age_distribution = InputData::GetAgeDistribution();
     for (unsigned int i = 0; i < age_distribution->size(); i++)    {
         if (rand < age_distribution->at(i))  {
             return i;
         }
     }
-    // Something went wrong ...
-    return -1;
+    // extremely unlikely, but might happen because of a finite double precision ...
+    return age_distribution->size() - 1;
 }

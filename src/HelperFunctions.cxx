@@ -20,6 +20,10 @@ float sars_cov2_sk::RandomGauss(float mean,float sigma)  {
     return sars_cov2_sk::RandomGeneratorGauss::Gauss(mean, sigma);
 }
 
+float sars_cov2_sk::RandomExponential(float mean)   {
+    return -mean*log(RandomUniform());
+}
+
 bool sars_cov2_sk::StringIsBool(const string &x)    {
     try {
         std::stoi(x);

@@ -21,7 +21,7 @@ ConfigParser::ConfigParser(const std::string &config_address)    {
         input_file.close();
     }
     else    {
-        throw "Unable to open config file \"" + config_address + "\"";     
+        throw "Unable to open config file \"" + config_address + "\"";
     }
     InitializeValues();
 }
@@ -33,7 +33,7 @@ void ConfigParser::ReadLineOfConfig(string line)  {
 
     if (elements.size() != 2) {
         return;
-    }   
+    }
 
     // Check whether the value is already in dictiory. If yes, rise exception
     std::map<string, string>::iterator it = m_map.find(elements.at(0));
@@ -83,7 +83,7 @@ void ConfigParser::SetTrackingOption() {
     }
     else if (tracking_string == "all")  {
         m_tracking_option = all;
-    } 
+    }
     else {
         throw("Value for tracking has to be one of the following: disabled, all, infected_only. Please fix it in the config!");
     }
@@ -131,11 +131,16 @@ void ConfigParser::InitializeValues()   {
     m_municipalities_file                       = GetStringValue("populations_file_txt");
     m_result_file                               = GetStringValue("result_file");
 
-    m_infectious_days_mean                      = GetFloatValue("infectious_days_mean");
-    m_infectious_days_std                       = GetFloatValue("infectious_days_std");
-    m_infectious_start                          = GetFloatValue("infectious_start");
-    m_hospitalization_start                     = GetFloatValue("hospitalization_start");
-    m_hospitalization_percentage                = GetFloatValue("hospitalization_percentage");
+    m_infectious_days_mean          = GetFloatValue("infectious_days_mean");
+    m_infectious_days_std           = GetFloatValue("infectious_days_std");
+    m_hospitalization_start_mean    = GetFloatValue("hospitalization_start_mean");
+    m_hospitalization_start_std     = GetFloatValue("hospitalization_start_std");
+    m_hospitalization_length_mean   = GetFloatValue("hospitalization_length_mean");
+    m_hospitalization_length_std    = GetFloatValue("hospitalization_length_std");
+    m_critical_care_start_mean      = GetFloatValue("critical_care_start_mean");
+    m_critical_care_start_std       = GetFloatValue("critical_care_start_std");
+    m_critical_care_length_mean     = GetFloatValue("critical_care_length_mean");
+    m_critical_care_length_std      = GetFloatValue("critical_care_length_std");
 
     // Number of infected can be either defined in the config centraly for whole country, or in the text file with number of infected in municipalities
     try {

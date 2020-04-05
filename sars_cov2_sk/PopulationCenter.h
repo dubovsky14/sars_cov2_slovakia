@@ -40,6 +40,7 @@ namespace sars_cov2_sk	{
             std::vector<unsigned int> m_logging_dead;
             std::vector<unsigned int> m_logging_new_cases;
             std::vector<unsigned int> m_logging_hospitalized;
+            std::vector<unsigned int> m_logging_critical;
 
             friend class sars_cov2_sk::Logging;
 
@@ -81,7 +82,7 @@ namespace sars_cov2_sk	{
             void RemoveAllTemporaryOccupants();
 
             const unsigned int GetNumberOfInhabitants() const {return m_number_of_inhabitants;};
-            
+
             void SetTravelMigrations(const std::vector<unsigned int> *migrations)   { m_migrations = migrations;};
 
             // Send number_of_travelers randomly chosen inhabitants to city destination_city

@@ -16,34 +16,7 @@ using namespace std;
 
 void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     ConfigParser::InitializeConfig(config_address);
-
     InputData::Initialize();
-
-
-    const vector <float> *age_distribution = InputData::GetAgeSymptomatic();
-    for (unsigned int i = 0; i < age_distribution->size(); i++) {
-        cout << i*10 << "\t\t" << age_distribution->at(i) << endl;
-    }
-    cout << endl;
-
-    age_distribution = InputData::GetAgeHospitalized();
-    for (unsigned int i = 0; i < age_distribution->size(); i++) {
-        cout << i*10 << "\t\t" << age_distribution->at(i) << endl;
-    }
-    cout << endl;
-
-    age_distribution = InputData::GetAgeCritical();
-    for (unsigned int i = 0; i < age_distribution->size(); i++) {
-        cout << i*10 << "\t\t" << age_distribution->at(i) << endl;
-    }
-    cout << endl;
-
-    age_distribution = InputData::GetAgeFatal();
-    for (unsigned int i = 0; i < age_distribution->size(); i++) {
-        cout << i*10 << "\t\t" << age_distribution->at(i) << endl;
-    }
-    cout << endl;
-    return;
 
     vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();
     vector<string> names = InputData::GetMunicipNames(); 
@@ -94,16 +67,16 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
         if (number_of_ill == 0) {
             break;
         }
+        cout << day << "\t\t" << number_of_ill << endl;
 
-        int positively_tested_today = 0;
-        positively_tested_today +=  genetic_test.TestContactOfPositivesFromYesterday();
-        // Testing
-        if (day % 1 == 0)   {
-            positively_tested_today += genetic_test.TestPeople(&population, 0.2);
-        }
-        genetic_test.PutToCarantinePositivelyTestedFromYesterday();
-
-        cout << day << "\t\t" << number_of_ill << "\t\t" << positively_tested_today <<  endl;
+        //int positively_tested_today = 0;
+        //positively_tested_today +=  genetic_test.TestContactOfPositivesFromYesterday();
+        //// Testing
+        //if (day % 1 == 0)   {
+        //    positively_tested_today += genetic_test.TestPeople(&population, 0.2);
+        //}
+        //genetic_test.PutToCarantinePositivelyTestedFromYesterday();
+        //cout << day << "\t\t" << number_of_ill << "\t\t" << positively_tested_today <<  endl;
 
         for (PopulationCenter &city : cities)   {
             city.SendTravelersToAllCities(&cities);

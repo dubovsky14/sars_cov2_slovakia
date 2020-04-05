@@ -11,12 +11,12 @@
 using namespace std;
 using namespace sars_cov2_sk;
 
-PopulationCenter::PopulationCenter( vector<Person> *country_population, unsigned int first_citizen_index, 
+PopulationCenter::PopulationCenter( vector<Person> *country_population, unsigned int first_citizen_index,
                                     unsigned int number_of_inhabitants, float average_people_in_household) {
     const unsigned int last_citizen_index = first_citizen_index + number_of_inhabitants;
     if (country_population->size() < last_citizen_index)    {
         throw "We do not have enough people.";
-    } 
+    }
 
     // Save pointers to ihabitants to member variable
     for (unsigned int i = first_citizen_index; i < last_citizen_index; i++) {
@@ -146,7 +146,7 @@ void PopulationCenter::SendTravelersToCity(PopulationCenter *destination_city, u
 
 void PopulationCenter::SendTravelersToAllCities(vector<PopulationCenter> *cities) const    {
     for (unsigned int i_city = 0; i_city < cities->size(); i_city++)   {
-        // Can't send traveler to the city where he lives. 
+        // Can't send traveler to the city where he lives.
         if (&cities->at(i_city) == this)    {
             continue;
         }
@@ -163,6 +163,7 @@ void PopulationCenter::SaveTheDayToHistory()    {
     unsigned int new_cases          = 0;
     unsigned int hospitalized       = 0;
     unsigned int infective          = 0;
+    unsigned int critical           = 0;
 
     for (const Person *person : m_inhabitants)  {
         if (person->IsUnaffected())     unaffected++;
@@ -172,6 +173,7 @@ void PopulationCenter::SaveTheDayToHistory()    {
         if (person->IsNewCase())        new_cases++;
         if (person->IsHospitalized())   hospitalized++;
         if (person->IsInfective())      infective++;
+        if (person->IsCritical())       critical++;
     }
 
     m_logging_days          .push_back(Person::GetDay());
@@ -182,6 +184,7 @@ void PopulationCenter::SaveTheDayToHistory()    {
     m_logging_new_cases     .push_back(new_cases   );
     m_logging_hospitalized  .push_back(hospitalized);
     m_logging_infective     .push_back(infective);
+    m_logging_critical      .push_back(critical);
 };
 
 void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &number_of_inhabitants, const vector<string> &names,

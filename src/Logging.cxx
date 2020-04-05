@@ -46,7 +46,8 @@ void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool c
     DumpVector(indent+indent, "immune",             city.m_logging_immune,      true);
     DumpVector(indent+indent, "dead",               city.m_logging_dead,        true);
     DumpVector(indent+indent, "new_cases",          city.m_logging_new_cases,   true);
-    DumpVector(indent+indent, "hospitalized",       city.m_logging_hospitalized,false);
+    DumpVector(indent+indent, "hospitalized",       city.m_logging_hospitalized,true);
+    DumpVector(indent+indent, "critical",           city.m_logging_critical,    false);
 
     if (comma_terminated)   m_log_file << indent << "},\n";
     else                    m_log_file << indent << "}\n";
@@ -60,4 +61,3 @@ void Logging::DumpHistoryToJson(const vector<PopulationCenter> &cities) {
 }
 
 
-    

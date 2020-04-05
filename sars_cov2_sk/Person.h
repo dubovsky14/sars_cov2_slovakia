@@ -4,8 +4,11 @@
 #include<vector>
 
 namespace sars_cov2_sk	{
-    enum seir_status    {enum_susceptible, enum_exposed, enum_infective, enum_immune, enum_dead};
-    enum symptoms       {enum_asymptomatic, enum_mild_symptons, enum_serious_symptoms, enum_critical};
+    enum seir_status    {   enum_susceptible,
+                            enum_exposed,
+                            enum_infective_symptomatic, enum_infective_asymptomatic, enum_needs_hospitalization, enum_critical,
+                            enum_immune, enum_dead
+                        };
 	class Person	{
 		private:
             // five possible values: enum_susceptible, enum_exposed, enum_infective, enum_immune, enum_dead;
@@ -14,15 +17,12 @@ namespace sars_cov2_sk	{
             int     m_age_category;
 
             float   m_health_state;   // from zero to one. Higher = more healthy
-            bool    m_has_symptoms;
             bool    m_in_quarantine;
-            bool    m_needs_hospitalization;
             bool    m_is_hospitalized;
             bool    m_had_positive_test;
             int     m_day_of_infection; // the day when the person got infected
+            int     m_date_of_next_status_change;
             std::vector<sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
-
-            int     m_infective_period;
 
             static int s_day_index;
 
@@ -46,7 +46,7 @@ namespace sars_cov2_sk	{
 
             void ReleseFromToQuarantine();
 
-            void Hospitalize();
+            bool Hospitalize();
 
             void SetTestResult(bool test_result)    {m_had_positive_test = test_result;};
 
@@ -54,14 +54,16 @@ namespace sars_cov2_sk	{
             // Those with low health_state needs to be hospitalized and some of them die
             float HealthState()     const   {return m_health_state;};
 
-            bool IsIll()            const   {return m_seir_status == enum_exposed || m_seir_status == enum_infective;};
+            bool IsIll()            const;
             bool IsUnaffected()     const   {return m_seir_status == enum_susceptible;};
-            bool HasSymptoms()      const   {return m_has_symptoms;};
+            bool HasSymptoms()      const;
+            bool IsInfective()      const;
+            bool NeedsHospitalization() const;
+
             bool IsImmune()         const   {return m_seir_status == enum_immune;};
-            bool IsInfective()      const   {return m_seir_status == enum_infective;};
             bool InQuarantine()     const   {return m_in_quarantine;};
-            bool NeedsHospitalization() const   {return m_needs_hospitalization;};
             bool IsHospitalized()       const   {return m_is_hospitalized;};
+            bool IsCritical()       const   {return m_seir_status == enum_critical;};
             bool IsDead()           const   {return m_seir_status == enum_dead;};
             bool IsNewCase()        const;
             bool PositivelyTesed()  const {return m_had_positive_test;};
@@ -75,7 +77,7 @@ namespace sars_cov2_sk	{
 
             // Simulate meeting of two people with a given transmission rate of virus.
             // But we do not remember all people we met, so only a random part of these meetings is saved for later tracking
-            static void Meet(   sars_cov2_sk::Person *person1, sars_cov2_sk::Person *person2, 
+            static void Meet(   sars_cov2_sk::Person *person1, sars_cov2_sk::Person *person2,
                                 float transmission_probability, float probability_to_remember);
 
             static int GetNumberOfInfectedPersonsInPopulation(const std::vector<sars_cov2_sk::Person *> &population);

@@ -19,7 +19,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     InputData::Initialize();
 
     vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();
-    vector<string> names = InputData::GetMunicipNames(); 
+    vector<string> names = InputData::GetMunicipNames();
 
     vector<PopulationCenter> cities;
     vector<Person> population;
@@ -60,14 +60,21 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     cout << "Running the simulation.\n";
     cout << "Number of municipalities: " << cities.size()   << endl;
     cout << "Total population: "         << population_size << endl;
-    cout << "day \t\t#infected people\t\tpos. tests\n";
+    cout << "day \t\t#infected\texposed\t\tasymptomatic\tsymptomatic\thosp.\t\tcritical\tdead\t\timmune" << endl;
     for (unsigned int day = 0; day < 1000; day++)    {
         Person::SetDay(day);
         const unsigned int number_of_ill = Person::GetNumberOfInfectedPersonsInPopulation(population);
         if (number_of_ill == 0) {
             break;
         }
-        cout << day << "\t\t" << number_of_ill << endl;
+        cout << day << "\t\t" << number_of_ill
+                    << "\t\t" << Person::CountInPopulation(population, enum_exposed)
+                    << "\t\t" << Person::CountInPopulation(population, enum_infective_asymptomatic)
+                    << "\t\t" << Person::CountInPopulation(population, enum_infective_symptomatic)
+                    << "\t\t" << Person::CountInPopulation(population, enum_needs_hospitalization)
+                    << "\t\t" << Person::CountInPopulation(population, enum_critical)
+                    << "\t\t" << Person::CountInPopulation(population, enum_dead)
+                    << "\t\t" << Person::CountInPopulation(population, enum_immune) << endl;
 
         //int positively_tested_today = 0;
         //positively_tested_today +=  genetic_test.TestContactOfPositivesFromYesterday();
@@ -88,7 +95,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
         for (PopulationCenter &city : cities)   {
             city.RemoveAllTemporaryOccupants();
         }
-        
+
         for (PopulationCenter &city : cities)   {
             city.SaveTheDayToHistory();
         }
@@ -96,5 +103,5 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     }
 
     Logging logging(ConfigParser::GetResultFileAddress());
-    logging.DumpHistoryToJson(cities);  
+    logging.DumpHistoryToJson(cities);
 }

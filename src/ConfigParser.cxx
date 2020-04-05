@@ -131,6 +131,8 @@ void ConfigParser::InitializeValues()   {
     m_municipalities_file                       = GetStringValue("populations_file_txt");
     m_result_file                               = GetStringValue("result_file");
 
+    m_infectious_start_mean         = GetFloatValue("infectious_start_mean");
+    m_infectious_start_std          = GetFloatValue("infectious_start_std");
     m_infectious_days_mean          = GetFloatValue("infectious_days_mean");
     m_infectious_days_std           = GetFloatValue("infectious_days_std");
     m_hospitalization_start_mean    = GetFloatValue("hospitalization_start_mean");

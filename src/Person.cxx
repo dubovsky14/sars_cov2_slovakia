@@ -6,6 +6,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 using namespace sars_cov2_sk;
@@ -76,14 +77,13 @@ void Person::ReleseFromToQuarantine()   {
     m_in_quarantine = false;
 };
 
-// #TODO: Improve the method (for now everything is deterministic)
 void Person::Evolve()   {
     if (!IsIll()) {
         return;
     }
 
     if (m_seir_status == enum_exposed)  {
-        if (m_date_of_next_status_change <= s_day_index)    {
+        if (s_day_index >= m_date_of_next_status_change)    {
             // Throwing a dice for symptoms
             const float p = RandomUniform();
             if (p < InputData::GetAgeSymptomatic()->at(m_age_category))   {
@@ -107,14 +107,14 @@ void Person::Evolve()   {
     }
 
     if (m_seir_status == enum_infective_asymptomatic)    {
-        if (m_date_of_next_status_change <= s_day_index)    {
+        if (s_day_index >= m_date_of_next_status_change)    {
             Heal();
         }
         return;
     }
 
     if (m_seir_status == enum_infective_symptomatic)    {
-        if (m_date_of_next_status_change <= s_day_index)    {
+        if (s_day_index >= m_date_of_next_status_change)    {
             // The person will recover without a need to be hospitalized
             if (m_health_state > InputData::GetAgeHospitalized()->at(m_age_category))   {
                 Heal();
@@ -137,7 +137,7 @@ void Person::Evolve()   {
     }
 
     if (m_seir_status == enum_needs_hospitalization)    {
-        if (m_date_of_next_status_change <= s_day_index)    {
+        if (s_day_index >= m_date_of_next_status_change)    {
             // The person will recover without a need for critical care
             if (m_health_state > InputData::GetAgeCritical()->at(m_age_category))   {
                 Heal();
@@ -145,13 +145,19 @@ void Person::Evolve()   {
             else {
                 m_seir_status = enum_critical;
 
-                // person will die
+                // If person recovers, this is the time it's going to stay in critical state
+                m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
+
+                // if person is going to die, we consider constant probabilty of death for each day, which leads to exponential distribution
+                // but if person is still alive at date "m_date_of_next_status_change", it will survive
+                // so we must cut off the tail of the distribution
                 if (m_health_state < InputData::GetAgeFatal()->at(m_age_category))   {
-                    m_date_of_next_status_change = s_day_index + RandomExponential(ConfigParser::CriticalLengthMean());
-                }
-                // person will survive
-                else {
-                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
+                    const double mean_time = (1/m_date_of_next_status_change)*log(InputData::GetAgeCritical()->at(m_age_category)/(InputData::GetAgeCritical()->at(m_age_category) - InputData::GetAgeFatal()->at(m_age_category)));
+                    double time_of_death = s_day_index + RandomExponential(mean_time);
+                    while (time_of_death > m_date_of_next_status_change)    {
+                        time_of_death = s_day_index + RandomExponential(mean_time);
+                    }
+                    m_date_of_next_status_change = time_of_death;
                 }
             }
         }
@@ -159,7 +165,7 @@ void Person::Evolve()   {
     }
 
     if (m_seir_status == enum_critical)  {
-        if (m_date_of_next_status_change <= s_day_index)    {
+        if (s_day_index >= m_date_of_next_status_change)    {
             // person died
             if (m_health_state < InputData::GetAgeFatal()->at(m_age_category))   {
                 Kill();
@@ -277,6 +283,16 @@ int Person::GetNumberOfInfectedPersonsInPopulation(const vector<Person> &populat
     }
     return infected;
 };
+
+int Person::CountInPopulation(const vector<Person> &population, seir_status status) {
+    int result = 0;
+    for (const Person &person : population) {
+        if (person.m_seir_status == status)    {
+            result++;
+        }
+    }
+    return result;
+}
 
 int Person::GenerateRandomAgeCategory() {
     const double rand = RandomUniform();

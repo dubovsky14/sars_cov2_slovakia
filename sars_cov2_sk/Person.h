@@ -84,6 +84,8 @@ namespace sars_cov2_sk	{
 
             static int GetNumberOfInfectedPersonsInPopulation(const std::vector<sars_cov2_sk::Person> &population);
 
+            static int CountInPopulation(const std::vector<sars_cov2_sk::Person> &population, sars_cov2_sk::seir_status status);
+
             static int GetDay() {return s_day_index;};
 
             // Generates random integers with the same distribution as the age categories distribution in Slovakia

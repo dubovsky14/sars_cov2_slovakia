@@ -4,8 +4,8 @@ population:
   probability_to_remember_random_meeting: 0.8
 
 virus:
-  transmission_probability: 0.022
-  transmission_probability_household: 0.3
+  transmission_probability: 0.0165
+  transmission_probability_household: 0.0
   infectious_days_mean: 6.5
   infectious_days_std: 1
 
@@ -32,13 +32,13 @@ critical_care_length_std: 1
 migration_matrix_txt: data/sensitive/migrations.txt
 populations_file_txt: data/municipalities.txt
 
-result_file: results/results.json
+result_file: results/results_busines_as_usual.json
 
 # numerical number of inital number of infected at the simulation start (will be selected randomly in this case). If not defined, the text file with number of infected will be used.
-#initial_number_of_infected: 150
+initial_number_of_infected: 100
 
 # test file with number of infected people in municipalities
-infected_distribution_file: data/infected.txt
+#infected_distribution_file: data/infected.txt
 
 # age distribution of people in country
 age_distribution_file: data/age_distribution.json

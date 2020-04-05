@@ -25,7 +25,7 @@ Person::Person() {
 }
 
 void Person::Infect()   {
-    if (!IsIll())    {
+    if (m_seir_status == enum_susceptible)    {
         m_seir_status               = enum_exposed;
         m_day_of_infection          = s_day_index;
         m_date_of_next_status_change= s_day_index + int(RandomGauss(ConfigParser::InfectiousStartMean(), ConfigParser::InfectiousStartStd()));
@@ -86,6 +86,7 @@ void Person::Evolve()   {
         if (s_day_index >= m_date_of_next_status_change)    {
             // Throwing a dice for symptoms
             const float p = RandomUniform();
+            // person has symptoms
             if (p < InputData::GetAgeSymptomatic()->at(m_age_category))   {
                 // person has symptoms and after some time it will need hospitalization
                 if (m_health_state < InputData::GetAgeHospitalized()->at(m_age_category))   {
@@ -98,6 +99,7 @@ void Person::Evolve()   {
                     m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
                 }
             }
+            // person will have no symptoms
             else {
                 m_seir_status = enum_infective_asymptomatic;
                 m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
@@ -142,18 +144,20 @@ void Person::Evolve()   {
             if (m_health_state > InputData::GetAgeCritical()->at(m_age_category))   {
                 Heal();
             }
+            // The person will need critical health care unit
             else {
                 m_seir_status = enum_critical;
 
-                // If person recovers, this is the time it's going to stay in critical state
+                // If person recovers, this is the when it will recover
                 m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
 
                 // if person is going to die, we consider constant probabilty of death for each day, which leads to exponential distribution
                 // but if person is still alive at date "m_date_of_next_status_change", it will survive
                 // so we must cut off the tail of the distribution
                 if (m_health_state < InputData::GetAgeFatal()->at(m_age_category))   {
-                    const double mean_time = (1/m_date_of_next_status_change)*log(InputData::GetAgeCritical()->at(m_age_category)/(InputData::GetAgeCritical()->at(m_age_category) - InputData::GetAgeFatal()->at(m_age_category)));
+                    const double mean_time = (m_date_of_next_status_change-s_day_index)/log(InputData::GetAgeCritical()->at(m_age_category)/(InputData::GetAgeCritical()->at(m_age_category) - InputData::GetAgeFatal()->at(m_age_category)));
                     double time_of_death = s_day_index + RandomExponential(mean_time);
+                    // Force the person to die before leaving intensive health care unit
                     while (time_of_death > m_date_of_next_status_change)    {
                         time_of_death = s_day_index + RandomExponential(mean_time);
                     }

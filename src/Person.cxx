@@ -29,7 +29,7 @@ void Person::Infect()   {
     if (m_seir_status == enum_susceptible)    {
         m_seir_status               = enum_exposed;
         m_day_of_infection          = s_day_index;
-        m_date_of_next_status_change= s_day_index + int(RandomGauss(ConfigParser::InfectiousStartMean(), ConfigParser::InfectiousStartStd()));
+        m_date_of_next_status_change= 0.5 + s_day_index + int(RandomGauss(ConfigParser::InfectiousStartMean(), ConfigParser::InfectiousStartStd()));
     }
 }
 void Person::AddContact(sars_cov2_sk::Person *person)   {
@@ -92,18 +92,18 @@ void Person::Evolve()   {
                 // person has symptoms and after some time it will need hospitalization
                 if (m_health_state < InputData::GetAgeHospitalized()->at(m_age_category))   {
                     m_seir_status = enum_infective_symptomatic;
-                    m_date_of_next_status_change = m_day_of_infection + RandomGauss(ConfigParser::HospitalizationStartMean(),ConfigParser::HospitalizationStartStd());
+                    m_date_of_next_status_change = 0.5 + m_day_of_infection + RandomGauss(ConfigParser::HospitalizationStartMean(),ConfigParser::HospitalizationStartStd());
                 }
                 // person has symptoms, but it will not need hospitalization
                 else  {
                     m_seir_status = enum_infective_symptomatic;
-                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
+                    m_date_of_next_status_change = 0.5 + s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
                 }
             }
             // person will have no symptoms
             else {
                 m_seir_status = enum_infective_asymptomatic;
-                m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
+                m_date_of_next_status_change = 0.5 + s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
             }
         Evolve();
         }
@@ -129,11 +129,11 @@ void Person::Evolve()   {
 
                 // person will need critical care after some time
                 if (m_health_state < InputData::GetAgeCritical()->at(m_age_category))   {
-                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalStartMean(),ConfigParser::CriticalStartStd());
+                    m_date_of_next_status_change = 0.5 + s_day_index + RandomGauss(ConfigParser::CriticalStartMean(),ConfigParser::CriticalStartStd());
                 }
                 // person will recover without a need for critical care
                 else {
-                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::HospitalizationLengthMean(),ConfigParser::HospitalizationLengthStd());
+                    m_date_of_next_status_change = 0.5 + s_day_index + RandomGauss(ConfigParser::HospitalizationLengthMean(),ConfigParser::HospitalizationLengthStd());
                 }
             }
             Evolve();
@@ -151,10 +151,10 @@ void Person::Evolve()   {
                 m_seir_status = enum_critical;
 
                 if (m_health_state < InputData::GetAgeFatal()->at(m_age_category))   {
-                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
+                    m_date_of_next_status_change = 0.5 + s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
                 }
                 else    {
-                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
+                    m_date_of_next_status_change = 0.5 + s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
                 }
             }
             Evolve();

@@ -20,8 +20,30 @@ float sars_cov2_sk::RandomGauss(float mean,float sigma)  {
     return sars_cov2_sk::RandomGeneratorGauss::Gauss(mean, sigma);
 }
 
+int sars_cov2_sk::RandomGaussWithProbabilisticRounding(float mean, float sigma) {
+    const double gauss = RandomGauss(mean, sigma);
+    const double decimal_part = gauss - int(gauss);
+    if (RandomUniform() < decimal_part) {
+        return 1 + int(gauss);
+    }
+    else    {
+        return int(gauss);
+    }
+}
+
 float sars_cov2_sk::RandomExponential(float mean)   {
     return -mean*log(RandomUniform());
+}
+
+int sars_cov2_sk::RandomExponentialWithProbabilisticRounding(float mean)    {
+    const double exponential = RandomExponential(mean);
+    const double decimal_part = exponential - int(exponential);
+    if (RandomUniform() < decimal_part) {
+        return 1 + int(exponential);
+    }
+    else    {
+        return int(exponential);
+    }
 }
 
 bool sars_cov2_sk::StringIsBool(const string &x)    {

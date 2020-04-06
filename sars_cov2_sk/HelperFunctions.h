@@ -13,9 +13,14 @@ namespace sars_cov2_sk	{
 
     float RandomGauss(float mean, float sigma);
 
+    // Generate Gauss first. If 4.8 is generated (for example), 5 will be returned with 80% probability and 4 with 20% probability
+    int RandomGaussWithProbabilisticRounding(float mean, float sigma);
+
     float RandomExponential(float mean);
 
-    template <class T> 
+    int RandomExponentialWithProbabilisticRounding(float mean);
+
+    template <class T>
     bool IsInVector(std::vector<T> input_vector, T element) {
         for (T &x : input_vector)   {
             if (x == element)   {

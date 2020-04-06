@@ -106,14 +106,14 @@ void Person::Evolve()   {
                 m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
             }
         }
-        return;
+        Evolve();
     }
 
     if (m_seir_status == enum_infective_asymptomatic)    {
         if (s_day_index >= m_date_of_next_status_change)    {
             Heal();
         }
-        return;
+        Evolve();
     }
 
     if (m_seir_status == enum_infective_symptomatic)    {
@@ -136,7 +136,7 @@ void Person::Evolve()   {
                 }
             }
         }
-        return;
+        Evolve();
     }
 
     if (m_seir_status == enum_needs_hospitalization)    {
@@ -149,24 +149,15 @@ void Person::Evolve()   {
             else {
                 m_seir_status = enum_critical;
 
-                // If person recovers, this is the when it will recover
-                m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
-
-                // if person is going to die, we consider constant probabilty of death for each day, which leads to exponential distribution
-                // but if person is still alive at date "m_date_of_next_status_change", it will survive
-                // so we must cut off the tail of the distribution
                 if (m_health_state < InputData::GetAgeFatal()->at(m_age_category))   {
-                    const double mean_time = (m_date_of_next_status_change-s_day_index)/log(InputData::GetAgeCritical()->at(m_age_category)/(InputData::GetAgeCritical()->at(m_age_category) - InputData::GetAgeFatal()->at(m_age_category)));
-                    double time_of_death = s_day_index + RandomExponential(mean_time);
-                    // Force the person to die before leaving intensive health care unit
-                    while (time_of_death > m_date_of_next_status_change)    {
-                        time_of_death = s_day_index + RandomExponential(mean_time);
-                    }
-                    m_date_of_next_status_change = time_of_death;
+                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
+                }
+                else    {
+                    m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
                 }
             }
         }
-        return;
+        Evolve();
     }
 
     if (m_seir_status == enum_critical)  {
@@ -180,7 +171,7 @@ void Person::Evolve()   {
                 Heal();
             }
         }
-        return;
+        Evolve();
     }
 };
 

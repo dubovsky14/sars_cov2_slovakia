@@ -105,15 +105,16 @@ void Person::Evolve()   {
                 m_seir_status = enum_infective_asymptomatic;
                 m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
             }
-        }
         Evolve();
+        }
     }
 
     if (m_seir_status == enum_infective_asymptomatic)    {
         if (s_day_index >= m_date_of_next_status_change)    {
             Heal();
+
+            Evolve();
         }
-        Evolve();
     }
 
     if (m_seir_status == enum_infective_symptomatic)    {
@@ -135,8 +136,8 @@ void Person::Evolve()   {
                     m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::HospitalizationLengthMean(),ConfigParser::HospitalizationLengthStd());
                 }
             }
+            Evolve();
         }
-        Evolve();
     }
 
     if (m_seir_status == enum_needs_hospitalization)    {
@@ -156,8 +157,8 @@ void Person::Evolve()   {
                     m_date_of_next_status_change = s_day_index + RandomGauss(ConfigParser::CriticalLengthMean(),ConfigParser::CriticalLengthStd());
                 }
             }
+            Evolve();
         }
-        Evolve();
     }
 
     if (m_seir_status == enum_critical)  {
@@ -170,8 +171,8 @@ void Person::Evolve()   {
             else {
                 Heal();
             }
+            Evolve();
         }
-        Evolve();
     }
 };
 

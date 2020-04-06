@@ -105,7 +105,7 @@ void Person::Evolve()   {
                 m_seir_status = enum_infective_asymptomatic;
                 m_date_of_next_status_change = 0.5 + s_day_index + RandomGauss(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
             }
-        Evolve();
+            Evolve();
         }
     }
 

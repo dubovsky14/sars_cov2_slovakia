@@ -11,7 +11,7 @@ namespace sars_cov2_sk	{
                         };
 	class Person	{
 		private:
-            // five possible values: enum_susceptible, enum_exposed, enum_infective, enum_immune, enum_dead;
+            // possible values: enum_susceptible, enum_exposed, enum_infective_symptomatic, enum_infective_asymptomatic, enum_needs_hospitalization, enum_critical, enum_immune, enum_dead;
             seir_status m_seir_status;
 
             int     m_age_category;
@@ -65,19 +65,19 @@ namespace sars_cov2_sk	{
             // Those with low health_state needs to be hospitalized and some of them die
             float HealthState()     const   {return m_health_state;};
 
-            bool IsIll()            const;
-            bool IsUnaffected()     const   {return m_seir_status == enum_susceptible;};
-            bool HasSymptoms()      const;
-            bool IsInfective()      const;
-            bool NeedsHospitalization() const;
+            inline bool IsIll()            const    {return !(m_seir_status == enum_susceptible || m_seir_status == enum_immune || m_seir_status == enum_dead);};
+            inline bool IsUnaffected()     const    {return m_seir_status == enum_susceptible;};
+            inline bool HasSymptoms()      const    {return (IsIll() && m_seir_status != enum_infective_asymptomatic);};
+            inline bool IsInfective()      const    {return (IsIll() && !(m_seir_status == enum_exposed));};
+            inline bool NeedsHospitalization() const{return (m_seir_status == enum_needs_hospitalization || m_seir_status == enum_critical);};
 
-            bool IsImmune()         const   {return m_seir_status == enum_immune;};
-            bool InQuarantine()     const   {return m_in_quarantine;};
-            bool IsHospitalized()       const   {return m_is_hospitalized;};
-            bool IsCritical()       const   {return m_seir_status == enum_critical;};
-            bool IsDead()           const   {return m_seir_status == enum_dead;};
-            bool IsNewCase()        const;
-            bool PositivelyTesed()  const {return m_had_positive_test;};
+            inline bool IsImmune()         const        {return m_seir_status == enum_immune;};
+            inline bool InQuarantine()     const        {return m_in_quarantine;};
+            inline bool IsHospitalized()       const    {return m_is_hospitalized;};
+            inline bool IsCritical()       const        {return m_seir_status == enum_critical;};
+            inline bool IsDead()           const        {return m_seir_status == enum_dead;};
+            inline bool IsNewCase()        const        {return (IsIll() && (s_day_index == m_day_of_infection));};
+            inline bool PositivelyTesed()  const        {return m_had_positive_test;};
             const std::vector<sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
 
             void ForgetContacts();

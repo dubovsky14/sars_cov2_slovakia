@@ -92,7 +92,7 @@ void Person::Evolve()   {
                 // person has symptoms and after some time it will need hospitalization
                 if (m_health_state < InputData::GetAgeHospitalized()->at(m_age_category))   {
                     m_seir_status = enum_infective_symptomatic;
-                    m_date_of_next_status_change = m_day_of_infection + RandomGaussWithProbabilisticRounding(ConfigParser::HospitalizationStartMean(),ConfigParser::HospitalizationStartStd());
+                    m_date_of_next_status_change = s_day_index + RandomGaussWithProbabilisticRounding(ConfigParser::HospitalizationStartMean(),ConfigParser::HospitalizationStartStd());
                 }
                 // person has symptoms, but it will not need hospitalization
                 else  {
@@ -174,26 +174,6 @@ void Person::Evolve()   {
             Evolve();
         }
     }
-};
-
-bool Person::IsIll()            const   {
-    return !(m_seir_status == enum_susceptible || m_seir_status == enum_immune || m_seir_status == enum_dead);
-};
-
-bool Person::HasSymptoms()      const   {
-    return (IsIll() && m_seir_status != enum_infective_asymptomatic);
-}
-
-bool Person::IsInfective()      const   {
-    return (IsIll() && !(m_seir_status == enum_exposed));
-};
-
-bool Person::NeedsHospitalization() const   {
-    return (m_seir_status == enum_needs_hospitalization || m_seir_status == enum_critical);
-};
-
-bool Person::IsNewCase()        const   {
-    return (IsIll() && (s_day_index == m_day_of_infection));
 };
 
 void Person::ForgetContacts()   {

@@ -23,7 +23,7 @@ void Household::SpreadInfection(float probability)   {
     // person1 is the source of infection, person2 get infected
     for (Person *person1 : m_inhabitants)    {
         // Can't infect other people if hospitalized or dead ...
-        if (!person1->IsHospitalized() && !person1->IsDead())    {
+        if (person1->IsHospitalized() || person1->IsDead())    {
             continue;
         }
 
@@ -39,7 +39,7 @@ void Household::SpreadInfection(float probability)   {
             }
 
             // Can't infect other people if hospitalized or dead ...
-            if (!person2->IsHospitalized() && !person2->IsDead())    {
+            if (person2->IsHospitalized() || person2->IsDead())    {
                 continue;
             }
 

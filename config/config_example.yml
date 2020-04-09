@@ -10,7 +10,7 @@ virus:
   infectious_days_std: 1
 
 # fraction of symptomatic people being tested every day. Zero means no tests
-genetic_tests_rate: 0.2
+genetic_tests_rate: 0.
 
 # if a person is infected, this is the probability of positive test result. There are no false positive cases, only false negative.
 genetic_tests_accuracy: 0.98

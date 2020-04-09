@@ -30,8 +30,14 @@ void Person::Infect()   {
         m_seir_status               = enum_exposed;
         m_day_of_infection          = s_day_index;
         m_date_of_next_status_change= s_day_index + int(RandomGaussWithProbabilisticRounding(ConfigParser::InfectiousStartMean(), ConfigParser::InfectiousStartStd()));
+
+        // Person starts to be infectious on the same day (quite unlikely, but might happen)
+        if (m_date_of_next_status_change == s_day_index) {
+            Evolve();
+        }
     }
 }
+
 void Person::AddContact(sars_cov2_sk::Person *person)   {
     if (ConfigParser::GetTrackingOption() == disabled)  {
         return;

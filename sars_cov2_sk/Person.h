@@ -67,7 +67,7 @@ namespace sars_cov2_sk	{
 
             inline bool IsIll()            const    {return !(m_seir_status == enum_susceptible || m_seir_status == enum_immune || m_seir_status == enum_dead);};
             inline bool IsUnaffected()     const    {return m_seir_status == enum_susceptible;};
-            inline bool HasSymptoms()      const    {return (IsIll() && m_seir_status != enum_infective_asymptomatic);};
+            bool HasSymptoms()             const;
             inline bool IsInfective()      const    {return (IsIll() && !(m_seir_status == enum_exposed));};
             inline bool NeedsHospitalization() const{return (m_seir_status == enum_needs_hospitalization || m_seir_status == enum_critical);};
 

@@ -76,6 +76,13 @@ bool Person::Hospitalize() {
     return true; // true of there is a free hospital bed
 }
 
+bool Person::HasSymptoms() const    {
+    // being dead is also quite strong symptom, but we are not going to test these people ...
+    return (m_seir_status == enum_infective_symptomatic ||
+            m_seir_status == enum_needs_hospitalization ||
+            m_seir_status == enum_critical);
+}
+
 void Person::PutToQuarantine()  {
     m_in_quarantine = true;
 }

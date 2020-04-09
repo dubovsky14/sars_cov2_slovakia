@@ -68,8 +68,8 @@ int CovidTest::TestPeople(std::vector<Person> *persons, float fraction) {
 
     int number_of_positively_tested = 0;
     for (Person &person : *persons)  {
-        // Do not test healthy people for now
-        if (!person.IsIll())   {
+        // Do not test healthy and asymptomatic people for now
+        if (!(person.IsIll() && person.HasSymptoms()))   {
             continue;
         }
 

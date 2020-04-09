@@ -54,7 +54,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
         }
     }
 
-    CovidTest genetic_test(0.98);
+    CovidTest genetic_test(ConfigParser::ReadFloatValue("genetic_tests_accuracy"));
 
 
     cout << "Running the simulation.\n";
@@ -76,15 +76,6 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
                     << "\t\t" << Person::CountInPopulation(population, enum_dead)
                     << "\t\t" << Person::CountInPopulation(population, enum_immune) << endl;
 
-        //int positively_tested_today = 0;
-        //positively_tested_today +=  genetic_test.TestContactOfPositivesFromYesterday();
-        //// Testing
-        //if (day % 1 == 0)   {
-        //    positively_tested_today += genetic_test.TestPeople(&population, 0.2);
-        //}
-        //genetic_test.PutToCarantinePositivelyTestedFromYesterday();
-        //cout << day << "\t\t" << number_of_ill << "\t\t" << positively_tested_today <<  endl;
-
         for (PopulationCenter &city : cities)   {
             city.SendTravelersToAllCities(&cities);
         }
@@ -95,6 +86,12 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
         for (PopulationCenter &city : cities)   {
             city.RemoveAllTemporaryOccupants();
         }
+
+        // Testing
+        int positively_tested_today = 0;
+        positively_tested_today +=  genetic_test.TestContactOfPositivesFromYesterday();
+        positively_tested_today += genetic_test.TestPeople(&population, ConfigParser::ReadFloatValue("genetic_tests_rate"));
+        genetic_test.PutToCarantinePositivelyTestedFromYesterday();
 
         for (PopulationCenter &city : cities)   {
             city.SaveTheDayToHistory();

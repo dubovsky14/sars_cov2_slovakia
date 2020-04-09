@@ -63,7 +63,7 @@ namespace sars_cov2_sk  {
             float m_infectious_days_mean;
             float m_infectious_days_std;
 
-            // Time from being exposed to virus until hospitalization is needed
+            // Time from the first symptoms until hospitalization is needed
             float m_hospitalization_start_mean;
             float m_hospitalization_start_std;
 

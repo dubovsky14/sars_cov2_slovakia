@@ -1,24 +1,24 @@
 
 population:
-  mean_stochastic_interactions: 22
+  mean_stochastic_interactions: 15
   probability_to_remember_random_meeting: 0.8
 
 virus:
   transmission_probability: 0.0165
-  transmission_probability_household: 0.0
+  transmission_probability_household: 0.06
   infectious_days_mean: 6.5
   infectious_days_std: 1
 
 
 # mean time after which a person who contracted the virus
 # starts being infectious
-infectious_start_mean: 5
+infectious_start_mean: 5.1
 infectious_start_std: 1
 
 # mean time after which a person who contracted the virus
 # starts needing hospitalization
-hospitalization_start_mean: 10
-hospitalization_start_std: 1.5
+hospitalization_start_mean: 4.9
+hospitalization_start_std: 1.1
 
 hospitalization_length_mean: 8
 hospitalization_length_std: 1

@@ -17,5 +17,5 @@ make
 
 # run
 
-./bin/main "config/config_example.txt"
+./bin/main "config/config_example.yml"
 ```

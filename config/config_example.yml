@@ -1,4 +1,4 @@
-
+---
 population:
   mean_stochastic_interactions: 15
   probability_to_remember_random_meeting: 0.8

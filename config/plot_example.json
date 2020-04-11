@@ -1,0 +1,14 @@
+{
+  "type": {
+    "slovakia": {
+      "lines": ["unaffected", "infected", "infective", "symptomatic",
+                "asymptomatic", "immune", "dead", "new_cases", "hospitalized",
+                "critical"],
+      "yscale": "log"
+    },
+    "by_municipality": {
+      "lines": ["unaffected", "infected", "infective", "immune", "dead", "new_cases", "hospitalized", "critical"],
+      "yscale": "log"
+    }
+  }
+}

@@ -199,9 +199,8 @@ void PopulationCenter::SaveTheDayToHistory()    {
       cout << "symptomatic: " << symptomatic << endl;
       cout << "asymptomatic: " << asymptomatic << endl;
       cout << "hospitalized: " << hospitalized << endl;
-      cout << "critical: " << critical << endl;
       cout << "infective: " << infective << endl;
-      throw "ERROR: Sum of symptomatic and asymptomatic cases does not match infective cases!";
+      throw "ERROR: Sum of symptomatic, asymptomatic and hospitalized cases does not match infective cases!";
     }
 
     m_logging_days          .push_back(Person::GetDay());

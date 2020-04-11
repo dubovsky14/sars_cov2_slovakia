@@ -62,7 +62,7 @@ void Person::Heal() {
     m_seir_status       = enum_immune;
     m_is_hospitalized   = false;
 
-    ReleseFromToQuarantine();
+    ReleaseFromToQuarantine();
 
     // Temporary fix in order to save memory and speed up the code
     ForgetContacts();
@@ -87,7 +87,7 @@ void Person::PutToQuarantine()  {
     m_in_quarantine = true;
 }
 
-void Person::ReleseFromToQuarantine()   {
+void Person::ReleaseFromToQuarantine()   {
     m_in_quarantine = false;
 };
 

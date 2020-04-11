@@ -172,6 +172,8 @@ void PopulationCenter::SendTravelersToAllCities(vector<PopulationCenter> *cities
 void PopulationCenter::SaveTheDayToHistory()    {
     unsigned int unaffected         = 0;
     unsigned int infected           = 0;
+    unsigned int symptomatic        = 0;
+    unsigned int asymptomatic       = 0;
     unsigned int immune             = 0;
     unsigned int dead               = 0;
     unsigned int new_cases          = 0;
@@ -182,6 +184,8 @@ void PopulationCenter::SaveTheDayToHistory()    {
     for (const Person *person : m_inhabitants)  {
         if (person->IsUnaffected())     unaffected++;
         if (person->IsIll())            infected++;
+        if (person->IsInfectiveSymptomatic())    symptomatic++;
+        if (person->IsInfectiveAsymptomatic())   asymptomatic++;
         if (person->IsImmune())         immune++;
         if (person->IsDead())           dead++;
         if (person->IsNewCase())        new_cases++;
@@ -190,9 +194,21 @@ void PopulationCenter::SaveTheDayToHistory()    {
         if (person->IsCritical())       critical++;
     }
 
+    if (symptomatic + asymptomatic + hospitalized != infective) {
+      cout << "Population center: " << m_name << endl;
+      cout << "symptomatic: " << symptomatic << endl;
+      cout << "asymptomatic: " << asymptomatic << endl;
+      cout << "hospitalized: " << hospitalized << endl;
+      cout << "critical: " << critical << endl;
+      cout << "infective: " << infective << endl;
+      throw "ERROR: Sum of symptomatic and asymptomatic cases does not match infective cases!";
+    }
+
     m_logging_days          .push_back(Person::GetDay());
     m_logging_unaffected    .push_back(unaffected  );
     m_logging_infected      .push_back(infected    );
+    m_logging_symptomatic   .push_back(symptomatic );
+    m_logging_asymptomatic  .push_back(asymptomatic);
     m_logging_immune        .push_back(immune      );
     m_logging_dead          .push_back(dead        );
     m_logging_new_cases     .push_back(new_cases   );

@@ -38,7 +38,7 @@ namespace sars_cov2_sk	{
 
             // Number of municipalities where person is present at the current day, including the one where it lives
             // For travelers it's more than one
-            inline bool GetNumberOfVisitedMunicipalities() const {return m_visited_cities_today;};
+            inline int GetNumberOfVisitedMunicipalities() const {return m_visited_cities_today;};
 
             // Infect the person if not immune or ill. If immune or ill, do nothing.
             void Infect();

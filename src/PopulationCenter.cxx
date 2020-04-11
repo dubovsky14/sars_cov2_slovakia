@@ -76,6 +76,8 @@ void PopulationCenter::SpreadInfectionInHouseholds(float probablity)    {
 void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float average_interactions_per_person, float probability)    {
     const unsigned int number_of_temporary_occupants = m_temporary_occupants.size();
 
+    const bool travellers_increase_number_of_meetings = !ConfigParser::TravellerMeetingsConstant();
+
     // Meetings initiated by inhabitants
     for (Person *person : m_inhabitants)    {
         // /2 is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
@@ -83,7 +85,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
 
         for (int i = 0; i < interactions; i++) {
             // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
-            if (person->GetNumberOfVisitedMunicipalities() > 1)    {
+            if (person->GetNumberOfVisitedMunicipalities() > 1 && !travellers_increase_number_of_meetings)    {
                 if (RandomUniform() < 1./person->GetNumberOfVisitedMunicipalities())  {
                     continue;
                 }
@@ -105,7 +107,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
             }
 
             // Travelers who visited N cities (including their home city) will have 1/N part of their meetings in each city
-            if (person2->GetNumberOfVisitedMunicipalities() > 1)    {
+            if (person2->GetNumberOfVisitedMunicipalities() > 1 && !travellers_increase_number_of_meetings)    {
                 if (RandomUniform() < 1./person2->GetNumberOfVisitedMunicipalities())  {
                     i--;    // In this case (contrary to other "continue"s in this part of code), we need another meeting to happen instead
                     continue;
@@ -122,7 +124,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
 
         for (unsigned int i = 0; i < interactions; i++) {
             // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
-            if (RandomUniform() < 1./person->GetNumberOfVisitedMunicipalities())  {
+            if (RandomUniform() < 1./person->GetNumberOfVisitedMunicipalities() && !travellers_increase_number_of_meetings)  {
                 continue;
             }
             unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);
@@ -142,7 +144,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
             }
 
             // Travelers who visited N cities (including their home city) will have 1/N part of their meetings in each city
-            if (person2->GetNumberOfVisitedMunicipalities() > 1)    {
+            if (person2->GetNumberOfVisitedMunicipalities() > 1 && !travellers_increase_number_of_meetings)    {
                 if (RandomUniform() < 1./person2->GetNumberOfVisitedMunicipalities())  {
                     i--;    // In this case (contrary to other "continue"s in this part of code), we need another meeting to happen instead
                     continue;

@@ -20,6 +20,10 @@ namespace sars_cov2_sk  {
 
             int   m_infected_initial;
 
+            // true = number of travellers meetings is the same as for other people, they are just distributed among cities (travelling does not increase the number of total meetings)
+            // false = traveller will have in each visited city the same number of meetings as normal person (travelling increases the number of total meetings)
+            bool  m_travellers_meetings_constant;
+
 
             sars_cov2_sk::TrackingOption m_tracking_option;
 
@@ -48,6 +52,8 @@ namespace sars_cov2_sk  {
             static bool RemoveCommentFromLine(std::string *line);
 
             void InitializeValues();
+
+            void InitializeTravellersMeetingsConstant();
 
             // Throw exception if config is not initialized
             static void Check();
@@ -90,7 +96,6 @@ namespace sars_cov2_sk  {
             static float GetAverageNumberOfCityInteractions()   {Check(); return s_singleton_instance->m_average_number_of_city_interactions;};
             static float GetProbToRememberCityInteractions()    {Check(); return s_singleton_instance->m_probability_to_remember_city_interactions;};
 
-
             static float InfectiousStartMean()               {Check(); return s_singleton_instance->m_infectious_start_mean;};
             static float InfectiousStartStd()                {Check(); return s_singleton_instance->m_infectious_start_std;};
             static float InfectiousDaysMean()                {Check(); return s_singleton_instance->m_infectious_days_mean;};
@@ -109,6 +114,11 @@ namespace sars_cov2_sk  {
             static std::string GetResultFileAddress()         {Check(); return s_singleton_instance->m_result_file;};
             static std::string GetInfectedFileAddress()       {Check(); return s_singleton_instance->m_infected_file;};
             static int GetInfectedInitial()                   {Check(); return s_singleton_instance->m_infected_initial;};
+
+            // true = number of traveller's meetings is the same as for other people, they are just distributed among cities (travelling does not increase the number of total meetings)
+            // false = traveller will have in each visited city the same number of meetings as normal person (travelling increases the number of total meetings)
+            static bool  TravellerMeetingsConstant()          {Check(); return s_singleton_instance->m_travellers_meetings_constant;};
+
 
             static sars_cov2_sk::TrackingOption GetTrackingOption()   {Check(); return s_singleton_instance->m_tracking_option;};
 

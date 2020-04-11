@@ -144,6 +144,8 @@ void ConfigParser::InitializeValues()   {
     m_critical_care_length_mean     = GetFloatValue("critical_care_length_mean");
     m_critical_care_length_std      = GetFloatValue("critical_care_length_std");
 
+    InitializeTravellersMeetingsConstant();
+
     // Number of infected can be either defined in the config centraly for whole country, or in the text file with number of infected in municipalities
     try {
         m_infected_initial = GetIntValue("initial_number_of_infected");
@@ -153,6 +155,19 @@ void ConfigParser::InitializeValues()   {
         m_infected_file                             = GetStringValue("infected_distribution_file");
     }
 };
+
+void ConfigParser::InitializeTravellersMeetingsConstant() {
+    const string value = GetStringValue("traveller_meetings");
+    if (value == "constant")    {
+        m_travellers_meetings_constant = true;
+    }
+    else if (value == "additional") {
+        m_travellers_meetings_constant = false;
+    }
+    else    {
+        throw "Unknown value of parameter \"traveller_meetings\" in config! It has to be either \"additional\" or \"constant\"";
+    }
+}
 
 void ConfigParser::Check()    {
     if (!s_singleton_instance)   {

@@ -53,3 +53,6 @@ tracking: infected_only
 
 age_symptoms_file: data/age_symptoms.json
 
+# two possible values: constant or additional. constant = number of meetings for travellers is the same as for other persons, they are just distributed to more cities. additonal = a traveller meets in every city Poisson(mean_stochastic_interactions) other people
+traveller_meetings: constant
+

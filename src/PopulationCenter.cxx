@@ -79,9 +79,9 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     // Meetings initiated by inhabitants
     for (Person *person : m_inhabitants)    {
         // /2 is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
-        const unsigned int interactions = RandomPoisson(average_interactions_per_person/2.);
+        const int interactions = RandomPoisson(average_interactions_per_person/2.);
 
-        for (unsigned int i = 0; i < interactions; i++) {
+        for (int i = 0; i < interactions; i++) {
             // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
             if (person->GetNumberOfVisitedMunicipalities() > 1)    {
                 if (RandomUniform() < 1./person->GetNumberOfVisitedMunicipalities())  {
@@ -89,19 +89,29 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
                 }
             }
             unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);
+            Person *person2 = nullptr;
 
             // Interaction with inhabitants of the city
             if (person2_index < m_number_of_inhabitants)  {
-                Person::Meet(person, m_inhabitants.at(person2_index), probability, 0.8);
+               person2 = m_inhabitants.at(person2_index);
             }
             else    // Interaction with temporary occupants
             {
                 person2_index -= m_number_of_inhabitants;
-                if (person2_index >= number_of_temporary_occupants)
-                    continue; // if this happens, somethins is really wrong ...
-
-                Person::Meet(person, m_temporary_occupants.at(person2_index), probability, 0.8);
+                if (person2_index >= number_of_temporary_occupants) {
+                    continue;  // might happen very rarely because of a finite float precision
+                }
+                person2 = m_temporary_occupants.at(person2_index);
             }
+
+            // Travelers who visited N cities (including their home city) will have 1/N part of their meetings in each city
+            if (person2->GetNumberOfVisitedMunicipalities() > 1)    {
+                if (RandomUniform() < 1./person2->GetNumberOfVisitedMunicipalities())  {
+                    i--;    // In this case (contrary to other "continue"s in this part of code), we need another meeting to happen instead
+                    continue;
+                }
+            }
+            Person::Meet(person, person2, probability, ConfigParser::GetProbToRememberCityInteractions());
         }
     }
 
@@ -116,19 +126,29 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
                 continue;
             }
             unsigned int person2_index = RandomUniform()*(number_of_temporary_occupants + m_number_of_inhabitants);
+            Person *person2 = nullptr;
 
             // Interaction with inhabitants of the city
             if (person2_index < m_number_of_inhabitants)  {
-                Person::Meet(person, m_inhabitants.at(person2_index), probability, 0.8);
+               person2 = m_inhabitants.at(person2_index);
             }
             else    // Interaction with temporary occupants
             {
                 person2_index -= m_number_of_inhabitants;
-                if (person2_index >= number_of_temporary_occupants)
-                    continue; // if this happens, somethins is really wrong ...
-
-                Person::Meet(person, m_temporary_occupants.at(person2_index), probability, 0.8);
+                if (person2_index >= number_of_temporary_occupants) {
+                    continue; // might happen very rarely because of a finite float precision
+                }
+                person2 = m_temporary_occupants.at(person2_index);
             }
+
+            // Travelers who visited N cities (including their home city) will have 1/N part of their meetings in each city
+            if (person2->GetNumberOfVisitedMunicipalities() > 1)    {
+                if (RandomUniform() < 1./person2->GetNumberOfVisitedMunicipalities())  {
+                    i--;    // In this case (contrary to other "continue"s in this part of code), we need another meeting to happen instead
+                    continue;
+                }
+            }
+            Person::Meet(person, person2, probability, ConfigParser::GetProbToRememberCityInteractions());
         }
     }
 };

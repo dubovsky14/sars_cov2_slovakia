@@ -1,5 +1,7 @@
-bin/
+bin/*.o
+bin/main
 results/
 .vscode/
 */*.pickle
 data/sensitive
+*.pdf

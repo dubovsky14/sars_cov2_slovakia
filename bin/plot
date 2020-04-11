@@ -1,0 +1,122 @@
+#!/usr/bin/env python
+from argparse import ArgumentParser
+from sys import exit
+import json
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def main():
+    '''
+    Make plots from SARS-CoV-2 simulation in Slovakia
+    '''
+
+    parser = ArgumentParser(description='Yay, make Slovak SARS-CoV-2 plots!')
+    parser.add_argument('-c', '--config',
+                        type=str, default='config/plot.json',
+                        help='location of configuration file')
+    parser.add_argument('-t', '--type',
+                        type=str, default='slovakia',
+                        help='plot type')
+    required_arguments = parser.add_argument_group('required arguments')
+    required_arguments.add_argument('-i', '--input-file',
+                                    type=str, required=True,
+                                    help='input file path')
+    args = parser.parse_args()
+
+    try:
+        infile = open(args.config, "r")
+        config = json.load(infile)
+        infile.close()
+    except IOError:
+        print("ERROR: Configuration file not found!")
+        exit(1)
+
+    try:
+        infile = open(args.input_file, "r")
+        indata = json.load(infile)
+        infile.close()
+    except IOError:
+        print("ERROR: Input file not found!")
+        exit(1)
+
+    print('Number of municipalities: ' + str(len(indata)))
+
+    if args.type == 'slovakia':
+        plot_slovakia(indata, config)
+    elif args.type == 'by_municipality':
+        plot_by_municipality(indata, config)
+
+
+def plot_slovakia(indata, config):
+    '''
+        Create plots for the whole Slovakia.
+    '''
+
+    outfile_path = 'plots/slovakia'
+
+    lines = config['type']['slovakia']['lines']
+    days = indata['Nitra']['simulation_days']
+
+    height = len(lines)
+    width = len(days)
+    line_arr = [[0 for x in range(width)] for y in range(height)]
+
+    for index, key in enumerate(indata):
+        place = indata[key]
+
+        percent = round(100.*index/len(indata))
+        print(str(percent) + '%, municipality: ' + key)
+
+        for line_index, line in enumerate(lines):
+            line_arr[line_index] = np.add(line_arr[line_index], place[line])
+
+    for index, line in enumerate(lines):
+        plt.plot(days, line_arr[index], label=line)
+
+    plt.title('Slovakia')
+    plt.xlabel('Days')
+    plt.ylabel('Number of people')
+    plt.yscale(config['type']['by_municipality']['yscale'])
+    plt.legend(lines)
+    plt.grid()
+
+    outfile_path += '.pdf'
+    plt.savefig(outfile_path)
+
+    plt.clf()
+
+
+def plot_by_municipality(indata, config):
+    '''
+        Create plots for every municipality in Slovakia.
+    '''
+
+    for index, key in enumerate(indata):
+        place = indata[key]
+        outfile_path = 'plots/by_municipality/' + key
+
+        percent = round(100.*index/len(indata))
+        print(str(percent) + '%, municipality: ' + key)
+
+        days = place['simulation_days']
+        lines = config['type']['by_municipality']['lines']
+
+        for line in lines:
+            plt.plot(days, place[line], label=line)
+
+        plt.title(key)
+        plt.xlabel('Days')
+        plt.ylabel('Number of people')
+        plt.yscale(config['type']['by_municipality']['yscale'])
+        plt.legend(lines)
+        plt.grid()
+
+        outfile_path += '.pdf'
+        plt.savefig(outfile_path)
+
+        plt.clf()
+
+
+if __name__ == '__main__':
+    main()

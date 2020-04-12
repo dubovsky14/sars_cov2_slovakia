@@ -48,11 +48,14 @@ initial_number_of_infected: 100
 # age distribution of people in country
 age_distribution_file: data/age_distribution.json
 
-# tracking of contants (disabled, infected-only, all)
+# tracking of contacts (disabled, infected_only, all)
 tracking: infected_only
 
 age_symptoms_file: data/age_symptoms.json
 
 # two possible values: constant or additional. constant = number of meetings for travellers is the same as for other persons, they are just distributed to more cities. additonal = a traveller meets in every city Poisson(mean_stochastic_interactions) other people
 traveller_meetings: constant
+
+# offers a possibility to limit travelling (1 = travelling as usual, 0 = no travelling)
+mobility: 1.
 

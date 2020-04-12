@@ -127,6 +127,7 @@ void ConfigParser::InitializeValues()   {
     m_transmission_prob_city                    = GetFloatValue("transmission_probability");
     m_average_number_of_city_interactions       = GetFloatValue("mean_stochastic_interactions");
     m_probability_to_remember_city_interactions = GetFloatValue("probability_to_remember_random_meeting");
+    m_mobility                                  = GetFloatValue("mobility");
     m_migration_matrix_address                  = GetStringValue("migration_matrix_txt");
     m_municipalities_file                       = GetStringValue("populations_file_txt");
     m_result_file                               = GetStringValue("result_file");

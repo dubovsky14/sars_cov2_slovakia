@@ -20,6 +20,10 @@ namespace sars_cov2_sk	{
 
     int RandomExponentialWithProbabilisticRounding(float mean);
 
+    // Takes care of a rounding. If value = 4.8 (for example), 4 will be returned in 20% of cases and 5 in 80% of cases.
+    // So if we cound a mean value of rounded 4.8 in a loop, the result will be 4.8 and not 5 as in case of normal rounding
+    int RoundProbabilistic(float value);
+
     template <class T>
     bool IsInVector(std::vector<T> input_vector, T element) {
         for (T &x : input_vector)   {

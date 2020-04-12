@@ -21,14 +21,8 @@ float sars_cov2_sk::RandomGauss(float mean,float sigma)  {
 }
 
 int sars_cov2_sk::RandomGaussWithProbabilisticRounding(float mean, float sigma) {
-    const double gauss = RandomGauss(mean, sigma);
-    const double decimal_part = gauss - int(gauss);
-    if (RandomUniform() < decimal_part) {
-        return 1 + int(gauss);
-    }
-    else    {
-        return int(gauss);
-    }
+    const float gauss = RandomGauss(mean, sigma);
+    return RoundProbabilistic(gauss);
 }
 
 float sars_cov2_sk::RandomExponential(float mean)   {
@@ -36,13 +30,17 @@ float sars_cov2_sk::RandomExponential(float mean)   {
 }
 
 int sars_cov2_sk::RandomExponentialWithProbabilisticRounding(float mean)    {
-    const double exponential = RandomExponential(mean);
-    const double decimal_part = exponential - int(exponential);
+    const float exponential = RandomExponential(mean);
+    return RoundProbabilistic(exponential);
+}
+
+int sars_cov2_sk::RoundProbabilistic(float value) {
+    const float decimal_part = value - int(value);
     if (RandomUniform() < decimal_part) {
-        return 1 + int(exponential);
+        return 1 + int(value);
     }
     else    {
-        return int(exponential);
+        return int(value);
     }
 }
 

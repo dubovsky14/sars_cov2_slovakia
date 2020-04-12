@@ -24,6 +24,8 @@ namespace sars_cov2_sk  {
             // false = traveller will have in each visited city the same number of meetings as normal person (travelling increases the number of total meetings)
             bool  m_travellers_meetings_constant;
 
+            float m_mobility;
+
 
             sars_cov2_sk::TrackingOption m_tracking_option;
 
@@ -118,6 +120,9 @@ namespace sars_cov2_sk  {
             // true = number of traveller's meetings is the same as for other people, they are just distributed among cities (travelling does not increase the number of total meetings)
             // false = traveller will have in each visited city the same number of meetings as normal person (travelling increases the number of total meetings)
             static bool  TravellerMeetingsConstant()          {Check(); return s_singleton_instance->m_travellers_meetings_constant;};
+
+            // Fraction of people travelling in current state (with respect to the normal state)
+            static float GetMobility()                        {Check(); return s_singleton_instance->m_mobility;}
 
 
             static sars_cov2_sk::TrackingOption GetTrackingOption()   {Check(); return s_singleton_instance->m_tracking_option;};

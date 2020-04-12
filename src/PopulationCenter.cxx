@@ -187,7 +187,7 @@ void PopulationCenter::SendTravelersToAllCities(vector<PopulationCenter> *cities
             continue;
         }
         // Sampling with poisson would be incredibly slow here ... in average this should be also fine enough
-        this->SendTravelersToCity(&cities->at(i_city), m_migrations->at(i_city));
+        this->SendTravelersToCity(&cities->at(i_city), RoundProbabilistic(ConfigParser::GetMobility()*m_migrations->at(i_city)));
     }
 };
 

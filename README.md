@@ -5,7 +5,7 @@ Compile and run:
 
 # create directories
 
-mkdir data/sensitive results bin
+mkdir data/sensitive results
 
 # convert pickle database to txt file
 
@@ -19,3 +19,19 @@ make
 
 bin/main -c config/config_example.yml
 ```
+
+## Plotting
+
+Copy example configuration file:
+```bash
+cp config/plot_example.json config/plot.json
+```
+
+Run plotting program
+```bash
+bin/plot -i results/results_busines_as_usual.json
+```
+
+Plot types:
+  * `slovakia`
+  * `by_municipality`

@@ -6,8 +6,12 @@
 namespace sars_cov2_sk	{
     enum seir_status    {   enum_susceptible,
                             enum_exposed,
-                            enum_infective_symptomatic, enum_infective_asymptomatic, enum_needs_hospitalization, enum_critical,
-                            enum_immune, enum_dead
+                            enum_infective_symptomatic,
+                            enum_infective_asymptomatic,
+                            enum_needs_hospitalization,
+                            enum_critical,
+                            enum_immune,
+                            enum_dead
                         };
 	class Person	{
 		private:
@@ -55,7 +59,7 @@ namespace sars_cov2_sk	{
 
             void PutToQuarantine();
 
-            void ReleseFromToQuarantine();
+            void ReleaseFromToQuarantine();
 
             bool Hospitalize();
 
@@ -66,6 +70,8 @@ namespace sars_cov2_sk	{
             float HealthState()     const   {return m_health_state;};
 
             inline bool IsIll()            const    {return !(m_seir_status == enum_susceptible || m_seir_status == enum_immune || m_seir_status == enum_dead);};
+            inline bool IsInfectiveSymptomatic()     const    {return m_seir_status == enum_infective_symptomatic;};
+            inline bool IsInfectiveAsymptomatic()    const    {return m_seir_status == enum_infective_asymptomatic;};
             inline bool IsUnaffected()     const    {return m_seir_status == enum_susceptible;};
             bool HasSymptoms()             const;
             inline bool IsInfective()      const    {return (IsIll() && !(m_seir_status == enum_exposed));};
@@ -73,7 +79,7 @@ namespace sars_cov2_sk	{
 
             inline bool IsImmune()         const        {return m_seir_status == enum_immune;};
             inline bool InQuarantine()     const        {return m_in_quarantine;};
-            inline bool IsHospitalized()       const    {return m_is_hospitalized;};
+            inline bool IsHospitalized()   const        {return m_is_hospitalized;};
             inline bool IsCritical()       const        {return m_seir_status == enum_critical;};
             inline bool IsDead()           const        {return m_seir_status == enum_dead;};
             inline bool IsNewCase()        const        {return (IsIll() && (s_day_index == m_day_of_infection));};

@@ -2,3 +2,4 @@
 !.gitignore
 !config_example.yml
 !config_validation_wuhan.yml
+!plot_example.json

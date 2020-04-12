@@ -5,7 +5,6 @@
 #include<iostream>
 #include<fstream>
 
-using namespace std;
 using namespace sars_cov2_sk;
 
 Logging::Logging(const std::string &out_address) {
@@ -33,7 +32,7 @@ void Logging::DumpVector(const std::string &indent, const std::string &variable_
 };
 
 void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool comma_terminated)   {
-    string indent = "    ";
+    std::string indent = "    ";
     m_log_file << indent << "\"" << city.m_name << "\" : {\n";
     m_log_file << indent << indent << "\"size\" : "         << city.m_number_of_inhabitants << ",\n";
     m_log_file << indent << indent << "\"longitude\" : "    << city.m_longitude << ",\n";
@@ -42,6 +41,8 @@ void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool c
     DumpVector(indent+indent, "simulation_days",    city.m_logging_days,        true);
     DumpVector(indent+indent, "unaffected",         city.m_logging_unaffected,  true);
     DumpVector(indent+indent, "infected",           city.m_logging_infected,    true);
+    DumpVector(indent+indent, "symptomatic",        city.m_logging_symptomatic, true);
+    DumpVector(indent+indent, "asymptomatic",       city.m_logging_asymptomatic,true);
     DumpVector(indent+indent, "infective",          city.m_logging_infective,   true);
     DumpVector(indent+indent, "immune",             city.m_logging_immune,      true);
     DumpVector(indent+indent, "dead",               city.m_logging_dead,        true);
@@ -53,11 +54,9 @@ void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool c
     else                    m_log_file << indent << "}\n";
 };
 
-void Logging::DumpHistoryToJson(const vector<PopulationCenter> &cities) {
+void Logging::DumpHistoryToJson(const std::vector<PopulationCenter> &cities) {
     for (unsigned int i = 0; i < cities.size(); i++)    {
         if (i + 1 == cities.size())     DumpCityHistory(cities.at(i), false);
         else                            DumpCityHistory(cities.at(i), true);
     }
 }
-
-

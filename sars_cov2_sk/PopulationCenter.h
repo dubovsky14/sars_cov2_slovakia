@@ -35,6 +35,8 @@ namespace sars_cov2_sk	{
             std::vector<unsigned int> m_logging_days;
             std::vector<unsigned int> m_logging_unaffected;
             std::vector<unsigned int> m_logging_infected;
+            std::vector<unsigned int> m_logging_symptomatic;
+            std::vector<unsigned int> m_logging_asymptomatic;
             std::vector<unsigned int> m_logging_infective;
             std::vector<unsigned int> m_logging_immune;
             std::vector<unsigned int> m_logging_dead;

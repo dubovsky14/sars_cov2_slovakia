@@ -30,6 +30,13 @@ namespace sars_cov2_sk	{
             std::vector<float>          m_age_critical;
             std::vector<float>          m_age_fatal;
 
+            // 1st element = number of elderly people living with youngs in an household
+            // 2nd element = number of elderly people living in pairs with another elderly person
+            int elderly_houses[3];
+
+            // Number of other people than elderly living in pairs, living in a household with given number of inhabitants
+            int young_houses[11];
+
             unsigned int                m_number_of_municipalities;
 
             void ReadMunicipalityFile();
@@ -50,7 +57,15 @@ namespace sars_cov2_sk	{
 
             void ReadAgeSymptomsFile();
 
-            std::vector<float> ReadAgeSymptomsProperty(const std::string &property);
+            // Opens file "json_address", looks for dictionary dic_name and read values for all keys in the same order
+            static void ReadDictionaryFromJSON( const std::string &json_address, const std::string &dict_name,
+                                                const std::vector<std::string> &keys, std::vector<float> *values);
+
+            void ReadHouseholdFile();
+
+            void ReadHouseholdsElderly();
+
+            void ReadHouseholdsYoung();
 
             static std::vector<std::string> SplitAndStripString(std::string input_string, const std::string &separator);
 

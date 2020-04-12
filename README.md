@@ -5,7 +5,7 @@ Compile and run:
 
 # create directories
 
-mkdir data/sensitive results
+mkdir data/sensitive results bil
 
 # convert pickle database to txt file
 
@@ -17,7 +17,7 @@ make
 
 # run
 
-bin/main -c config/config_example.yml
+python/plotting/main -c config/config_example.yml
 ```
 
 ## Plotting
@@ -29,7 +29,7 @@ cp config/plot_example.json config/plot.json
 
 Run plotting program
 ```bash
-bin/plot -i results/results_busines_as_usual.json
+python/plotting/plot -i results/results_busines_as_usual.json
 ```
 
 Plot types:

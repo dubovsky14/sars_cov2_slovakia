@@ -6,12 +6,8 @@
 namespace sars_cov2_sk	{
     enum seir_status    {   enum_susceptible,
                             enum_exposed,
-                            enum_infective_symptomatic,
-                            enum_infective_asymptomatic,
-                            enum_needs_hospitalization,
-                            enum_critical,
-                            enum_immune,
-                            enum_dead
+                            enum_infective_symptomatic, enum_infective_asymptomatic, enum_needs_hospitalization, enum_critical,
+                            enum_immune, enum_dead
                         };
 	class Person	{
 		private:
@@ -59,7 +55,7 @@ namespace sars_cov2_sk	{
 
             void PutToQuarantine();
 
-            void ReleaseFromToQuarantine();
+            void ReleaseFromQuarantine();
 
             bool Hospitalize();
 

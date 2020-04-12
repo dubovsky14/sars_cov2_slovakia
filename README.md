@@ -1,22 +1,26 @@
 Still under heavy development.
 
-Compile and run:
+## Compile and run:
+
+
+create necessary directories
+```
+mkdir data/sensitive results bin
 ```
 
-# create directories
+convert pickle database to txt file
 
-mkdir data/sensitive results bil
-
-# convert pickle database to txt file
-
+```
 python python/ConvertPickeToTextFile.py <path to the pickle file> data/sensitive/migrations.txt
+```
 
-#compile (if this does not work, there is also CMakeLists file for cmake build)
-
+compile (if this does not work, there is also CMakeLists file for cmake build)
+```
 make
+```
 
-# run
-
+run
+```
 python/plotting/main -c config/config_example.yml
 ```
 

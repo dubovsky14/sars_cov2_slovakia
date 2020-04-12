@@ -32,10 +32,10 @@ namespace sars_cov2_sk	{
 
             // 1st element = number of elderly people living with youngs in an household
             // 2nd element = number of elderly people living in pairs with another elderly person
-            int elderly_houses[3];
+            int m_elderly_houses[3];
 
             // Number of other people than elderly living in pairs, living in a household with given number of inhabitants
-            int young_houses[11];
+            int m_young_houses[11];
 
             unsigned int                m_number_of_municipalities;
 

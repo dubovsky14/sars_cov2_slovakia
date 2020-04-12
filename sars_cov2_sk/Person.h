@@ -69,7 +69,7 @@ namespace sars_cov2_sk	{
             inline bool IsInfectiveSymptomatic()     const    {return m_seir_status == enum_infective_symptomatic;};
             inline bool IsInfectiveAsymptomatic()    const    {return m_seir_status == enum_infective_asymptomatic;};
             inline bool IsUnaffected()     const    {return m_seir_status == enum_susceptible;};
-            bool HasSymptoms()             const;
+            bool        HasSymptoms()      const;
             inline bool IsInfective()      const    {return (IsIll() && !(m_seir_status == enum_exposed));};
             inline bool NeedsHospitalization() const{return (m_seir_status == enum_needs_hospitalization || m_seir_status == enum_critical);};
 
@@ -83,6 +83,12 @@ namespace sars_cov2_sk	{
             const std::vector<sars_cov2_sk::Person *> *GetListOfContacts() const {return  &m_list_of_contacts;};
 
             void ForgetContacts();
+
+            inline void SetAgeCategory(int age_category) {m_age_category = age_category;};
+            inline int  GetAgeCategory()    const       {return m_age_category;};
+
+            static inline bool IsElderly(int age_category)  {return age_category >= 6;};
+            inline bool IsElderly()         const           {return IsElderly(m_age_category);};
 
             // Temporary solution (will be move to a separate singleton class).
             // The class person needs to know the date in order to evolve status of people (hospitalization, appearance of symptoms ...)

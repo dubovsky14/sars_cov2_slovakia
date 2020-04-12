@@ -18,6 +18,7 @@ InputData::InputData()    {
     ReadMigrations();
     ReadAgeDistribution();
     ReadAgeSymptomsFile();
+    ReadHouseholdFile();
     if (ConfigParser::GetInfectedInitial() < 0) {
         ReadNumberOfInfected();
     }
@@ -313,14 +314,22 @@ void InputData::ReadHouseholdFile() {
     ReadHouseholdsYoung();
 };
 
-// #FIXME
 void InputData::ReadHouseholdsElderly() {
-
+    const vector<string> keys = {"1", "2"};
+    vector<float> values;
+    ReadDictionaryFromJSON(ConfigParser::ReadStringValue("households_file"), "elderly", keys, &values);
+    for (unsigned int i = 0; i < keys.size(); i++)   {
+        m_elderly_houses[i+1] = values.at(0);
+    }
 };
 
-// #FIXME
 void InputData::ReadHouseholdsYoung()   {
-
+    const vector<string> keys = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+    vector<float> values;
+    ReadDictionaryFromJSON(ConfigParser::ReadStringValue("households_file"), "young", keys, &values);
+    for (unsigned int i = 0; i < keys.size(); i++)   {
+        m_young_houses[i+1] = values.at(0);
+    }
 };
 
 vector<string> InputData::SplitAndStripString(string input_string, const string &separator) {

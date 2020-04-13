@@ -12,7 +12,7 @@ using namespace std;
 using namespace sars_cov2_sk;
 
 PopulationCenter::PopulationCenter( vector<Person> *country_population, unsigned int first_citizen_index,
-                                    unsigned int number_of_inhabitants, float average_people_in_household) {
+                                    unsigned int number_of_inhabitants) {
     const unsigned int last_citizen_index = first_citizen_index + number_of_inhabitants;
     if (country_population->size() < last_citizen_index)    {
         throw "We do not have enough people.";
@@ -23,7 +23,7 @@ PopulationCenter::PopulationCenter( vector<Person> *country_population, unsigned
         m_inhabitants.push_back(&country_population->at(i));
     }
     m_number_of_inhabitants = m_inhabitants.size();
-    BuildAndFillHouseholds(average_people_in_household);
+    BuildAndFillHouseholds();
 }
 
 PopulationCenter::~PopulationCenter()   {
@@ -48,13 +48,23 @@ void PopulationCenter::RandomlyInfectNInhabitants(unsigned int number_of_infecte
     }
 }
 
-void PopulationCenter::BuildAndFillHouseholds(float average_people_in_household)  {
+void PopulationCenter::BuildAndFillHouseholds()  {
     unsigned int current_person = 0;
     while (current_person < m_number_of_inhabitants)   {
         m_households.push_back(Household());
         // Randomly generate number of inhabitants and fill the household
-        const unsigned int people_in_household = Household::GetRandomHouseholdNumber(average_people_in_household);
+        unsigned int people_in_household;
+        HouseholdCategory household_category;
+        Household::GetRandomHouseholdNumbers(&people_in_household, &household_category);
         for (unsigned int i = 0; (i < people_in_household) && (current_person < m_number_of_inhabitants); i++)  {
+            // Adjust age of ihabitants according to the age category of the household
+            if (household_category == enum_elderly) {
+                m_inhabitants.at(current_person)->SetAgeCategory(Person::GenerateRandomAgeCategoryElderlyHousehold());
+            }
+            if (household_category == enum_young) {
+                m_inhabitants.at(current_person)->SetAgeCategory(Person::GenerateRandomAgeCategoryYoungHousehold());
+            }
+
             m_households.back().AddInhabitant(m_inhabitants.at(current_person));
             current_person++;
         }
@@ -259,7 +269,7 @@ void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &numb
     // Move people to cities
     int current_person_index = 0;
     for (unsigned int i = 0; i < number_of_inhabitants.size(); i++) {
-        cities->push_back(PopulationCenter(population, current_person_index, number_of_inhabitants.at(i), 3.));
+        cities->push_back(PopulationCenter(population, current_person_index, number_of_inhabitants.at(i)));
         cities->back().SetName(names.at(i));
         current_person_index += number_of_inhabitants.at(i);
     }

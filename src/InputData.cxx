@@ -18,6 +18,7 @@ InputData::InputData()    {
     ReadMigrations();
     ReadAgeDistribution();
     ReadAgeSymptomsFile();
+    ReadHouseholdFile();
     if (ConfigParser::GetInfectedInitial() < 0) {
         ReadNumberOfInfected();
     }
@@ -44,7 +45,7 @@ void InputData::ReadMunicipalityFile()  {
         input_file.close();
     }
     else    {
-        throw "Unable to open file municipality text file!";     
+        throw "Unable to open file municipality text file!";
     }
     m_number_of_municipalities = m_municipality_id.size();
 };
@@ -56,7 +57,7 @@ void InputData::ReadLineOfConfig(string line)  {
 
     if (elements.size() < 3) {
         throw("I was unable to read the following line of input : " + line);
-    }   
+    }
 
     const int id          = std::stoi(elements.at(0));
     const int population  = std::stoi(elements.at(1));
@@ -77,11 +78,11 @@ void InputData::ReadMigrations()    {
         input_file.close();
     }
     else    {
-        throw "Unable to open file municipality text file!";     
+        throw "Unable to open file municipality text file!";
     }
     if (m_migrations.size() != m_number_of_municipalities)   {
         throw ("Incompatible inputs! The size of the migration matrix does not match the size of municipalities info input!\n");
-    }    
+    }
 }
 
 void InputData::ReadLineOfMigrations(string line)  {
@@ -117,8 +118,8 @@ void InputData::ReadNumberOfInfected()    {
         input_file.close();
     }
     else    {
-        throw "Unable to open file text file with number of infected people in municipalities!";     
-    } 
+        throw "Unable to open file text file with number of infected people in municipalities!";
+    }
 }
 
 void InputData::ReadLineOfInfected(string line)  {
@@ -151,7 +152,7 @@ void InputData::ReadLineOfInfected(string line)  {
                 m_municipality_number_of_infected.at(i) = stoi(elements.at(1));
                 return;
             }
-        }        
+        }
     }
     throw "I wasn't able to find municipality with name/ID : \"" + elements.at(0) + "\"";
 }
@@ -171,7 +172,7 @@ void InputData::ReadAgeDistribution()   {
         input_file.close();
     }
     else    {
-        throw "Unable to open file text file with the population age distribution!";     
+        throw "Unable to open file text file with the population age distribution!";
     }
 
     float sum = 0;
@@ -185,11 +186,6 @@ void InputData::ReadAgeDistribution()   {
     // Normalize
     for (float &age : m_age_distribution)   {
         age /= sum;
-    }
-
-    // Calculate cumulative distribution function
-    for (unsigned int i = 1; i < m_age_distribution.size(); i++)  {
-        m_age_distribution.at(i) = m_age_distribution.at(i) + m_age_distribution.at(i-1);
     }
 }
 
@@ -216,15 +212,28 @@ void InputData::ReadLineOfAgeDistributuon(std::string line) {
 
 
 void InputData::ReadAgeSymptomsFile()   {
-    m_age_symptomatic   = ReadAgeSymptomsProperty("symptomatic");
-    m_age_hospitalized  = ReadAgeSymptomsProperty("hospitalized");
-    m_age_critical      = ReadAgeSymptomsProperty("critical_care");
-    m_age_fatal         = ReadAgeSymptomsProperty("fatal");
+    const string file = ConfigParser::ReadStringValue("age_symptoms_file");
+    vector<string> age_categories = {"0", "10", "20", "30", "40", "50", "60", "70", "80"};
+
+    ReadDictionaryFromJSON(file, "symptomatic",     age_categories, &m_age_symptomatic);
+    ReadDictionaryFromJSON(file, "hospitalized",    age_categories, &m_age_hospitalized);
+    ReadDictionaryFromJSON(file, "critical_care",   age_categories, &m_age_critical);
+    ReadDictionaryFromJSON(file, "fatal",           age_categories, &m_age_fatal);
 };
 
-vector<float> InputData::ReadAgeSymptomsProperty(const string &property)    {
+void InputData::ReadDictionaryFromJSON( const std::string &json_address, const std::string &dict_name,
+                                        const std::vector<std::string> &keys, std::vector<float> *values)    {
+
+    values->clear();
+    vector<bool> key_found_vector;
+    for (unsigned int i = 0; i < keys.size(); i++)  {
+        values->push_back(-1.);
+        key_found_vector.push_back(false);
+    }
+
     string line;
-    ifstream input_file (ConfigParser::ReadStringValue("age_symptoms_file"));
+    ifstream input_file (json_address);
+
 
     bool reading_requested_value = false;
     vector<float> result;
@@ -252,7 +261,7 @@ vector<float> InputData::ReadAgeSymptomsProperty(const string &property)    {
             StripString(&key, "\"");
 
             // start reading
-            if (key == property)  {
+            if (key == dict_name)  {
                 reading_requested_value = true;
                 continue;
             }
@@ -263,37 +272,61 @@ vector<float> InputData::ReadAgeSymptomsProperty(const string &property)    {
 
             StripString(&elements.at(1), ", \t");
             if (!StringIsFloat(elements.at(1)))  {
-                throw "I could not read the following line in age_symptoms_file config\n" + line;
+                throw "I could not read the following line in json \"" + json_address + "\", :" + line;
             }
             const float value = stod(elements.at(1));
             if (reading_requested_value)    {
-                if      (key == "0")    result.at(0) = value;
-                else if (key == "10")   result.at(1) = value;
-                else if (key == "20")   result.at(2) = value;
-                else if (key == "30")   result.at(3) = value;
-                else if (key == "40")   result.at(4) = value;
-                else if (key == "50")   result.at(5) = value;
-                else if (key == "60")   result.at(6) = value;
-                else if (key == "70")   result.at(7) = value;
-                else if (key == "80")   result.at(8) = value;   
-                else {
-                    throw "Unknown key appeared in age symptoms json while reading property \"" + property + "\", the key: \"" + key + "\"";
-                }             
+                bool key_found = false;
+                for (unsigned int i = 0; i < keys.size(); i++)  {
+                    if (keys.at(i) == key) {
+                        values->at(i) = value;
+                        key_found_vector.at(i) = true;
+                        key_found = true;
+                    }
+                }
+
+                if (key_found == false) {
+                    throw "Unknown key appeared in age symptoms json while reading property \"" + dict_name + "\", the key: \"" + key + "\"";
+                }
             }
         }
         input_file.close();
     }
     else    {
-        throw "Unable to open file text file with the age symptoms!";     
+        throw "Unable to open file text file with the age symptoms!";
     }
 
-    for (unsigned int i = 0; i < result.size(); i++)    {
-        if (result.at(i) < 0)  {
-            throw "I coult not read age symptom property \"" + property + "\" for age group " + to_string(i*10); 
+    for (unsigned int i = 0; i < key_found_vector.size(); i++)    {
+        if (key_found_vector.at(i) == false)  {
+            throw "I could not read value for key \"" + keys.at(i) + "\" in file " + json_address + " dictionary \"" + dict_name + "\"";
         }
     }
+};
 
-    return result;
+
+void InputData::ReadHouseholdFile() {
+    ReadHouseholdsElderly();
+    ReadHouseholdsYoung();
+};
+
+void InputData::ReadHouseholdsElderly() {
+    const vector<string> keys = {"with_young", "1", "2"};
+    m_elderly_houses.resize(keys.size());
+    vector<float> values;
+    ReadDictionaryFromJSON(ConfigParser::ReadStringValue("households_file"), "elderly", keys, &values);
+    for (unsigned int i = 0; i < keys.size(); i++)   {
+        m_elderly_houses.at(i) = values.at(i);
+    }
+};
+
+void InputData::ReadHouseholdsYoung()   {
+    const vector<string> keys = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+    m_young_houses.resize(keys.size() + 1);
+    vector<float> values;
+    ReadDictionaryFromJSON(ConfigParser::ReadStringValue("households_file"), "young", keys, &values);
+    for (unsigned int i = 0; i < keys.size(); i++)   {
+        m_young_houses.at(i+1) = values.at(i);  // we do not have households with 0 inhabitants, that's why "i+1"
+    }
 };
 
 vector<string> InputData::SplitAndStripString(string input_string, const string &separator) {

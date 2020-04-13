@@ -30,6 +30,14 @@ namespace sars_cov2_sk	{
             std::vector<float>          m_age_critical;
             std::vector<float>          m_age_fatal;
 
+            // 0th element = number of elderly people living with youngs in an household
+            // 1st element = number of elderly people living alone
+            // 2nd element = number of elderly people living in pairs with another elderly person
+            std::vector<float> m_elderly_houses;
+
+            // Number of other people than elderly living in pairs, living in a household with given number of inhabitants
+            std::vector<float> m_young_houses;
+
             unsigned int                m_number_of_municipalities;
 
             void ReadMunicipalityFile();
@@ -50,7 +58,15 @@ namespace sars_cov2_sk	{
 
             void ReadAgeSymptomsFile();
 
-            std::vector<float> ReadAgeSymptomsProperty(const std::string &property);
+            // Opens file "json_address", looks for dictionary dic_name and read values for all keys in the same order
+            static void ReadDictionaryFromJSON( const std::string &json_address, const std::string &dict_name,
+                                                const std::vector<std::string> &keys, std::vector<float> *values);
+
+            void ReadHouseholdFile();
+
+            void ReadHouseholdsElderly();
+
+            void ReadHouseholdsYoung();
 
             static std::vector<std::string> SplitAndStripString(std::string input_string, const std::string &separator);
 
@@ -70,6 +86,8 @@ namespace sars_cov2_sk	{
             static std::vector<unsigned int>   GetMunicipInfected()     { Check(); return s_singleton_instance->m_municipality_number_of_infected;};
             static std::vector<std::string>    GetMunicipNames()        { Check(); return s_singleton_instance->m_municipality_name;};
             static const std::vector< std::vector <unsigned int> > *GetMigrations()   {Check(); return &s_singleton_instance->m_migrations;};
+
+            // Fraction of people in given age category. Sum of all elements == 1
             static const std::vector<float>    *GetAgeDistribution()    { Check(); return &s_singleton_instance->m_age_distribution; };
 
 
@@ -77,6 +95,16 @@ namespace sars_cov2_sk	{
             static const std::vector<float>    *GetAgeHospitalized()    { Check(); return &s_singleton_instance->m_age_hospitalized;};
             static const std::vector<float>    *GetAgeCritical()        { Check(); return &s_singleton_instance->m_age_critical;};
             static const std::vector<float>    *GetAgeFatal()           { Check(); return &s_singleton_instance->m_age_fatal;};
+
+            // fraction of people living in non-elderly households with "index" number of inhabitants
+            static const std::vector<float>    *GetYoungHouseholdsOccupancy()   { Check(); return &s_singleton_instance->m_young_houses;};
+
+            static float GetElderlyFractionLivingWithYoungs()           { Check(); return s_singleton_instance->m_elderly_houses.at(0);};
+
+            // 0th element = fraction of elderly people living with youngs in an household
+            // 1st element = fraction of elderly people living alone
+            // 2nd element = fraction of elderly people living in pairs with another elderly person
+            static const std::vector<float>    *GetElderlyHouseholdsOccupancy() { Check(); return &s_singleton_instance->m_elderly_houses;};
     };
 };
 #endif

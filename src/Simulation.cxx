@@ -100,5 +100,6 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     }
 
     Logging logging(ConfigParser::GetResultFileAddress());
+    logging.DumpConfigToJson(true);
     logging.DumpHistoryToJson(cities);
 }

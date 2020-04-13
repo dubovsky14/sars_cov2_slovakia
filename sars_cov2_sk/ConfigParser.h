@@ -1,11 +1,15 @@
 #ifndef CONFIG_PARSER_H
 #define CONFIG_PARSER_H
 
+#include "../sars_cov2_sk/ConfigParser.h"
+
 #include <string>
 #include <vector>
 #include <map>
 
 namespace sars_cov2_sk  {
+    class Logging;
+
     enum TrackingOption {disabled, all, infected_only};
     // singleton
     class ConfigParser  {
@@ -87,6 +91,7 @@ namespace sars_cov2_sk  {
             float m_critical_care_length_mean;
             float m_critical_care_length_std;
 
+            friend class sars_cov2_sk::Logging;
         public:
             static void InitializeConfig(const std::string &config_address);
 
@@ -131,7 +136,6 @@ namespace sars_cov2_sk  {
             static std::string ReadStringValue(const std::string &key) {Check(); return s_singleton_instance->GetStringValue(key);};;
             static int         ReadIntValue   (const std::string &key) {Check(); return s_singleton_instance->GetIntValue(key);};;
             static float       ReadFloatValue (const std::string &key) {Check(); return s_singleton_instance->GetFloatValue(key);};;
-
     };
 }
 

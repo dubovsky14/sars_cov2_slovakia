@@ -1,10 +1,13 @@
 #include "../sars_cov2_sk/Logging.h"
 #include "../sars_cov2_sk/PopulationCenter.h"
+#include "../sars_cov2_sk/ConfigParser.h"
 
 #include<string>
 #include<iostream>
 #include<fstream>
+#include<map>
 
+using namespace std;
 using namespace sars_cov2_sk;
 
 Logging::Logging(const std::string &out_address) {
@@ -60,3 +63,30 @@ void Logging::DumpHistoryToJson(const std::vector<PopulationCenter> &cities) {
         else                            DumpCityHistory(cities.at(i), true);
     }
 }
+
+void Logging::DumpConfigToJson(bool comma_terminated) {
+    ConfigParser::Check();
+    map<string, string> *config_map = &ConfigParser::s_singleton_instance->m_map;
+
+    string indent = "    ";
+    m_log_file << indent << "\"config\" : {\n";
+
+
+	map<string, string>::iterator it = config_map->begin();
+
+	while (it != config_map->end())	{
+		const string key    = it->first;
+		const string value  = it->second;
+
+		it++;
+        if (it != config_map->end()) {
+		    m_log_file << indent << indent << "\"" << key << "\" : \"" << value << "\"," << endl;
+        }
+        else {
+		    m_log_file << indent << indent << "\"" << key << "\" : \"" << value << "\"" << endl;
+        }
+	}
+
+    if (comma_terminated)   m_log_file << indent << "},\n";
+    else                    m_log_file << indent << "}\n";
+};

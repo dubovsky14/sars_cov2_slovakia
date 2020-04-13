@@ -32,7 +32,6 @@ void Household::IntializeHouseholdNumbers() {
 
     const vector<float> *age_distribution = InputData::GetAgeDistribution();
     for (unsigned int i = 0; i < age_distribution->size(); i++)    {
-        cout << age_distribution->at(i) << endl;
         if (Person::IsElderly(i))  {
             s_n_elderly += age_distribution->at(i);
         }
@@ -64,10 +63,6 @@ void Household::IntializeHouseholdNumbers() {
     s_n_households_elderly  = float((1-InputData::GetElderlyFractionLivingWithYoungs())*s_n_elderly)/s_average_occupancy_elderly;
 
     s_info_initialized = true;
-
-    cout << "Elderly: " << s_n_elderly << endl;
-    cout << "Young: "   << s_n_young   << endl;
-
 }
 
 

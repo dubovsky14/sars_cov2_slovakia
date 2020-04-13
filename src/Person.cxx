@@ -285,15 +285,15 @@ int Person::CountInPopulation(const vector<Person> &population, seir_status stat
 }
 
 int Person::GenerateRandomAgeCategory() {
-    const double rand = RandomUniform();
     const vector<float> *age_distribution = InputData::GetAgeDistribution();
-    for (unsigned int i = 0; i < age_distribution->size(); i++)    {
-        if (rand < age_distribution->at(i))  {
-            return i;
+    const float max_prob = MaxInVector(*age_distribution);
+    while (true)    {
+        int age = (age_distribution->size())*RandomUniform();
+        const float p = max_prob*RandomUniform();
+        if (p < age_distribution->at(age))  {
+            return age;
         }
     }
-    // extremely unlikely, but might happen because of a finite double precision ...
-    return age_distribution->size() - 1;
 }
 
 int Person::GenerateRandomAgeCategoryYoungHousehold() {

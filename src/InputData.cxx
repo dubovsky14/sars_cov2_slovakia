@@ -187,11 +187,6 @@ void InputData::ReadAgeDistribution()   {
     for (float &age : m_age_distribution)   {
         age /= sum;
     }
-
-    // Calculate cumulative distribution function
-    for (unsigned int i = 1; i < m_age_distribution.size(); i++)  {
-        m_age_distribution.at(i) = m_age_distribution.at(i) + m_age_distribution.at(i-1);
-    }
 }
 
 void InputData::ReadLineOfAgeDistributuon(std::string line) {

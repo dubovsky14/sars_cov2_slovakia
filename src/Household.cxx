@@ -12,13 +12,12 @@ using namespace std;
 using namespace sars_cov2_sk;
 
 bool     Household::s_info_initialized = false;
-int      Household::s_n_young            = -1;
-int      Household::s_n_elderly          = -1;
-int      Household::s_n_households_young    = -1;
-int      Household::s_n_households_elderly  = -1;
+float    Household::s_n_young            = -1;
+float    Household::s_n_elderly          = -1;
+float    Household::s_n_households_young    = -1;
+float    Household::s_n_households_elderly  = -1;
 float    Household::s_average_occupancy_young   = -1.;
 float    Household::s_average_occupancy_elderly = -1.;
-float    Household::s_fraction_of_elderly_living_with_young = 0.;
 
 void Household::IntializeHouseholdNumbers() {
     if (s_info_initialized) {
@@ -33,7 +32,8 @@ void Household::IntializeHouseholdNumbers() {
 
     const vector<float> *age_distribution = InputData::GetAgeDistribution();
     for (unsigned int i = 0; i < age_distribution->size(); i++)    {
-        if (i >= 6)  {
+        cout << age_distribution->at(i) << endl;
+        if (Person::IsElderly(i))  {
             s_n_elderly += age_distribution->at(i);
         }
         else {
@@ -62,6 +62,12 @@ void Household::IntializeHouseholdNumbers() {
     // calculate number of households with elderly persons only and the number of "young" households
     s_n_households_young    = float(s_n_young + InputData::GetElderlyFractionLivingWithYoungs()*s_n_elderly)/s_average_occupancy_young;
     s_n_households_elderly  = float((1-InputData::GetElderlyFractionLivingWithYoungs())*s_n_elderly)/s_average_occupancy_elderly;
+
+    s_info_initialized = true;
+
+    cout << "Elderly: " << s_n_elderly << endl;
+    cout << "Young: "   << s_n_young   << endl;
+
 }
 
 
@@ -104,6 +110,8 @@ void Household::SpreadInfection(float probability)   {
 };
 
 void Household::GetRandomHouseholdNumbers(unsigned int *number_of_inhabitants, HouseholdCategory *category) {
+    IntializeHouseholdNumbers();
+
     if (RandomUniform() < (float(s_n_households_elderly)/float(s_n_households_elderly+s_n_households_young)) )  {
         *category = enum_elderly;
         const float max_prob = MaxInVector(*InputData::GetElderlyHouseholdsOccupancy());

@@ -27,6 +27,21 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     PopulationCenter::CityAndPersonsFactory(cities_number_of_citizens, names, &population, &cities);
     PopulationCenter::SetMigrations(InputData::GetMigrations(), &cities);
 
+    vector<int> age_distribution;
+    for (unsigned int i = 0; i < InputData::GetAgeDistribution()->size(); i++)    {
+        age_distribution.push_back(0);
+    }
+
+    for (const Person &person : population) {
+        age_distribution.at(person.GetAgeCategory()) += 1;
+    }
+
+    for (unsigned int i = 0; i < age_distribution.size(); i++)  {
+        cout << i << "\t\t" << age_distribution.at(i) << endl;
+    }
+
+    return;
+
     int population_size = 0;
     for (unsigned int x : cities_number_of_citizens)    {
         population_size += x;

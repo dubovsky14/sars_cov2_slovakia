@@ -12,13 +12,12 @@ namespace sars_cov2_sk	{
             std::vector<Person *> m_inhabitants;
 
             static bool     s_info_initialized;
-            static int      s_n_young;
-            static int      s_n_elderly;
+            static float    s_n_young;                   // fraction of young people in population
+            static float    s_n_elderly;                 // fraction of elderly people in population
             static float    s_average_occupancy_young;   // Average number of persons living in "young" households
             static float    s_average_occupancy_elderly; // Average number of persons living in "elderly" households
-            static int      s_n_households_young;   // Number of households with young people
-            static int      s_n_households_elderly; // Number of households with elderly people
-            static float    s_fraction_of_elderly_living_with_young;
+            static float    s_n_households_young;        // Relative number of households with young people
+            static float    s_n_households_elderly;      // Relative number of households with elderly people
 
         public:
             const std::vector<Person *> *GetInhabitants()   {return &m_inhabitants;};

@@ -109,6 +109,12 @@ namespace sars_cov2_sk	{
 
             // Generates random integers with the same distribution as the age categories distribution in Slovakia
             static int GenerateRandomAgeCategory();
+
+            // Generate random integer with the same distribution as the age categories distribution in "elderly" households
+            static int GenerateRandomAgeCategoryElderlyHousehold();
+
+            // Generate random integer with the same distribution as the age categories distribution in "young" households
+            static int GenerateRandomAgeCategoryYoungHousehold();
 	};
 }
 

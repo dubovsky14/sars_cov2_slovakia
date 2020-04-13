@@ -30,12 +30,13 @@ namespace sars_cov2_sk	{
             std::vector<float>          m_age_critical;
             std::vector<float>          m_age_fatal;
 
-            // 1st element = number of elderly people living with youngs in an household
+            // 0th element = number of elderly people living with youngs in an household
+            // 1st element = number of elderly people living alone
             // 2nd element = number of elderly people living in pairs with another elderly person
-            int m_elderly_houses[3];
+            std::vector<float> m_elderly_houses;
 
             // Number of other people than elderly living in pairs, living in a household with given number of inhabitants
-            int m_young_houses[11];
+            std::vector<float> m_young_houses;
 
             unsigned int                m_number_of_municipalities;
 
@@ -92,6 +93,16 @@ namespace sars_cov2_sk	{
             static const std::vector<float>    *GetAgeHospitalized()    { Check(); return &s_singleton_instance->m_age_hospitalized;};
             static const std::vector<float>    *GetAgeCritical()        { Check(); return &s_singleton_instance->m_age_critical;};
             static const std::vector<float>    *GetAgeFatal()           { Check(); return &s_singleton_instance->m_age_fatal;};
+
+            // fraction of people living in non-elderly households with "index" number of inhabitants
+            static const std::vector<float>    *GetYoungHouseholdsOccupancy()   { Check(); return &s_singleton_instance->m_young_houses;};
+
+            static float GetElderlyFractionLivingWithYoungs()           { Check(); return s_singleton_instance->m_elderly_houses.at(0);};
+
+            // 0th element = fraction of elderly people living with youngs in an household
+            // 1st element = fraction of elderly people living alone
+            // 2nd element = fraction of elderly people living in pairs with another elderly person
+            static const std::vector<float>    *GetElderlyHouseholdsOccupancy() { Check(); return &s_singleton_instance->m_elderly_houses;};
     };
 };
 #endif

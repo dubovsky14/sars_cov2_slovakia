@@ -295,3 +295,26 @@ int Person::GenerateRandomAgeCategory() {
     // extremely unlikely, but might happen because of a finite double precision ...
     return age_distribution->size() - 1;
 }
+
+int Person::GenerateRandomAgeCategoryYoungHousehold() {
+    while (true)    {
+        const int age = GenerateRandomAgeCategory();
+        if (!IsElderly(age))    {
+            return age;
+        }
+        else {
+            if (RandomUniform() < InputData::GetElderlyFractionLivingWithYoungs())  {
+                return age;
+            }
+        }
+    }
+}
+
+int Person::GenerateRandomAgeCategoryElderlyHousehold() {
+    while (true)    {
+        const int age = GenerateRandomAgeCategory();
+        if (IsElderly(age))    {
+            return age;
+        }
+    }
+}

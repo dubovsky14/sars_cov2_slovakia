@@ -25,13 +25,30 @@ namespace sars_cov2_sk	{
     int RoundProbabilistic(float value);
 
     template <class T>
-    bool IsInVector(std::vector<T> input_vector, T element) {
-        for (T &x : input_vector)   {
-            if (x == element)   {
+    bool IsInVector(const std::vector<T> &input_vector, T element) {
+        for (unsigned int i = 0; i < input_vector.size(); i++)   {
+            if (input_vector.at(i) == element)   {
                 return true;
             }
         }
         return false;
+    }
+
+    // return maximal value in vector
+    template <class T>
+    T MaxInVector(const std::vector<T> &input_vector) {
+        if (input_vector.size() == 0)   {
+            throw "Cannot find maximal value of empty vector!";
+        }
+
+        T maximum = input_vector.at(0);
+
+        for (unsigned int i = 0; i < input_vector.size(); i++)   {
+            if (input_vector.at(i) > maximum)   {
+                maximum = input_vector.at(i);
+            }
+        }
+        return maximum;
     }
 
     bool StringIsBool(const std::string &x);

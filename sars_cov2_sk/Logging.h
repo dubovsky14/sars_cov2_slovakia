@@ -17,7 +17,7 @@ namespace sars_cov2_sk	{
             std::ofstream   m_log_file;
 
             void DumpVector(const std::string &indent, const std::string &variable_name, const std::vector<unsigned int> &numbers, bool comma_terminated);
- 
+
             void DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool comma_terminated);
 
         public:
@@ -25,6 +25,8 @@ namespace sars_cov2_sk	{
             ~Logging();
 
             void DumpHistoryToJson(const std::vector<sars_cov2_sk::PopulationCenter> &cities);
+
+            void DumpConfigToJson(bool comma_terminated = true);
     };
 };
 #endif

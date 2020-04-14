@@ -6,9 +6,18 @@
 #include<vector>
 
 namespace sars_cov2_sk	{
+    enum HouseholdCategory {enum_young, enum_elderly};
     class Household  {
         private:
             std::vector<Person *> m_inhabitants;
+
+            static bool     s_info_initialized;
+            static float    s_n_young;                   // fraction of young people in population
+            static float    s_n_elderly;                 // fraction of elderly people in population
+            static float    s_average_occupancy_young;   // Average number of persons living in "young" households
+            static float    s_average_occupancy_elderly; // Average number of persons living in "elderly" households
+            static float    s_n_households_young;        // Relative number of households with young people
+            static float    s_n_households_elderly;      // Relative number of households with elderly people
 
         public:
             const std::vector<Person *> *GetInhabitants()   {return &m_inhabitants;};
@@ -25,7 +34,9 @@ namespace sars_cov2_sk	{
             unsigned int GetNumberOfInhabitants() const {return m_inhabitants.size();};
 
             // Generate a random number with the distribution of household occupancy
-            static unsigned int GetRandomHouseholdNumber(float average_people_in_household);
+            static void GetRandomHouseholdNumbers(unsigned int *number_of_inhabitants, HouseholdCategory *category);
+
+            static void IntializeHouseholdNumbers();
     };
 };
 #endif

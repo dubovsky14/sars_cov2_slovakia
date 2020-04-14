@@ -4,6 +4,7 @@ from sys import exit
 import json
 import matplotlib.pyplot as plt
 import numpy as np
+from math import sqrt
 
 
 def main():
@@ -13,7 +14,7 @@ def main():
 
     parser = ArgumentParser(description='Yay, make Slovak SARS-CoV-2 plots!')
     parser.add_argument('-c', '--config',
-                        type=str, default='config/plot.json',
+                        type=str, default='../../config/plot.json',
                         help='location of configuration file')
     parser.add_argument('-t', '--type',
                         type=str, default='slovakia',
@@ -44,6 +45,8 @@ def main():
 
     if args.type == 'slovakia':
         plot_slovakia(indata, config)
+    elif args.type == 'slovakia_map':
+        plot_slovakia_map(indata, config)
     elif args.type == 'by_municipality':
         plot_by_municipality(indata, config)
 
@@ -53,9 +56,9 @@ def plot_slovakia(indata, config):
         Create plots for the whole Slovakia.
     '''
 
-    outfile_path = 'plots/slovakia'
+    outfile_path = '../../plots/slovakia'
 
-    lines = config['type']['slovakia']['lines']
+    lines = config['slovakia']['lines']
     days = indata['Nitra']['simulation_days']
 
     height = len(lines)
@@ -94,16 +97,21 @@ def plot_by_municipality(indata, config):
 
     for index, key in enumerate(indata):
         place = indata[key]
-        outfile_path = 'plots/by_municipality/' + key
+        outfile_path = '../../plots/by_municipality/' + key
 
         percent = round(100.*index/len(indata))
         print(str(percent) + '%, municipality: ' + key)
 
         days = place['simulation_days']
-        lines = config['type']['by_municipality']['lines']
+        lines = config['by_municipality']['lines']
 
         for line in lines:
-            plt.plot(days, place[line], label=line)
+            lines_to_sum = line.split('+')
+            line_sum = np.zeros(len(days))
+            for lin in lines_to_sum:
+                line_sum = np.add(line_sum, place[lin])
+
+            plt.plot(days, line_sum, label=line)
 
         plt.title(key)
         plt.xlabel('Days')
@@ -114,6 +122,67 @@ def plot_by_municipality(indata, config):
 
         outfile_path += '.pdf'
         plt.savefig(outfile_path)
+
+        plt.clf()
+
+
+def plot_slovakia_map(indata, config):
+    '''
+        Create dot on the map for every municipality in Slovakia.
+        To create video run:
+        ffmpeg -framerate 4 -i day_%03d.png -c:v libx264 -r 30 \
+               -pix_fmt yuv420p slovakia_map.mp4
+    '''
+
+    outfile_path_base = '../../plots/slovakia_map/day_'
+
+    # variable = config['slovakia_map']['variable']
+    days = indata['Nitra']['simulation_days']
+
+    lon = np.array([])
+    lat = np.array([])
+    pop = np.array([])
+    for index, key in enumerate(indata):
+        place = indata[key]
+
+        percent = round(100.*index/len(indata))
+        print(str(percent) + '%, municipality: ' + key)
+
+        lon = np.append(lon, place['longitude'])
+        lat = np.append(lat, place['latitude'])
+        pop = np.append(pop, sqrt(place['size']*0.01) + 1)
+
+    var = np.empty((0, len(indata)), int)
+    for index, day in enumerate(days):
+        var_one_day = np.array([])
+
+        percent = round(100.*index/len(days))
+        print(str(percent) + '%, day: ' + str(day))
+
+        for key in indata:
+            place = indata[key]
+
+            var_one_day = np.append(
+                var_one_day,
+                place['infected'][index])
+
+        var = np.append(var, [var_one_day], axis=0)
+
+    print(np.amax(var))
+
+
+    for index, day in enumerate(days):
+        outfile_path = outfile_path_base
+        plt.scatter(lon, lat, s=pop, c=var[index],
+                    cmap='jet', vmin=0, vmax=20000)
+
+        plt.title('Infected, day: ' + str(day))
+        plt.xlabel('Longitude')
+        plt.ylabel('Latitude')
+
+        outfile_path += str(day).zfill(3)
+        outfile_path += '.png'
+        plt.savefig(outfile_path, dpi=300)
 
         plt.clf()
 

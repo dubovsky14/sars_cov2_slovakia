@@ -44,7 +44,7 @@ void InputData::ReadMunicipalityFile()  {
         input_file.close();
     }
     else    {
-        throw "Unable to open file municipality text file!";     
+        throw "Unable to open file municipality text file!";
     }
     m_number_of_municipalities = m_municipality_id.size();
 };
@@ -54,17 +54,21 @@ void InputData::ReadLineOfConfig(string line)  {
     if (!ValidLine(line)) return; // Enable comments
     vector<string> elements = SplitAndStripString(line, ";");
 
-    if (elements.size() < 3) {
+    if (elements.size() < 5) {
         throw("I was unable to read the following line of input : " + line);
-    }   
+    }
 
     const int id          = std::stoi(elements.at(0));
-    const int population  = std::stoi(elements.at(1));
-    const string name     = elements.at(2);
+    const string name     = elements.at(1);
+    const int population  = std::stoi(elements.at(2));
+    const float longitude = std::stof(elements.at(3));
+    const float latitude  = std::stof(elements.at(4));
 
     m_municipality_id                   .push_back(id);
-    m_municipality_number_of_inhabitants.push_back(population);
     m_municipality_name                 .push_back(name);
+    m_municipality_number_of_inhabitants.push_back(population);
+    m_municipality_longitude            .push_back(longitude);
+    m_municipality_latitude             .push_back(latitude);
 }
 
 void InputData::ReadMigrations()    {
@@ -77,11 +81,11 @@ void InputData::ReadMigrations()    {
         input_file.close();
     }
     else    {
-        throw "Unable to open file municipality text file!";     
+        throw "Unable to open file municipality text file!";
     }
     if (m_migrations.size() != m_number_of_municipalities)   {
         throw ("Incompatible inputs! The size of the migration matrix does not match the size of municipalities info input!\n");
-    }    
+    }
 }
 
 void InputData::ReadLineOfMigrations(string line)  {
@@ -117,8 +121,8 @@ void InputData::ReadNumberOfInfected()    {
         input_file.close();
     }
     else    {
-        throw "Unable to open file text file with number of infected people in municipalities!";     
-    } 
+        throw "Unable to open file text file with number of infected people in municipalities!";
+    }
 }
 
 void InputData::ReadLineOfInfected(string line)  {
@@ -151,7 +155,7 @@ void InputData::ReadLineOfInfected(string line)  {
                 m_municipality_number_of_infected.at(i) = stoi(elements.at(1));
                 return;
             }
-        }        
+        }
     }
     throw "I wasn't able to find municipality with name/ID : \"" + elements.at(0) + "\"";
 }
@@ -171,7 +175,7 @@ void InputData::ReadAgeDistribution()   {
         input_file.close();
     }
     else    {
-        throw "Unable to open file text file with the population age distribution!";     
+        throw "Unable to open file text file with the population age distribution!";
     }
 
     float sum = 0;
@@ -275,16 +279,16 @@ vector<float> InputData::ReadAgeSymptomsProperty(const string &property)    {
                 else if (key == "50")   result.at(5) = value;
                 else if (key == "60")   result.at(6) = value;
                 else if (key == "70")   result.at(7) = value;
-                else if (key == "80")   result.at(8) = value;   
+                else if (key == "80")   result.at(8) = value;
                 else {
                     throw "Unknown key appeared in age symptoms json while reading property \"" + property + "\", the key: \"" + key + "\"";
-                }             
+                }
             }
         }
         input_file.close();
     }
     else    {
-        throw "Unable to open file text file with the age symptoms!";     
+        throw "Unable to open file text file with the age symptoms!";
     }
 
     for (unsigned int i = 0; i < result.size(); i++)    {

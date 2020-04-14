@@ -238,9 +238,13 @@ void PopulationCenter::SaveTheDayToHistory()    {
     m_logging_critical      .push_back(critical);
 };
 
-void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &number_of_inhabitants, const vector<string> &names,
-                                                vector<Person> *population,
-                                                vector<PopulationCenter> *cities)    {
+void PopulationCenter::CityAndPersonsFactory(
+        const vector<unsigned int> &number_of_inhabitants,
+        const vector<string> &names,
+        const vector<float> &longitudes,
+        const vector<float> &latitudes,
+        vector<Person> *population,
+        vector<PopulationCenter> *cities) {
 
     population->clear();
     cities->clear();
@@ -261,6 +265,8 @@ void PopulationCenter::CityAndPersonsFactory(   const vector<unsigned int> &numb
     for (unsigned int i = 0; i < number_of_inhabitants.size(); i++) {
         cities->push_back(PopulationCenter(population, current_person_index, number_of_inhabitants.at(i), 3.));
         cities->back().SetName(names.at(i));
+        cities->back().SetLongitude(longitudes.at(i));
+        cities->back().SetLatitude(latitudes.at(i));
         current_person_index += number_of_inhabitants.at(i);
     }
 };

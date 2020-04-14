@@ -4,4 +4,7 @@ results/
 .vscode/
 */*.pickle
 data/sensitive
+data/*csv
+data/*xlsx
+!data/municipalities.csv
 *.pdf

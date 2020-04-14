@@ -20,11 +20,15 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
 
     vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();
     vector<string> names = InputData::GetMunicipNames();
+    vector<float> longitudes = InputData::GetMunicipLongitudes();
+    vector<float> latitudes = InputData::GetMunicipLatitudes();
 
     vector<PopulationCenter> cities;
     vector<Person> population;
 
-    PopulationCenter::CityAndPersonsFactory(cities_number_of_citizens, names, &population, &cities);
+    PopulationCenter::CityAndPersonsFactory(cities_number_of_citizens, names,
+                                            longitudes, latitudes,
+                                            &population, &cities);
     PopulationCenter::SetMigrations(InputData::GetMigrations(), &cities);
 
     int population_size = 0;

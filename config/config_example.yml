@@ -35,7 +35,7 @@ critical_care_length_mean: 10
 critical_care_length_std: 1
 
 migration_matrix_txt: data/sensitive/migrations.txt
-populations_file_txt: data/municipalities.txt
+populations_file_txt: data/municipalities.csv
 households_file: data/households.json
 
 result_file: results/results_busines_as_usual.json

@@ -19,6 +19,8 @@ namespace sars_cov2_sk	{
             std::vector<unsigned int>   m_municipality_number_of_inhabitants;
             std::vector<unsigned int>   m_municipality_number_of_infected;
             std::vector<std::string>    m_municipality_name;
+            std::vector<float>          m_municipality_longitude;
+            std::vector<float>          m_municipality_latitude;
 
             std::vector< std::vector <unsigned int> > m_migrations;
 
@@ -85,6 +87,8 @@ namespace sars_cov2_sk	{
             static std::vector<unsigned int>   GetMunicipPopulations()  { Check(); return s_singleton_instance->m_municipality_number_of_inhabitants;};
             static std::vector<unsigned int>   GetMunicipInfected()     { Check(); return s_singleton_instance->m_municipality_number_of_infected;};
             static std::vector<std::string>    GetMunicipNames()        { Check(); return s_singleton_instance->m_municipality_name;};
+            static std::vector<float>          GetMunicipLongitudes()   { Check(); return s_singleton_instance->m_municipality_longitude;};
+            static std::vector<float>          GetMunicipLatitudes()    { Check(); return s_singleton_instance->m_municipality_latitude;};
             static const std::vector< std::vector <unsigned int> > *GetMigrations()   {Check(); return &s_singleton_instance->m_migrations;};
 
             // Fraction of people in given age category. Sum of all elements == 1

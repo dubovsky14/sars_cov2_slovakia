@@ -55,17 +55,21 @@ void InputData::ReadLineOfConfig(string line)  {
     if (!ValidLine(line)) return; // Enable comments
     vector<string> elements = SplitAndStripString(line, ";");
 
-    if (elements.size() < 3) {
+    if (elements.size() < 5) {
         throw("I was unable to read the following line of input : " + line);
     }
 
     const int id          = std::stoi(elements.at(0));
-    const int population  = std::stoi(elements.at(1));
-    const string name     = elements.at(2);
+    const string name     = elements.at(1);
+    const int population  = std::stoi(elements.at(2));
+    const float longitude = std::stof(elements.at(3));
+    const float latitude  = std::stof(elements.at(4));
 
     m_municipality_id                   .push_back(id);
-    m_municipality_number_of_inhabitants.push_back(population);
     m_municipality_name                 .push_back(name);
+    m_municipality_number_of_inhabitants.push_back(population);
+    m_municipality_longitude            .push_back(longitude);
+    m_municipality_latitude             .push_back(latitude);
 }
 
 void InputData::ReadMigrations()    {

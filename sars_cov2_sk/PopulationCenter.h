@@ -73,6 +73,14 @@ namespace sars_cov2_sk	{
 
             std::string GetName()   const {return m_name;};
 
+            void SetLongitude(const float &longitude) {m_longitude = longitude;};
+
+            float GetLongitude()   const {return m_longitude;};
+
+            void SetLatitude(const float &latitude) {m_latitude = latitude;};
+
+            float GetLatitude()   const {return m_latitude;};
+
             inline Person *GetInhabitant(unsigned int index)    {return m_inhabitants.at(index);};
 
             const std::vector<sars_cov2_sk::Person *> *GetInhabitants()   const {return &m_inhabitants; };
@@ -101,6 +109,7 @@ namespace sars_cov2_sk	{
             // Requires number of inhabitants and names of cities as input
             // City and population vector are firstly cleared out, then the are filled again
             static void CityAndPersonsFactory(  const std::vector<unsigned int> &number_of_inhabitants, const std::vector<std::string> &names,
+                                                const std::vector<float> &longitudes, const std::vector<float> &latitudes,
                                                 std::vector<sars_cov2_sk::Person> *population,
                                                 std::vector<sars_cov2_sk::PopulationCenter> *cities);
 

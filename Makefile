@@ -6,7 +6,7 @@ BASEDIR  = .
 
 DEBUG=-g -Wall -ggdb -O3 -std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0
 
-INCDIR=$(PWD) 
+INCDIR=$(PWD)
 
 INCFLAGS=$(DEBUG) -I$(INCDIR)
 
@@ -72,17 +72,23 @@ bin/CovidTest.o:src/CovidTest.cxx sars_cov2_sk/CovidTest.h
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
+bin/NetworkBase.o:src/NetworkBase.cxx sars_cov2_sk/NetworkBase.h
+	@echo "**"
+	@echo "** Compiling C++ Source: NetworkBase.cxx NetworkBase.h"
+	@echo "**"
+	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
+
 bin/main.o:src/main.cxx
 	@echo "**"
 	@echo "** Compiling C++ Source"
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
-bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o
+bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o bin/NetworkBase.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o bin/NetworkBase.o
 
 clean:
 	rm -rf bin/*.o main

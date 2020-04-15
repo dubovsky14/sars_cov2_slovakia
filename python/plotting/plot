@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
 from sys import exit
-import json
-import matplotlib.pyplot as plt
-import numpy as np
 from math import sqrt
+import json
+import subprocess
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+import numpy as np
 
 
 def main():
@@ -134,10 +136,13 @@ def plot_slovakia_map(indata, config):
                -pix_fmt yuv420p slovakia_map.mp4
     '''
 
-    outfile_path_base = '../../plots/slovakia_map/day_'
-
-    # variable = config['slovakia_map']['variable']
+    var_name = config['slovakia_map']['var_name']
+    var_title = config['slovakia_map']['var_title']
     days = indata['Nitra']['simulation_days']
+
+    outfile_path_base = '../../plots/slovakia_map/'
+    outfile_path_base += var_name
+    outfile_path_base += '_day_'
 
     lon = np.array([])
     lat = np.array([])
@@ -164,27 +169,63 @@ def plot_slovakia_map(indata, config):
 
             var_one_day = np.append(
                 var_one_day,
-                place['infected'][index])
+                place[var_name][index])
 
         var = np.append(var, [var_one_day], axis=0)
 
-    print(np.amax(var))
+    for day in days:
+        percent = round(100.*day/len(days))
+        print(str(percent) + '%, plot: ' + str(day))
 
-
-    for index, day in enumerate(days):
         outfile_path = outfile_path_base
-        plt.scatter(lon, lat, s=pop, c=var[index],
-                    cmap='jet', vmin=0, vmax=20000)
+        var_max = np.amax(var)
+        if var_max > 1e4:
+            color_map = colors.ListedColormap(
+                ['blue', 'gold', 'orange', 'orangered', 'red', 'maroon'])
+            color_norm = colors.BoundaryNorm(
+                [0, 1, 10, 100, 1e3, 1e4, np.amax(var)], 6)
+        elif var_max > 1e3:
+            color_map = colors.ListedColormap(
+                ['blue', 'gold', 'orange', 'red', 'maroon'])
+            color_norm = colors.BoundaryNorm(
+                [0, 1, 10, 100, 1e3, np.amax(var)], 5)
+        elif var_max > 1e2:
+            color_map = colors.ListedColormap(
+                ['blue', 'gold', 'red', 'maroon'])
+            color_norm = colors.BoundaryNorm(
+                [0, 1, 10, 100, np.amax(var)], 4)
+        elif var_max > 10:
+            color_map = colors.ListedColormap(
+                ['blue', 'gold', 'maroon'])
+            color_norm = colors.BoundaryNorm(
+                [0, 1, 10, np.amax(var)], 3)
+        else:
+            print('ERROR: Color range too small!')
+            print('       var_max = ' + str(var_max) + '<= 10')
+            exit(1)
+        plt.scatter(lon, lat, s=pop, c=var[day],
+                    cmap=color_map,
+                    norm=color_norm)
 
-        plt.title('Infected, day: ' + str(day))
+        plt.title('Day: ' + str(day))
         plt.xlabel('Longitude')
         plt.ylabel('Latitude')
+        cbar = plt.colorbar(orientation='horizontal')
+        cbar.set_label('Number of ' + var_title)
 
         outfile_path += str(day).zfill(3)
         outfile_path += '.png'
         plt.savefig(outfile_path, dpi=300)
 
         plt.clf()
+
+    command = 'ffmpeg -framerate 4 -i ../../plots/slovakia_map/'
+    command += var_name
+    command += '_day_%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p '
+    command += '../../plots/slovakia_map/'
+    command += var_name
+    command += '.mp4'
+    subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 
 
 if __name__ == '__main__':

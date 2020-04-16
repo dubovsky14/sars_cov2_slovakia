@@ -21,19 +21,6 @@ Logging::~Logging() {
     m_log_file.close();
 };
 
-void Logging::DumpVector(const std::string &indent, const std::string &variable_name, const std::vector<unsigned int> &numbers, bool comma_terminated)  {
-    m_log_file << indent << "\"" << variable_name << "\" : [";
-    for (unsigned int i = 0; i < numbers.size(); i++)   {
-        m_log_file << numbers.at(i);
-        if (i + 1 != numbers.size())    {
-            m_log_file << ", ";
-        }
-    }
-    m_log_file << "]";
-    if (comma_terminated) m_log_file << ",";
-    m_log_file << "\n";
-};
-
 void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool comma_terminated)   {
     std::string indent = "    ";
     m_log_file << indent << "\"" << city.m_name << "\" : {\n";

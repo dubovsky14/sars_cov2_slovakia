@@ -16,7 +16,19 @@ namespace sars_cov2_sk	{
             std::string     m_log_file_address;
             std::ofstream   m_log_file;
 
-            void DumpVector(const std::string &indent, const std::string &variable_name, const std::vector<unsigned int> &numbers, bool comma_terminated);
+            template <class T>
+            void DumpVector(const std::string &indent, const std::string &variable_name, const std::vector<T> &numbers, bool comma_terminated)  {
+                m_log_file << indent << "\"" << variable_name << "\" : [";
+                for (unsigned int i = 0; i < numbers.size(); i++)   {
+                    m_log_file << numbers.at(i);
+                    if (i + 1 != numbers.size())    {
+                        m_log_file << ", ";
+                    }
+                }
+                m_log_file << "]";
+                if (comma_terminated) m_log_file << ",";
+                m_log_file << "\n";
+            };
 
             void DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool comma_terminated);
 

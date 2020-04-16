@@ -1,8 +1,6 @@
 #ifndef CONFIG_PARSER_H
 #define CONFIG_PARSER_H
 
-#include "../sars_cov2_sk/ConfigParser.h"
-
 #include <string>
 #include <vector>
 #include <map>

@@ -1,0 +1,65 @@
+---
+population:
+  mean_stochastic_interactions: 7.5
+  probability_to_remember_random_meeting: 0.8
+
+virus:
+  transmission_probability: 0.0165
+  transmission_probability_household: 0.06
+  infectious_days_mean: 6.5
+  infectious_days_std: 1
+
+# fraction of symptomatic people being tested every day. Zero means no tests
+genetic_tests_rate: 0.2
+
+# if a person is infected, this is the probability of positive test result. There are no false positive cases, only false negative.
+genetic_tests_accuracy: 0.98
+
+# maximal number of genetic tests that can be done in a day
+genetic_tests_number_of_kits_daily: 3000
+
+# mean time after which a person who contracted the virus
+# starts being infectious
+infectious_start_mean: 5.1
+infectious_start_std: 1
+
+# mean time after which a person who contracted the virus
+# starts needing hospitalization
+hospitalization_start_mean: 4.9
+hospitalization_start_std: 1.1
+
+hospitalization_length_mean: 8
+hospitalization_length_std: 1
+
+critical_care_start_mean: 6
+critical_care_start_std: 1.5
+
+critical_care_length_mean: 10
+critical_care_length_std: 1
+
+migration_matrix_txt: data/sensitive/migrations.txt
+populations_file_txt: data/municipalities.csv
+households_file: data/households.json
+
+result_file: results/results_R1.6_with_tests.json
+
+# numerical number of inital number of infected at the simulation start (will be selected randomly in this case). If not defined, the text file with number of infected will be used.
+initial_number_of_infected: 500
+
+# test file with number of infected people in municipalities
+#infected_distribution_file: data/infected.txt
+
+# age distribution of people in country
+age_distribution_file: data/age_distribution.json
+
+# tracking of contacts (disabled, infected_only, all)
+tracking: infected_only
+
+age_symptoms_file: data/age_symptoms.json
+
+# two possible values: constant or additional. constant = number of meetings for travellers is the same as for other persons, they are just distributed to more cities. additonal = a traveller meets in every city Poisson(mean_stochastic_interactions) other people
+traveller_meetings: constant
+
+# offers a possibility to limit travelling (1 = travelling as usual, 0 = no travelling)
+mobility: 1.
+

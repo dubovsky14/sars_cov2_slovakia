@@ -18,6 +18,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     ConfigParser::InitializeConfig(config_address);
     InputData::Initialize();
 
+    // Retrieve input data about municipalities
     vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();
     vector<string> names = InputData::GetMunicipNames();
     vector<float> longitudes = InputData::GetMunicipLongitudes();
@@ -38,6 +39,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
 
     cout << "Population created\n";
 
+    // Infect randomly number of people defined in config
     if (ConfigParser::GetInfectedInitial() > 0) {
         int infected_already = 0;
         while (infected_already < ConfigParser::GetInfectedInitial())    {
@@ -51,7 +53,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
             }
         }
     }
-    else {
+    else { // Infect randomly number of people in municipalities from the corresponding text file
         vector <unsigned int> numbers_of_infected = InputData::GetMunicipInfected();
         for (unsigned int i_city = 0; i_city < cities.size(); i_city++) {
             cities.at(i_city).RandomlyInfectNInhabitants(numbers_of_infected.at(i_city));

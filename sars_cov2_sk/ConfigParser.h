@@ -15,6 +15,9 @@ namespace sars_cov2_sk  {
             ConfigParser(const std::string &config_address);
             ~ConfigParser();
 
+            static sars_cov2_sk::ConfigParser *s_singleton_instance;
+
+
             float m_transmission_prob_household;
             float m_transmission_prob_city;
             float m_average_number_of_city_interactions;
@@ -25,9 +28,7 @@ namespace sars_cov2_sk  {
             // true = number of travellers meetings is the same as for other people, they are just distributed among cities (travelling does not increase the number of total meetings)
             // false = traveller will have in each visited city the same number of meetings as normal person (travelling increases the number of total meetings)
             bool  m_travellers_meetings_constant;
-
             float m_mobility;
-
 
             sars_cov2_sk::TrackingOption m_tracking_option;
 
@@ -37,8 +38,6 @@ namespace sars_cov2_sk  {
             std::string m_infected_file;
 
             std::map<std::string, std::string> m_map;   // Note for python developers -> this is the same as dictionary in python
-
-            static sars_cov2_sk::ConfigParser *s_singleton_instance;
 
             void ReadConfig();
 

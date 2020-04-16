@@ -12,6 +12,7 @@ namespace sars_cov2_sk	{
 
             static sars_cov2_sk::InputData *s_singleton_instance;
 
+            // throw exception if singleton instance is nullptr
             static void Check();
 
             std::string                 m_text_file_municipalities;

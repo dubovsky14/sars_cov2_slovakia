@@ -24,9 +24,9 @@ namespace sars_cov2_sk	{
             // Number of people traveling from this city to another cities
             const std::vector<unsigned int> *m_migrations = nullptr;
 
-            // Called in the contructor. Takes people and move them randomly to households
+            // Called in the contructor. Takes people and move them randomly to households.
+            // It also changes age categories of people so the age distributions in households corresponds to reality as well as overall age distribution in Slovakia
             void BuildAndFillHouseholds();
-
 
             float m_longitude = 0;
             float m_latitude = 0;

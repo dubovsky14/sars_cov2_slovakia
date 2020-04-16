@@ -22,6 +22,7 @@ bool CovidTest::Test(Person *person)  const {
     else    {
         const bool test_result = (RandomUniform() < m_reliability);
         person->SetTestResult(test_result);
+        person->SetDateOfTest(Person::GetDay());
         return test_result;
     }
 }

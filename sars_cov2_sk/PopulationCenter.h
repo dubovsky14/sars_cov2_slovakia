@@ -43,6 +43,8 @@ namespace sars_cov2_sk	{
             std::vector<unsigned int> m_logging_new_cases;
             std::vector<unsigned int> m_logging_hospitalized;
             std::vector<unsigned int> m_logging_critical;
+            std::vector<unsigned int> m_logging_positive_tests_today;
+            std::vector<unsigned int> m_logging_negative_tests_today;
 
             friend class sars_cov2_sk::Logging;
 

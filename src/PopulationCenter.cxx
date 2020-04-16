@@ -212,6 +212,8 @@ void PopulationCenter::SaveTheDayToHistory()    {
     unsigned int hospitalized       = 0;
     unsigned int infective          = 0;
     unsigned int critical           = 0;
+    unsigned int positive_tests_today = 0;
+    unsigned int negative_tests_today = 0;
 
     for (const Person *person : m_inhabitants)  {
         if (person->IsUnaffected())     unaffected++;
@@ -224,6 +226,10 @@ void PopulationCenter::SaveTheDayToHistory()    {
         if (person->IsHospitalized())   hospitalized++;
         if (person->IsInfective())      infective++;
         if (person->IsCritical())       critical++;
+        if (person->TestedToday())  {
+            if (person->PositivelyTesed())  positive_tests_today++;
+            else                            negative_tests_today++;
+        }
     }
 
     if (symptomatic + asymptomatic + hospitalized != infective) {
@@ -246,6 +252,8 @@ void PopulationCenter::SaveTheDayToHistory()    {
     m_logging_hospitalized  .push_back(hospitalized);
     m_logging_infective     .push_back(infective);
     m_logging_critical      .push_back(critical);
+    m_logging_positive_tests_today.push_back(positive_tests_today);
+    m_logging_negative_tests_today.push_back(negative_tests_today);
 };
 
 void PopulationCenter::CityAndPersonsFactory(

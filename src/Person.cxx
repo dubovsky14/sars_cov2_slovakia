@@ -21,6 +21,7 @@ Person::Person() {
     m_in_quarantine     = false;
     m_is_hospitalized   = false;
     m_day_of_infection  = -1;
+    m_date_of_test      = -1;
     m_had_positive_test = false;
     m_visited_cities_today = 1;
 }

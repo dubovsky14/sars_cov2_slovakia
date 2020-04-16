@@ -41,17 +41,20 @@ void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool c
     m_log_file << indent << indent << "\"longitude\" : "    << city.m_longitude << ",\n";
     m_log_file << indent << indent << "\"latitude\" : "     << city.m_latitude << ",\n";
 
-    DumpVector(indent+indent, "simulation_days",    city.m_logging_days,        true);
-    DumpVector(indent+indent, "unaffected",         city.m_logging_unaffected,  true);
-    DumpVector(indent+indent, "infected",           city.m_logging_infected,    true);
-    DumpVector(indent+indent, "symptomatic",        city.m_logging_symptomatic, true);
-    DumpVector(indent+indent, "asymptomatic",       city.m_logging_asymptomatic,true);
-    DumpVector(indent+indent, "infective",          city.m_logging_infective,   true);
-    DumpVector(indent+indent, "immune",             city.m_logging_immune,      true);
-    DumpVector(indent+indent, "dead",               city.m_logging_dead,        true);
-    DumpVector(indent+indent, "new_cases",          city.m_logging_new_cases,   true);
-    DumpVector(indent+indent, "hospitalized",       city.m_logging_hospitalized,true);
-    DumpVector(indent+indent, "critical",           city.m_logging_critical,    false);
+    DumpVector(indent+indent, "simulation_days",        city.m_logging_days,                true);
+    DumpVector(indent+indent, "unaffected",             city.m_logging_unaffected,          true);
+    DumpVector(indent+indent, "infected",               city.m_logging_infected,            true);
+    DumpVector(indent+indent, "symptomatic",            city.m_logging_symptomatic,         true);
+    DumpVector(indent+indent, "asymptomatic",           city.m_logging_asymptomatic,        true);
+    DumpVector(indent+indent, "infective",              city.m_logging_infective,           true);
+    DumpVector(indent+indent, "immune",                 city.m_logging_immune,              true);
+    DumpVector(indent+indent, "dead",                   city.m_logging_dead,                true);
+    DumpVector(indent+indent, "new_cases",              city.m_logging_new_cases,           true);
+    DumpVector(indent+indent, "hospitalized",           city.m_logging_hospitalized,        true);
+    DumpVector(indent+indent, "critical",               city.m_logging_critical,            true);
+    DumpVector(indent+indent, "positive_tests_today",   city.m_logging_positive_tests_today,true);
+    DumpVector(indent+indent, "negative_tests_today",   city.m_logging_negative_tests_today,false);
+
 
     if (comma_terminated)   m_log_file << indent << "},\n";
     else                    m_log_file << indent << "}\n";

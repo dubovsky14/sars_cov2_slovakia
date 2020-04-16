@@ -14,18 +14,19 @@ namespace sars_cov2_sk	{
             // possible values: enum_susceptible, enum_exposed, enum_infective_symptomatic, enum_infective_asymptomatic, enum_needs_hospitalization, enum_critical, enum_immune, enum_dead;
             seir_status m_seir_status;
 
-            int     m_age_category;
+            short int   m_age_category;
 
-            float   m_health_state;   // from zero to one. Higher = more healthy
-            bool    m_in_quarantine;
-            bool    m_is_hospitalized;
-            bool    m_had_positive_test;
-            int     m_day_of_infection; // the day when the person got infected
-            int     m_date_of_next_status_change;
+            float       m_health_state;   // from zero to one. Higher = more healthy
+            bool        m_in_quarantine;
+            bool        m_is_hospitalized;
+            bool        m_had_positive_test;
+            short int   m_day_of_infection; // the day when the person got infected
+            short int   m_date_of_next_status_change;
             std::vector<sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
 
             // Number of cities visited today, including the one where the person lives
-            int     m_visited_cities_today;
+            short int   m_visited_cities_today;
+            short int   m_date_of_test;
 
             static int s_day_index;
 
@@ -85,7 +86,11 @@ namespace sars_cov2_sk	{
             void ForgetContacts();
 
             inline void SetAgeCategory(int age_category) {m_age_category = age_category;};
-            inline int  GetAgeCategory()    const       {return m_age_category;};
+            inline int  GetAgeCategory()    const        {return m_age_category;};
+
+            inline void SetDateOfTest(int date_of_test) {m_date_of_test = date_of_test;};
+            inline int  GetDateOfTest()     const       {return m_date_of_test;};
+            inline bool TestedToday()       const       {return m_date_of_test == s_day_index;}
 
             static inline bool IsElderly(int age_category)  {return age_category >= 6;};
             inline bool IsElderly()         const           {return IsElderly(m_age_category);};

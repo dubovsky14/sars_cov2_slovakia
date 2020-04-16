@@ -19,7 +19,7 @@ namespace sars_cov2_sk	{
 
             void SetConnectionsPerPerson(int connections) {m_connections = connections;};
 
-            virtual std::vector<std::vector<unsigned int>> CreateNetwork(unsigned int persons) const;
+            virtual std::vector<std::vector<unsigned int>> CreateNetwork(unsigned int persons, bool shuffle = false) const;
 
 
     };

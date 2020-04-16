@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
         ("v,verbosity", "verbosity level", cxxopts::value<int>(verbosity))
         ("c,configuration", "input configuration", cxxopts::value<std::string>(input_config));
 
-    auto results = options.parse(argc, argv);
+    cxxopts::ParseResult results = options.parse(argc, argv);
 
     if (input_config.empty()) {
         cout << "ERROR: Please specify address of the config file." << endl;

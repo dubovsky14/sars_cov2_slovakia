@@ -59,12 +59,12 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     }
 
     CovidTest genetic_test(ConfigParser::ReadFloatValue("genetic_tests_accuracy"));
-
+    genetic_test.SetNumberOfAvailableTestsDaily(ConfigParser::ReadIntValue("genetic_tests_number_of_kits_daily"));
 
     cout << "Running the simulation.\n";
     cout << "Number of municipalities: " << cities.size()   << endl;
     cout << "Total population: "         << population_size << endl;
-    cout << "day \t\t#infected\texposed\t\tasymptomatic\tsymptomatic\thosp.\t\tcritical\tdead\t\timmune" << endl;
+    cout << "day \t\t#infected\texposed\t\tasymptomatic\tsymptomatic\thosp.\t\tcritical\tdead\t\timmune\t\ttest_random\ttest_contacts" << endl;
     for (unsigned int day = 0; day < 1000; day++)    {
         Person::SetDay(day);
         const unsigned int number_of_ill = Person::GetNumberOfInfectedPersonsInPopulation(population);
@@ -78,7 +78,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
                     << "\t\t" << Person::CountInPopulation(population, enum_needs_hospitalization)
                     << "\t\t" << Person::CountInPopulation(population, enum_critical)
                     << "\t\t" << Person::CountInPopulation(population, enum_dead)
-                    << "\t\t" << Person::CountInPopulation(population, enum_immune) << endl;
+                    << "\t\t" << Person::CountInPopulation(population, enum_immune);
 
         for (PopulationCenter &city : cities)   {
             city.SendTravelersToAllCities(&cities);
@@ -92,15 +92,18 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
         }
 
         // Testing
-        int positively_tested_today = 0;
-        positively_tested_today +=  genetic_test.TestContactOfPositivesFromYesterday();
-        positively_tested_today += genetic_test.TestPeople(&population, ConfigParser::ReadFloatValue("genetic_tests_rate"));
+        const int positively_tested_1st_round  = genetic_test.TestPeople(&population, ConfigParser::ReadFloatValue("genetic_tests_rate"));
+        const int positively_tested_contacts =  genetic_test.TestContactOfPositivesFromYesterday();
         genetic_test.PutToCarantinePositivelyTestedFromYesterday();
+        cout    << "\t\t" << positively_tested_1st_round
+                << "\t\t" << positively_tested_contacts;
+
 
         for (PopulationCenter &city : cities)   {
             city.SaveTheDayToHistory();
         }
 
+        cout << endl;
     }
 
     Logging logging(ConfigParser::GetResultFileAddress());

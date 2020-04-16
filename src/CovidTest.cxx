@@ -13,9 +13,13 @@ CovidTest::CovidTest(float reliability) {
 
     m_yesterday = Person::GetDay() - 1;
     m_today     = Person::GetDay();
+
+    m_number_of_available_tests_daily = 2e9;
+    m_number_of_tests_used_today = 0;
 }
 
-bool CovidTest::Test(Person *person)  const {
+bool CovidTest::Test(Person *person) {
+    m_number_of_tests_used_today++;
     if (!person->IsIll())   {
         return false;
     }
@@ -33,6 +37,7 @@ int CovidTest::TestPeople(const std::vector<Person *> &persons, float fraction) 
         m_positively_tested_today.clear();
         m_today = Person::GetDay();
         m_yesterday = m_today - 1;
+        m_number_of_tests_used_today = 0;
     }
 
     int number_of_positively_tested = 0;
@@ -48,6 +53,9 @@ int CovidTest::TestPeople(const std::vector<Person *> &persons, float fraction) 
         }
 
         if (person->HealthState() < fraction)    {
+            if (m_number_of_tests_used_today >= m_number_of_available_tests_daily)  {
+                break; // There are no more test kits
+            }
             if (Test(person))   {
                 number_of_positively_tested++;
                 if (IsInVector(m_positively_tested_today, person))  {
@@ -65,6 +73,7 @@ int CovidTest::TestPeople(std::vector<Person> *persons, float fraction) {
         m_positively_tested_today.clear();
         m_today = Person::GetDay();
         m_yesterday = m_today - 1;
+        m_number_of_tests_used_today = 0;
     }
 
     int number_of_positively_tested = 0;
@@ -80,6 +89,9 @@ int CovidTest::TestPeople(std::vector<Person> *persons, float fraction) {
         }
 
         if (person.HealthState() < fraction)    {
+            if (m_number_of_tests_used_today >= m_number_of_available_tests_daily)  {
+                break; // There are no more test kits
+            }
             if (Test(&person))   {
                 number_of_positively_tested++;
                 if (!IsInVector(m_positively_tested_today, &person))  {
@@ -97,10 +109,15 @@ int CovidTest::TestContactOfPositivesFromYesterday()    {
         m_positively_tested_today.clear();
         m_today = Person::GetDay();
         m_yesterday = m_today - 1;
+        m_number_of_tests_used_today = 0;
     }
 
     int number_of_positively_tested = 0;
     for (Person *person : m_positively_tested_yesterday)  {
+        if (m_number_of_tests_used_today >= m_number_of_available_tests_daily)  {
+            break; // There are no more test kits
+        }
+
         // Do not test healthy people for now
         if (!person->IsIll())   {
             continue;
@@ -108,6 +125,9 @@ int CovidTest::TestContactOfPositivesFromYesterday()    {
 
         const vector<Person *> *list_if_contacts = person->GetListOfContacts();
         for (Person *contact : *list_if_contacts)   {
+            if (m_number_of_tests_used_today >= m_number_of_available_tests_daily)  {
+                break; // There are no more test kits
+            }
             // Do not test people who had positive test result already
             if (contact->PositivelyTesed())    {
                 continue;

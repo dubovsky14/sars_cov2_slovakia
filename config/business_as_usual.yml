@@ -15,6 +15,9 @@ genetic_tests_rate: 0.
 # if a person is infected, this is the probability of positive test result. There are no false positive cases, only false negative.
 genetic_tests_accuracy: 0.98
 
+# maximal number of genetic tests that can be done in a day
+genetic_tests_number_of_kits_daily: 0
+
 # mean time after which a person who contracted the virus
 # starts being infectious
 infectious_start_mean: 5.1
@@ -38,10 +41,10 @@ migration_matrix_txt: data/sensitive/migrations.txt
 populations_file_txt: data/municipalities.csv
 households_file: data/households.json
 
-result_file: results/results_busines_as_usual_test.json
+result_file: results/results_business_as_usual.json
 
 # numerical number of inital number of infected at the simulation start (will be selected randomly in this case). If not defined, the text file with number of infected will be used.
-initial_number_of_infected: 100
+initial_number_of_infected: 500
 
 # test file with number of infected people in municipalities
 #infected_distribution_file: data/infected.txt

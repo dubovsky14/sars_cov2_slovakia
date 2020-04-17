@@ -104,7 +104,6 @@ int CovidTest::TestAllPeople(const std::vector<Person *> &persons, bool limit_nu
             }
         }
 
-        m_number_of_tests_used_today++;
         if (m_number_of_tests_used_today >= m_number_of_available_tests_daily)  {
             break; // There are no more test kits
         }

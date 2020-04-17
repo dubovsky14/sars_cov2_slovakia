@@ -37,6 +37,11 @@ namespace sars_cov2_sk	{
             // Test people in input vector. Only symptomatic with health state < fraction will be tested
             int TestPeople(std::vector<Person> *persons, float fraction);
 
+            // Test all people in the input vector (do not look at their health state, results of previous tests ... just test them all)
+            // If limit_number_of_tests == true, the first N persons from the vector will be tested, where N is number of available testing kits
+            // It returns number of positive tests
+            int TestAllPeople(const std::vector<Person *> &persons, bool limit_number_of_tests = true);
+
             int TestContactOfPositivesFromYesterday();
 
             void PutToCarantinePositivelyTestedFromYesterday();

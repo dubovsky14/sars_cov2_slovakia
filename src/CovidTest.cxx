@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 using namespace sars_cov2_sk;
@@ -40,7 +41,7 @@ int CovidTest::TestPeople(const std::vector<Person *> &persons, float fraction) 
         m_number_of_tests_used_today = 0;
     }
 
-    int number_of_positively_tested = 0;
+    vector<Person *> persons_to_be_tested;
     for (Person *person : persons)  {
         // Do not test healthy people for now
         if (!person->IsIll())   {
@@ -53,18 +54,13 @@ int CovidTest::TestPeople(const std::vector<Person *> &persons, float fraction) 
         }
 
         if (person->HealthState() < fraction)    {
-            if (m_number_of_tests_used_today >= m_number_of_available_tests_daily)  {
-                break; // There are no more test kits
-            }
-            if (Test(person))   {
-                number_of_positively_tested++;
-                if (IsInVector(m_positively_tested_today, person))  {
-                    m_positively_tested_today.push_back(person);
-                }
-            }
+            persons_to_be_tested.push_back(person);
         }
     }
-    return number_of_positively_tested;
+    // Shuffle people randomly, so for lack of tests, even people from last municipalities will be tested
+    std::random_shuffle(persons_to_be_tested.begin(), persons_to_be_tested.end());
+
+    return TestAllPeople(persons_to_be_tested, true);
 }
 
 int CovidTest::TestPeople(std::vector<Person> *persons, float fraction) {
@@ -76,7 +72,7 @@ int CovidTest::TestPeople(std::vector<Person> *persons, float fraction) {
         m_number_of_tests_used_today = 0;
     }
 
-    int number_of_positively_tested = 0;
+    vector<Person *> persons_to_be_tested;
     for (Person &person : *persons)  {
         // Do not test healthy and asymptomatic people for now
         if (!(person.IsIll() && person.HasSymptoms()))   {
@@ -89,15 +85,28 @@ int CovidTest::TestPeople(std::vector<Person> *persons, float fraction) {
         }
 
         if (person.HealthState() < fraction)    {
-            if (m_number_of_tests_used_today >= m_number_of_available_tests_daily)  {
-                break; // There are no more test kits
+            persons_to_be_tested.push_back(&person);
+        }
+    }
+    // Shuffle people randomly, so for lack of tests, even people from last municipalities will be tested
+    std::random_shuffle(persons_to_be_tested.begin(), persons_to_be_tested.end());
+
+    return TestAllPeople(persons_to_be_tested, true);
+}
+
+int CovidTest::TestAllPeople(const std::vector<Person *> &persons, bool limit_number_of_tests)  {
+    int number_of_positively_tested = 0;
+    for (Person* person: persons)   {
+        if (Test(person))   {
+            number_of_positively_tested++;
+            if (!IsInVector(m_positively_tested_today,person))  {
+                m_positively_tested_today.push_back(person);
             }
-            if (Test(&person))   {
-                number_of_positively_tested++;
-                if (!IsInVector(m_positively_tested_today, &person))  {
-                    m_positively_tested_today.push_back(&person);
-                }
-            }
+        }
+
+        m_number_of_tests_used_today++;
+        if (m_number_of_tests_used_today >= m_number_of_available_tests_daily)  {
+            break; // There are no more test kits
         }
     }
     return number_of_positively_tested;

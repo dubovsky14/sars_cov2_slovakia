@@ -48,7 +48,12 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
                 continue;
             }
             else {
-                population.at(index).Infect();
+                if (ConfigParser::GetInitialSeirStatus() == enum_exposed)   {
+                    population.at(index).Infect();
+                }
+                else {
+                    population.at(index).ForceSEIRStatus(ConfigParser::GetInitialSeirStatus());
+                }
                 infected_already++;
             }
         }

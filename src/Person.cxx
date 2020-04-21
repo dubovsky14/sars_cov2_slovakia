@@ -190,6 +190,32 @@ void Person::Evolve()   {
     }
 };
 
+void Person::ForceSEIRStatus(seir_status status)    {
+    if (status == enum_infective_symptomatic)  {
+        m_day_of_infection          = s_day_index;
+        // person has symptoms and after some time it will need hospitalization
+        if (m_health_state < InputData::GetAgeHospitalized()->at(m_age_category))   {
+            m_seir_status = enum_infective_symptomatic;
+            m_date_of_next_status_change = s_day_index + RandomGaussWithProbabilisticRounding(ConfigParser::HospitalizationStartMean(),ConfigParser::HospitalizationStartStd());
+        }
+        // person has symptoms, but it will not need hospitalization
+        else  {
+            m_seir_status = enum_infective_symptomatic;
+            m_date_of_next_status_change = s_day_index + RandomGaussWithProbabilisticRounding(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
+        }
+        return;
+    }
+
+    if (status == enum_infective_asymptomatic)  {
+        m_day_of_infection          = s_day_index;
+        // person will have no symptoms
+        m_seir_status = enum_infective_asymptomatic;
+        m_date_of_next_status_change = s_day_index + RandomGaussWithProbabilisticRounding(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
+        return;
+    }
+    throw "Status" + std::to_string(status) + "not (yet) supported, sorry!";
+}
+
 void Person::ForgetContacts()   {
     m_list_of_contacts.clear();
     m_list_of_contacts.shrink_to_fit();

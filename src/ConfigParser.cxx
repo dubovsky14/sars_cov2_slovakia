@@ -147,6 +147,8 @@ void ConfigParser::InitializeValues()   {
 
     InitializeTravellersMeetingsConstant();
 
+    InitializeInitialSEIRStatus();
+
     // Number of infected can be either defined in the config centraly for whole country, or in the text file with number of infected in municipalities
     try {
         m_infected_initial = GetIntValue("initial_number_of_infected");
@@ -169,6 +171,18 @@ void ConfigParser::InitializeTravellersMeetingsConstant() {
         throw "Unknown value of parameter \"traveller_meetings\" in config! It has to be either \"additional\" or \"constant\"";
     }
 }
+
+void ConfigParser::InitializeInitialSEIRStatus()    {
+    m_initial_seir_status = enum_exposed;
+    try    {
+        const string status = GetStringValue("initial_status_of_infected");
+        if (status == "asymptomatic")  m_initial_seir_status = enum_infective_asymptomatic;
+        if (status == "symptomatic")   m_initial_seir_status = enum_infective_symptomatic;
+    }
+    catch(...)    {
+
+    }
+};
 
 void ConfigParser::Check()    {
     if (!s_singleton_instance)   {

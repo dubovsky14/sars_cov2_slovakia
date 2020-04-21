@@ -23,8 +23,7 @@ genetic_tests_number_of_kits_daily: 3000
 infectious_start_mean: 5.1
 infectious_start_std: 1
 
-# mean time after which a person who contracted the virus
-# starts needing hospitalization
+# mean time between appearance of first symptoms and need for hospitalization
 hospitalization_start_mean: 4.9
 hospitalization_start_std: 1.1
 

@@ -50,6 +50,8 @@ namespace sars_cov2_sk	{
             // Does not include interaction with other people
             void Evolve();
 
+            void ForceSEIRStatus(seir_status status);
+
             void Heal();
 
             void Kill();

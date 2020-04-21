@@ -1,6 +1,8 @@
 #ifndef CONFIG_PARSER_H
 #define CONFIG_PARSER_H
 
+#include "../sars_cov2_sk/Person.h"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -57,6 +59,9 @@ namespace sars_cov2_sk  {
             void InitializeValues();
 
             void InitializeTravellersMeetingsConstant();
+
+            seir_status m_initial_seir_status;
+            void InitializeInitialSEIRStatus();
 
             // Throw exception if config is not initialized
             static void Check();
@@ -126,6 +131,7 @@ namespace sars_cov2_sk  {
             // Fraction of people travelling in current state (with respect to the normal state)
             static float GetMobility()                        {Check(); return s_singleton_instance->m_mobility;}
 
+            static seir_status  GetInitialSeirStatus()        {Check(); return s_singleton_instance->m_initial_seir_status;};
 
             static sars_cov2_sk::TrackingOption GetTrackingOption()   {Check(); return s_singleton_instance->m_tracking_option;};
 

@@ -76,6 +76,6 @@ float sars_cov2_sk::Get_R_out()   {
         population_total += city_population;
     }
 
-    const float R_out = (n_random_interactions + meetings_additional*migrations_total/population_total)*T_inf_average*transmission_prob;
+    const float R_out = (n_random_interactions + meetings_additional*migrations_total*ConfigParser::GetMobility()/population_total)*T_inf_average*transmission_prob;
     return R_out;
 }

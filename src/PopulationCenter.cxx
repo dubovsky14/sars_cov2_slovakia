@@ -42,7 +42,7 @@ void PopulationCenter::RandomlyInfectNInhabitants(unsigned int number_of_infecte
             continue;
         }
         else {
-            m_inhabitants.at(index)->Infect();
+            m_inhabitants.at(index)->Infect(1);
             infected_already++;
         }
     }

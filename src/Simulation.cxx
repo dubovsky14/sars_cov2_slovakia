@@ -49,7 +49,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
             }
             else {
                 if (ConfigParser::GetInitialSeirStatus() == enum_exposed)   {
-                    population.at(index).Infect();
+                    population.at(index).Infect(1);
                 }
                 else {
                     population.at(index).ForceSEIRStatus(ConfigParser::GetInitialSeirStatus());
@@ -111,6 +111,23 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
         }
 
         cout << endl;
+    }
+
+    vector<int> generations;
+    for (const Person &person:population)   {
+        generations.push_back(person.GetGeneration());
+    }
+    vector<int> generations_counts;
+    generations_counts.resize(MaxInVector(generations) + 1);
+    for (int gen : generations) {
+        if (gen > 0)    {
+            generations_counts.at(gen)++;
+        }
+    }
+
+    cout << "\n\ngeneration\tcount\n";
+    for (unsigned int i = 0; i < generations_counts.size(); i++)    {
+        cout << i << "\t\t" << generations_counts.at(i) << endl;
     }
 
     Logging logging(ConfigParser::GetResultFileAddress());

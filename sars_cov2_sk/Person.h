@@ -30,6 +30,10 @@ namespace sars_cov2_sk	{
 
             static int s_day_index;
 
+            // N=1 -> infected at the beginning of the simulation
+            // N>1 -> infected by someone from N-1 generation
+            short int  m_generation;
+
 		public:
             Person();
 
@@ -42,7 +46,7 @@ namespace sars_cov2_sk	{
             inline int GetNumberOfVisitedMunicipalities() const {return m_visited_cities_today;};
 
             // Infect the person if not immune or ill. If immune or ill, do nothing.
-            void Infect();
+            void Infect(short int generation);
 
             void AddContact(sars_cov2_sk::Person *person);
 
@@ -96,6 +100,8 @@ namespace sars_cov2_sk	{
 
             static inline bool IsElderly(int age_category)  {return age_category >= 6;};
             inline bool IsElderly()         const           {return IsElderly(m_age_category);};
+
+            inline int  GetGeneration()     const           {return m_generation;};
 
             // Temporary solution (will be move to a separate singleton class).
             // The class person needs to know the date in order to evolve status of people (hospitalization, appearance of symptoms ...)

@@ -24,13 +24,16 @@ Person::Person() {
     m_date_of_test      = -1;
     m_had_positive_test = false;
     m_visited_cities_today = 1;
+
+    m_generation = -1;
 }
 
-void Person::Infect()   {
+void Person::Infect(short int generation)   {
     if (m_seir_status == enum_susceptible)    {
         m_seir_status               = enum_exposed;
         m_day_of_infection          = s_day_index;
         m_date_of_next_status_change= s_day_index + int(RandomGaussWithProbabilisticRounding(ConfigParser::InfectiousStartMean(), ConfigParser::InfectiousStartStd()));
+        m_generation = generation;
 
         // Person starts to be infectious on the same day (quite unlikely, but might happen)
         if (m_date_of_next_status_change == s_day_index) {
@@ -203,6 +206,7 @@ void Person::ForceSEIRStatus(seir_status status)    {
             m_seir_status = enum_infective_symptomatic;
             m_date_of_next_status_change = s_day_index + RandomGaussWithProbabilisticRounding(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
         }
+        m_generation = 0;
         return;
     }
 
@@ -211,6 +215,7 @@ void Person::ForceSEIRStatus(seir_status status)    {
         // person will have no symptoms
         m_seir_status = enum_infective_asymptomatic;
         m_date_of_next_status_change = s_day_index + RandomGaussWithProbabilisticRounding(ConfigParser::InfectiousDaysMean(),ConfigParser::InfectiousDaysStd());
+        m_generation = 0;
         return;
     }
     throw "Status" + std::to_string(status) + "not (yet) supported, sorry!";
@@ -255,7 +260,7 @@ void Person::Meet(Person *person1, Person *person2, float transmission_probabili
     if (person1->IsIll() && !person2->IsIll())   {
         const bool spread_virus = RandomUniform() < transmission_probability;
         if (spread_virus)   {
-            if (person1->IsInfective())    person2->Infect();
+            if (person1->IsInfective())    person2->Infect(person1->GetGeneration() + 1);
             if (remember) person2->AddContact(person1);
         }
         if (spread_virus || ConfigParser::GetTrackingOption() == all)   {
@@ -268,7 +273,7 @@ void Person::Meet(Person *person1, Person *person2, float transmission_probabili
     if (!person1->IsIll() && person2->IsIll())   {
         const bool spread_virus = RandomUniform() < transmission_probability;
         if (spread_virus)   {
-            if (person2->IsInfective())    person1->Infect();
+            if (person2->IsInfective())    person1->Infect(person2->GetGeneration() + 1);
             if (remember) person1->AddContact(person1);
         }
 

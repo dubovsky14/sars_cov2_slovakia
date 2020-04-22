@@ -91,6 +91,7 @@ namespace sars_cov2_sk	{
             static std::vector<float>          GetMunicipLongitudes()   { Check(); return s_singleton_instance->m_municipality_longitude;};
             static std::vector<float>          GetMunicipLatitudes()    { Check(); return s_singleton_instance->m_municipality_latitude;};
             static const std::vector< std::vector <unsigned int> > *GetMigrations()   {Check(); return &s_singleton_instance->m_migrations;};
+            static unsigned int                GetMigrationsTotal();
 
             // Fraction of people in given age category. Sum of all elements == 1
             static const std::vector<float>    *GetAgeDistribution()    { Check(); return &s_singleton_instance->m_age_distribution; };

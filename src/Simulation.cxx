@@ -7,6 +7,7 @@
 #include "../sars_cov2_sk/Logging.h"
 #include "../sars_cov2_sk/ConfigParser.h"
 #include "../sars_cov2_sk/CovidTest.h"
+#include "../sars_cov2_sk/ROutToReffConvertor.h"
 
 #include <string>
 #include <vector>
@@ -71,6 +72,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     cout << "Running the simulation.\n";
     cout << "Number of municipalities: " << cities.size()   << endl;
     cout << "Total population: "         << population_size << endl;
+    cout << "Virus reproduction number R0 = : "         << Get_R_eff() << endl;
     cout << "day \t\t#infected\texposed\t\tasymptomatic\tsymptomatic\thosp.\t\tcritical\tdead\t\timmune\t\ttest_random\ttest_contacts" << endl;
     for (unsigned int day = 0; day < 1000; day++)    {
         Person::SetDay(day);
@@ -132,5 +134,6 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
 
     Logging logging(ConfigParser::GetResultFileAddress());
     logging.DumpConfigToJson(true);
+    logging.DumpGlobalVariablesToJson(cities, population, true);
     logging.DumpHistoryToJson(cities);
 }

@@ -35,6 +35,19 @@ void InputData::Initialize()   {
     s_singleton_instance = new InputData();
 };
 
+unsigned int InputData::GetMigrationsTotal() {
+    Check();
+    unsigned int result = 0;
+    for (unsigned int i = 0; i < s_singleton_instance->m_migrations.size(); i++)    {
+        for (unsigned int j = 0; j < s_singleton_instance->m_migrations.at(i).size(); j++)    {
+            if (j!=i)   {
+                result += s_singleton_instance->m_migrations.at(i).at(j);
+            }
+        }
+    }
+    return result;
+}
+
 void InputData::ReadMunicipalityFile()  {
     string line;
     ifstream input_file (m_text_file_municipalities);

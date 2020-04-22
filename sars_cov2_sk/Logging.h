@@ -2,6 +2,7 @@
 #define LOGGING_H
 
 #include "../sars_cov2_sk/PopulationCenter.h"
+#include "../sars_cov2_sk/Person.h"
 
 #include<string>
 #include<iostream>
@@ -39,6 +40,8 @@ namespace sars_cov2_sk	{
             void DumpHistoryToJson(const std::vector<sars_cov2_sk::PopulationCenter> &cities);
 
             void DumpConfigToJson(bool comma_terminated = true);
+
+            void DumpGlobalVariablesToJson(const std::vector<sars_cov2_sk::PopulationCenter> &cities, const std::vector<sars_cov2_sk::Person> &population, bool comma_terminated = true);
     };
 };
 #endif

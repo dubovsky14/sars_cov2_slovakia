@@ -78,17 +78,23 @@ bin/NetworkBase.o:src/NetworkBase.cxx sars_cov2_sk/NetworkBase.h
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
+bin/ROutToReffConvertor.o:src/ROutToReffConvertor.cxx sars_cov2_sk/ROutToReffConvertor.h
+	@echo "**"
+	@echo "** Compiling C++ Source: ROutToReffConvertor.cxx ROutToReffConvertor.h"
+	@echo "**"
+	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
+
 bin/main.o:src/main.cxx
 	@echo "**"
 	@echo "** Compiling C++ Source"
 	@echo "**"
 	g++ $(DEBUG) $(INCFLAGS) -g -c -o $@  $<
 
-bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o bin/NetworkBase.o
+bin/main:bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o bin/NetworkBase.o bin/ROutToReffConvertor.o
 	@echo "**"
 	@echo "** Linking"
 	@echo "**"
-	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o bin/NetworkBase.o
+	g++ $(DEBUG) -o $@ bin/main.o bin/Person.o bin/Household.o bin/PopulationCenter.o bin/HelperFunctions.o bin/InputData.o bin/RandomGenerators.o bin/Logging.o bin/ConfigParser.o bin/Simulation.o  bin/CovidTest.o bin/NetworkBase.o bin/ROutToReffConvertor.o
 
 clean:
 	rm -rf bin/*.o main

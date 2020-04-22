@@ -106,7 +106,7 @@ void Logging::DumpGlobalVariablesToJson(const vector<PopulationCenter> &cities, 
     const float R0 = Get_R_eff();
 
     if (cities.size() > 0)  {
-        vector<unsigned int> logging_days(cities.at(0).m_logging_days.size(), 0);
+        vector<unsigned int> logging_days = cities.at(0).m_logging_days;
         vector<unsigned int> logging_unaffected(logging_days.size(), 0);
         vector<unsigned int> logging_infected(logging_days.size(), 0);
         vector<unsigned int> logging_symptomatic(logging_days.size(), 0);

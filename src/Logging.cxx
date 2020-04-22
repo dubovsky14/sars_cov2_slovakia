@@ -119,7 +119,7 @@ void Logging::DumpGlobalVariablesToJson(const vector<PopulationCenter> &cities, 
         vector<unsigned int> logging_critical(logging_days.size(), 0);
         vector<unsigned int> logging_positive_tests_today(logging_days.size(), 0);
         vector<unsigned int> logging_negative_tests_today(logging_days.size(), 0);
-        vector<unsigned int> logging_R_eff(logging_days.size(), 0);
+        vector<float>        logging_R_eff(logging_days.size(), 0);
 
         for (const PopulationCenter &city : cities) {
             std::transform(logging_unaffected.begin(),          logging_unaffected.end(),          city.m_logging_unaffected.begin(),          logging_unaffected.begin(),          std::plus<unsigned int>()) ;

@@ -21,6 +21,17 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     InputData::Initialize();
     Restrictions::Initialize(ConfigParser::GetRestrictionsFile());
 
+    //cout << "Testing Restrictions class:\n";
+    //for (int i = 0; i < ConfigParser::ReadIntValue("simulation_days"); i++) {
+    //    Restrictions::UpdateDay(i);
+    //    cout << i
+    //            << "\t" << Restrictions::GetLimitMobility()
+    //            << "\t" << Restrictions::GetLimitElderlyStochasticInteractions()
+    //            << "\t" << Restrictions::GetLimitStochasticInteractions()
+    //            << endl;
+    //}
+    //return;
+
     // Retrieve input data about municipalities
     vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();
     vector<string> names = InputData::GetMunicipNames();
@@ -78,6 +89,7 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     cout << "day \t\t#infected\texposed\t\tasymptomatic\tsymptomatic\thosp.\t\tcritical\tdead\t\timmune\t\ttest_random\ttest_contacts" << endl;
     for (int day = 0; day < ConfigParser::ReadIntValue("simulation_days"); day++)    {
         Person::SetDay(day);
+        Restrictions::UpdateDay(day);
         const unsigned int number_of_ill = Person::GetNumberOfInfectedPersonsInPopulation(population);
         if (number_of_ill == 0) {
             break;

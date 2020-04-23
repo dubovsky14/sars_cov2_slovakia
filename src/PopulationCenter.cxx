@@ -3,6 +3,7 @@
 #include "../sars_cov2_sk/Person.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
 #include "../sars_cov2_sk/ConfigParser.h"
+#include "../sars_cov2_sk/Restrictions.h"
 
 #include <vector>
 #include <iostream>
@@ -91,7 +92,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     // Meetings initiated by inhabitants
     for (Person *person : m_inhabitants)    {
         // /2 is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
-        const int interactions = RandomPoisson(average_interactions_per_person/2.);
+        const int interactions = RandomPoisson(Restrictions::GetLimitStochasticInteractions()*average_interactions_per_person/2.);
 
         for (int i = 0; i < interactions; i++) {
             // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
@@ -123,6 +124,16 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
                     continue;
                 }
             }
+
+            // If at least one of the persons is elderly, limit number of meetings according to the restrictions
+            if (person->IsElderly() || person2->IsElderly())    {
+                if (Restrictions::GetLimitElderlyStochasticInteractions() < 0.999)  {
+                    if (RandomUniform() > Restrictions::GetLimitElderlyStochasticInteractions())    {
+                        continue;
+                    }
+                }
+            }
+
             Person::Meet(person, person2, probability, ConfigParser::GetProbToRememberCityInteractions());
         }
     }
@@ -130,7 +141,7 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     // Meetings initiated by temporary occupants
     for (Person *person : m_temporary_occupants)    {
         // /2 is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
-        const unsigned int interactions = RandomPoisson(average_interactions_per_person/2.);
+        const unsigned int interactions = RandomPoisson(Restrictions::GetLimitStochasticInteractions()*average_interactions_per_person/2.);
 
         for (unsigned int i = 0; i < interactions; i++) {
             // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
@@ -160,6 +171,16 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
                     continue;
                 }
             }
+
+            // If at least one of the persons is elderly, limit number of meetings according to the restrictions
+            if (person->IsElderly() || person2->IsElderly())    {
+                if (Restrictions::GetLimitElderlyStochasticInteractions() < 0.999)  {
+                    if (RandomUniform() > Restrictions::GetLimitElderlyStochasticInteractions())    {
+                        continue;
+                    }
+                }
+            }
+
             Person::Meet(person, person2, probability, ConfigParser::GetProbToRememberCityInteractions());
         }
     }
@@ -197,7 +218,7 @@ void PopulationCenter::SendTravelersToAllCities(vector<PopulationCenter> *cities
             continue;
         }
         // Sampling with poisson would be incredibly slow here ... in average this should be also fine enough
-        this->SendTravelersToCity(&cities->at(i_city), RoundProbabilistic(ConfigParser::GetMobility()*m_migrations->at(i_city)));
+        this->SendTravelersToCity(&cities->at(i_city), RoundProbabilistic(Restrictions::GetLimitMobility()*ConfigParser::GetMobility()*m_migrations->at(i_city)));
     }
 };
 

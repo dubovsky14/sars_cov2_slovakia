@@ -197,3 +197,12 @@ void ConfigParser::InitializeConfig(const std::string &config_address)   {
     }
     s_singleton_instance = new ConfigParser(config_address);
 };
+
+string ConfigParser::GetRestrictionsFile()    {
+    Check();
+    std::map<string, string>::iterator it = s_singleton_instance->m_map.find("restrictions_json");
+    if (it == s_singleton_instance->m_map.end())  {
+        return "";
+    }
+    return s_singleton_instance->m_map["restrictions_json"];
+};

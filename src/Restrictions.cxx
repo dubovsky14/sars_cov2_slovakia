@@ -23,30 +23,31 @@ Restrictions::Restrictions(const std::string &resctrictions_file)    {
 
     // Read daily restrictions
     for (unsigned int i = 0; i < n_simulation_days; i++)    {
-        std::map<string, float> *current_day_dictionary = ReadStringFloatDictionary(resctrictions_file, std::to_string(i));
+        if (resctrictions_file != "")   {
+            std::map<string, float> *current_day_dictionary = ReadStringFloatDictionary(resctrictions_file, std::to_string(i));
 
-        // if there is a dictionary for that line, update the restrictions which are defined for that day
-        // if there are no resctrictions for the day, use previous values. Do the same if a particular restriction is not defined.
-        if (current_day_dictionary) {
-            if (current_day_dictionary->find("limit_mobility") != current_day_dictionary->end())  {
-               current_limit_mobility =  current_day_dictionary->at("limit_mobility");
-            }
+            // if there is a dictionary for that line, update the restrictions which are defined for that day
+            // if there are no resctrictions for the day, use previous values. Do the same if a particular restriction is not defined.
+            if (current_day_dictionary) {
+                if (current_day_dictionary->find("limit_mobility") != current_day_dictionary->end())  {
+                current_limit_mobility =  current_day_dictionary->at("limit_mobility");
+                }
 
-            if (current_day_dictionary->find("limit_elderly_stochastic_interactions") != current_day_dictionary->end())  {
-               current_limit_elderly_stochastic_interactions =  current_day_dictionary->at("limit_elderly_stochastic_interactions");
-            }
+                if (current_day_dictionary->find("limit_elderly_stochastic_interactions") != current_day_dictionary->end())  {
+                current_limit_elderly_stochastic_interactions =  current_day_dictionary->at("limit_elderly_stochastic_interactions");
+                }
 
-            if (current_day_dictionary->find("limit_stochastic_interactions") != current_day_dictionary->end())  {
-               current_limit_stochastic_interactions =  current_day_dictionary->at("limit_stochastic_interactions");
+                if (current_day_dictionary->find("limit_stochastic_interactions") != current_day_dictionary->end())  {
+                current_limit_stochastic_interactions =  current_day_dictionary->at("limit_stochastic_interactions");
+                }
             }
+            delete current_day_dictionary;
+            current_day_dictionary = nullptr;
         }
 
         m_limit_mobility.push_back(current_limit_mobility);
         m_limit_elderly_stochastic_interactions.push_back(current_limit_elderly_stochastic_interactions);
         m_limit_stochastic_interactions.push_back(current_limit_stochastic_interactions);
-
-        delete current_day_dictionary;
-        current_day_dictionary = nullptr;
     }
 };
 

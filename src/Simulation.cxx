@@ -19,6 +19,7 @@ using namespace std;
 void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     ConfigParser::InitializeConfig(config_address);
     InputData::Initialize();
+    Restrictions::Initialize(ConfigParser::GetRestrictionsFile());
 
     // Retrieve input data about municipalities
     vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();

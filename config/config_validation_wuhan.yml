@@ -9,6 +9,7 @@ virus:
   infectious_days_mean: 6.5
   infectious_days_std: 1
 
+simulation_days: 1000
 
 # mean time after which a person who contracted the virus
 # starts being infectious

@@ -346,31 +346,6 @@ void InputData::ReadHouseholdsYoung()   {
     }
 };
 
-vector<string> InputData::SplitAndStripString(string input_string, const string &separator) {
-    vector<string> result = SplitString(input_string, separator);
-    for (string &x : result)    {
-        StripString(&x, " \n\t\r");
-    }
-    return move(result);
-}
-
-vector<string> InputData::SplitString(string input_string, const string &separator)    {
-    vector<string> result;
-    size_t pos = 0;
-    std::string token;
-    while ((pos = input_string.find(separator)) != std::string::npos) {
-        result.push_back(input_string.substr(0, pos));
-        input_string.erase(0, pos + separator.length());
-    }
-    if (input_string.length() > 0) result.push_back(input_string);
-    return move(result);
-};
-
-void InputData::StripString(string *input_string, const string &chars_to_remove)    {
-    input_string->erase(0,input_string->find_first_not_of(chars_to_remove));
-    input_string->erase(input_string->find_last_not_of(chars_to_remove)+1);
-}
-
 bool InputData::ValidLine(string line)   {
     StripString(&line);
     if (line.length() == 0) return false;

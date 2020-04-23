@@ -71,12 +71,6 @@ namespace sars_cov2_sk	{
 
             void ReadHouseholdsYoung();
 
-            static std::vector<std::string> SplitAndStripString(std::string input_string, const std::string &separator);
-
-            static std::vector<std::string> SplitString(std::string input_string, const std::string &separator);
-
-            static void StripString(std::string *input_string, const std::string &chars_to_remove = " \n\t\r");
-
             static bool ValidLine(std::string line);
 
         public:

@@ -54,6 +54,14 @@ namespace sars_cov2_sk	{
     bool StringIsBool(const std::string &x);
 
     bool StringIsFloat(const std::string &x);
+
+
+    std::vector<std::string> SplitAndStripString(std::string input_string, const std::string &separator);
+
+    std::vector<std::string> SplitString(std::string input_string, const std::string &separator);
+
+    void StripString(std::string *input_string, const std::string &chars_to_remove = " \n\t\r");
+
 }
 
 #endif

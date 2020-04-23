@@ -9,6 +9,8 @@ virus:
   infectious_days_mean: 6.5
   infectious_days_std: 1
 
+simulation_days: 1000
+
 # fraction of symptomatic people being tested every day. Zero means no tests
 genetic_tests_rate: 0.
 

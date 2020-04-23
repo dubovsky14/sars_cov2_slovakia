@@ -87,6 +87,8 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     cout << "Total population: "         << population_size << endl;
     cout << "Virus reproduction number R0 = : "         << Get_R_eff() << endl;
     cout << "day \t\t#infected\texposed\t\tasymptomatic\tsymptomatic\thosp.\t\tcritical\tdead\t\timmune\t\ttest_random\ttest_contacts" << endl;
+
+    Restrictions::SetPopulationPointer(&population);
     for (int day = 0; day < ConfigParser::ReadIntValue("simulation_days"); day++)    {
         Person::SetDay(day);
         Restrictions::UpdateDay(day);

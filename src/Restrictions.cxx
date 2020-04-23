@@ -23,6 +23,7 @@ Restrictions::Restrictions(const std::string &resctrictions_file)    {
     float current_limit_stochastic_interactions         = 1.;
     m_smart_restrictions_type = enum_smart_restrictions_none;
     m_smart_restrictions_active = false;
+    m_population = nullptr;
 
     m_smart_limit_mobility                          = -1.;
     m_smart_limit_elderly_stochastic_interactions   = -1.;
@@ -56,6 +57,8 @@ Restrictions::Restrictions(const std::string &resctrictions_file)    {
         m_limit_elderly_stochastic_interactions.push_back(current_limit_elderly_stochastic_interactions);
         m_limit_stochastic_interactions.push_back(current_limit_stochastic_interactions);
     }
+
+    InitializeInteligentRestrictions(resctrictions_file);
 };
 
 void Restrictions::InitializeInteligentRestrictions(const std::string &resctrictions_file)   {
@@ -124,9 +127,14 @@ void Restrictions::SetValuesForInteligentRestrictions(std::map<string, float> *r
 }
 
 void Restrictions::CheckNeedForSmartRestrictions()  {
+    Check();
     if (m_smart_restrictions_type == enum_smart_restrictions_none)   {
         m_smart_restrictions_active = false;
         return;
+    }
+
+    if (m_population == nullptr)    {
+        throw "You asked me to apply smart restrictions, but you haven't provided pointer to population.";
     }
 
     if (m_smart_restrictions_type == enum_smart_restrictions_critical)   {
@@ -155,8 +163,7 @@ void Restrictions::CheckNeedForSmartRestrictions()  {
         return;
     }
 
-
-    if (m_smart_restrictions_type == enum_smart_restrictions_hospitalized_all)   {
+    if (m_smart_restrictions_type == enum_smart_restrictions_positive_tests)   {
         int n_count = 0;
         for (const Person &person: *m_population)    {
             if ((person.GetDateOfTest()+1 == Person::GetDay()) && person.PositivelyTesed()) {

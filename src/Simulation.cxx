@@ -8,6 +8,7 @@
 #include "../sars_cov2_sk/ConfigParser.h"
 #include "../sars_cov2_sk/CovidTest.h"
 #include "../sars_cov2_sk/ROutToReffConvertor.h"
+#include "../sars_cov2_sk/Restrictions.h"
 
 #include <string>
 #include <vector>

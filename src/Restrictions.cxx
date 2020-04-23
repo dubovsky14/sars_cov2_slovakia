@@ -3,6 +3,7 @@
 #include "../sars_cov2_sk/ConfigParser.h"
 #include "../sars_cov2_sk/InputData.h"
 #include "../sars_cov2_sk/HelperFunctions.h"
+#include "../sars_cov2_sk/Person.h"
 
 #include <iostream>
 #include <fstream>
@@ -20,6 +21,12 @@ Restrictions::Restrictions(const std::string &resctrictions_file)    {
     float current_limit_mobility                        = 1.;
     float current_limit_elderly_stochastic_interactions = 1.;
     float current_limit_stochastic_interactions         = 1.;
+    m_smart_restrictions_type = enum_smart_restrictions_none;
+    m_smart_restrictions_active = false;
+
+    m_smart_limit_mobility                          = -1.;
+    m_smart_limit_elderly_stochastic_interactions   = -1.;
+    m_smart_limit_stochastic_interactions           = -1.;
 
     // Read daily restrictions
     for (unsigned int i = 0; i < n_simulation_days; i++)    {
@@ -30,15 +37,15 @@ Restrictions::Restrictions(const std::string &resctrictions_file)    {
             // if there are no resctrictions for the day, use previous values. Do the same if a particular restriction is not defined.
             if (current_day_dictionary) {
                 if (current_day_dictionary->find("limit_mobility") != current_day_dictionary->end())  {
-                current_limit_mobility =  current_day_dictionary->at("limit_mobility");
+                    current_limit_mobility =  current_day_dictionary->at("limit_mobility");
                 }
 
                 if (current_day_dictionary->find("limit_elderly_stochastic_interactions") != current_day_dictionary->end())  {
-                current_limit_elderly_stochastic_interactions =  current_day_dictionary->at("limit_elderly_stochastic_interactions");
+                    current_limit_elderly_stochastic_interactions =  current_day_dictionary->at("limit_elderly_stochastic_interactions");
                 }
 
                 if (current_day_dictionary->find("limit_stochastic_interactions") != current_day_dictionary->end())  {
-                current_limit_stochastic_interactions =  current_day_dictionary->at("limit_stochastic_interactions");
+                    current_limit_stochastic_interactions =  current_day_dictionary->at("limit_stochastic_interactions");
                 }
             }
             delete current_day_dictionary;
@@ -51,11 +58,129 @@ Restrictions::Restrictions(const std::string &resctrictions_file)    {
     }
 };
 
-void Restrictions::Initialize(const std::string &resctrictions_file)    {
+void Restrictions::InitializeInteligentRestrictions(const std::string &resctrictions_file)   {
+    std::map<string, float> *critical_dictionary            = ReadStringFloatDictionary(resctrictions_file, "critical");
+    std::map<string, float> *hospitalized_all_dictionary    = ReadStringFloatDictionary(resctrictions_file, "hospitalized_all");
+    std::map<string, float> *positive_tests_dictionary      = ReadStringFloatDictionary(resctrictions_file, "positive_tests");
+
+    int smart_restrictionss_count = 0;
+
+    if (critical_dictionary)    {
+        m_smart_restrictions_type = enum_smart_restrictions_critical;
+        SetValuesForInteligentRestrictions(critical_dictionary);
+        smart_restrictionss_count++;
+    }
+
+    if (hospitalized_all_dictionary)    {
+        m_smart_restrictions_type = enum_smart_restrictions_hospitalized_all;
+        SetValuesForInteligentRestrictions(hospitalized_all_dictionary);
+        smart_restrictionss_count++;
+    }
+
+    if (positive_tests_dictionary)    {
+        m_smart_restrictions_type = enum_smart_restrictions_positive_tests;
+        SetValuesForInteligentRestrictions(positive_tests_dictionary);
+        smart_restrictionss_count++;
+    }
+
+    delete critical_dictionary;
+    delete hospitalized_all_dictionary;
+    delete positive_tests_dictionary;
+
+    if (smart_restrictionss_count > 1)  {
+        throw "You have defined multiple smart restrictions, but only one is allowed!";
+    }
+
+}
+
+void Restrictions::SetValuesForInteligentRestrictions(std::map<string, float> *restrictions_dictionary) {
+    if (restrictions_dictionary->find("turn_on")  == restrictions_dictionary->end() ||
+        restrictions_dictionary->find("turn_off") == restrictions_dictionary->end())  {
+            throw "Please set trigger counts (turn_on and turn_off) for smart restrictions!";
+    }
+    bool restrictions_set = false;
+
+    m_trigger_count_on  = restrictions_dictionary->at("turn_on");
+    m_trigger_count_off = restrictions_dictionary->at("turn_off");
+
+    if (restrictions_dictionary->find("limit_stochastic_interactions") != restrictions_dictionary->end()) {
+        m_smart_limit_stochastic_interactions = restrictions_dictionary->at("limit_stochastic_interactions");
+        restrictions_set = true;
+    }
+
+    if (restrictions_dictionary->find("limit_elderly_stochastic_interactions") != restrictions_dictionary->end()) {
+        m_smart_limit_elderly_stochastic_interactions = restrictions_dictionary->at("limit_elderly_stochastic_interactions");
+        restrictions_set = true;
+    }
+
+    if (restrictions_dictionary->find("limit_mobility") != restrictions_dictionary->end()) {
+        m_smart_limit_mobility = restrictions_dictionary->at("limit_mobility");
+        restrictions_set = true;
+    }
+
+    if (!restrictions_set)   {
+        throw "You have defined smart restrictions with trigger counts, but you haven't defined their effect. Please check!";
+    }
+}
+
+void Restrictions::CheckNeedForSmartRestrictions()  {
+    if (m_smart_restrictions_type == enum_smart_restrictions_none)   {
+        m_smart_restrictions_active = false;
+        return;
+    }
+
+    if (m_smart_restrictions_type == enum_smart_restrictions_critical)   {
+        const int n_count = Person::CountInPopulation(*m_population, enum_critical);
+        if (!m_smart_restrictions_active && n_count > m_trigger_count_on)   {
+            m_smart_restrictions_active = true;
+            return;
+        }
+        if (m_smart_restrictions_active && n_count < m_trigger_count_off)   {
+            m_smart_restrictions_active = false;
+            return;
+        }
+        return;
+    }
+
+    if (m_smart_restrictions_type == enum_smart_restrictions_hospitalized_all)   {
+        const int n_count = Person::CountInPopulation(*m_population, enum_critical) + Person::CountInPopulation(*m_population, enum_needs_hospitalization);
+        if (!m_smart_restrictions_active && n_count > m_trigger_count_on)   {
+            m_smart_restrictions_active = true;
+            return;
+        }
+        if (m_smart_restrictions_active && n_count < m_trigger_count_off)   {
+            m_smart_restrictions_active = false;
+            return;
+        }
+        return;
+    }
+
+
+    if (m_smart_restrictions_type == enum_smart_restrictions_hospitalized_all)   {
+        int n_count = 0;
+        for (const Person &person: *m_population)    {
+            if ((person.GetDateOfTest()+1 == Person::GetDay()) && person.PositivelyTesed()) {
+                n_count++;
+            }
+        }
+
+        if (!m_smart_restrictions_active && n_count > m_trigger_count_on)   {
+            m_smart_restrictions_active = true;
+            return;
+        }
+        if (m_smart_restrictions_active && n_count < m_trigger_count_off)   {
+            m_smart_restrictions_active = false;
+            return;
+        }
+        return;
+    }
+};
+
+void Restrictions::Initialize()    {
     if (s_singleton_instance)   {
         throw "You have tried to initialize Resctrictions singleton multiple times!";
     }
-    s_singleton_instance = new Restrictions(resctrictions_file);
+    s_singleton_instance = new Restrictions(ConfigParser::GetRestrictionsFile());
 };
 
 void Restrictions::Check()  {
@@ -67,6 +192,7 @@ void Restrictions::Check()  {
 
 void Restrictions::UpdateDay(int day)  {
     Check();
+    s_singleton_instance->CheckNeedForSmartRestrictions();
     if (day >= int(s_singleton_instance->m_limit_mobility.size()))   {
         throw "You asked me to update restrictions for day " + to_string(day) + ", but the number of simuation days is only " + to_string(s_singleton_instance->m_limit_mobility.size());
     }
@@ -74,6 +200,17 @@ void Restrictions::UpdateDay(int day)  {
     s_singleton_instance->m_today_limit_elderly_stochastic_interactions = s_singleton_instance->m_limit_elderly_stochastic_interactions.at(day);
     s_singleton_instance->m_today_limit_stochastic_interactions = s_singleton_instance->m_limit_stochastic_interactions.at(day);
 
+    if (s_singleton_instance->m_smart_restrictions_active)    {
+        if (s_singleton_instance->m_smart_limit_mobility                         > 0) {
+            s_singleton_instance->m_today_limit_mobility = s_singleton_instance->m_smart_limit_mobility;
+        }
+        if (s_singleton_instance->m_smart_limit_elderly_stochastic_interactions  > 0) {
+            s_singleton_instance->m_today_limit_elderly_stochastic_interactions = s_singleton_instance->m_smart_limit_elderly_stochastic_interactions;
+        }
+        if (s_singleton_instance->m_smart_limit_stochastic_interactions          > 0) {
+            s_singleton_instance->m_today_limit_stochastic_interactions = s_singleton_instance->m_smart_limit_stochastic_interactions;
+        }
+    }
 }
 
 std::map<std::string, float> *Restrictions::ReadStringFloatDictionary(const std::string &json_file, const std::string &dict_name) {

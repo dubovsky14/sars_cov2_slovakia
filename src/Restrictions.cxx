@@ -67,6 +67,9 @@ void Restrictions::Check()  {
 
 void Restrictions::UpdateDay(int day)  {
     Check();
+    if (day >= int(s_singleton_instance->m_limit_mobility.size()))   {
+        throw "You asked me to update restrictions for day " + to_string(day) + ", but the number of simuation days is only " + to_string(s_singleton_instance->m_limit_mobility.size());
+    }
     s_singleton_instance->m_today_limit_mobility = s_singleton_instance->m_limit_mobility.at(day);
     s_singleton_instance->m_today_limit_elderly_stochastic_interactions = s_singleton_instance->m_limit_elderly_stochastic_interactions.at(day);
     s_singleton_instance->m_today_limit_stochastic_interactions = s_singleton_instance->m_limit_stochastic_interactions.at(day);
@@ -124,7 +127,7 @@ std::map<std::string, float> *Restrictions::ReadStringFloatDictionary(const std:
                     throw "Expression \"" + key + "\" defined multiple two times in restrictions file in dictionary \"" + dict_name + "\". Please check!";
                 }
 
-                result->at(key)=value;
+                (*result)[key]=value;
             }
         }
         input_file.close();

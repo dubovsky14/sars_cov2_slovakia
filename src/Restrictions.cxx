@@ -277,7 +277,7 @@ std::map<std::string, float> *Restrictions::ReadStringFloatDictionary(const std:
         input_file.close();
     }
     else    {
-        throw "Unable to open file json file with restrictions!";
+        return nullptr;
     }
 
     return result;

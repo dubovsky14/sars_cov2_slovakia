@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from math import sqrt
 
+json_key_words = ["config", "global"]
 
 def main():
     '''
@@ -58,7 +59,7 @@ def plot_slovakia(indata, config):
 
     outfile_path = '../../plots/slovakia'
 
-    lines = config['slovakia']['lines']
+    lines = config['type']['slovakia']['lines']
     days = indata['Nitra']['simulation_days']
 
     height = len(lines)
@@ -66,6 +67,8 @@ def plot_slovakia(indata, config):
     line_arr = [[0 for x in range(width)] for y in range(height)]
 
     for index, key in enumerate(indata):
+        if (key in json_key_words):
+            continue
         place = indata[key]
 
         percent = round(100.*index/len(indata))
@@ -96,6 +99,8 @@ def plot_by_municipality(indata, config):
     '''
 
     for index, key in enumerate(indata):
+        if (key in json_key_words):
+            continue
         place = indata[key]
         outfile_path = '../../plots/by_municipality/' + key
 
@@ -142,7 +147,10 @@ def plot_slovakia_map(indata, config):
     lon = np.array([])
     lat = np.array([])
     pop = np.array([])
+    number_of_municipalities = 0
     for index, key in enumerate(indata):
+        if (key in json_key_words):
+            continue
         place = indata[key]
 
         percent = round(100.*index/len(indata))
@@ -151,8 +159,9 @@ def plot_slovakia_map(indata, config):
         lon = np.append(lon, place['longitude'])
         lat = np.append(lat, place['latitude'])
         pop = np.append(pop, sqrt(place['size']*0.01) + 1)
+        number_of_municipalities += 1
 
-    var = np.empty((0, len(indata)), int)
+    var = np.empty((0, number_of_municipalities), int)
     for index, day in enumerate(days):
         var_one_day = np.array([])
 
@@ -161,7 +170,8 @@ def plot_slovakia_map(indata, config):
 
         for key in indata:
             place = indata[key]
-
+            if (key in json_key_words):
+                continue
             var_one_day = np.append(
                 var_one_day,
                 place['infected'][index])

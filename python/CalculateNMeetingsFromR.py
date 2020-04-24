@@ -21,6 +21,26 @@ def F(x):
         return 0.00016
     return 0
 
+def Fexp(x):
+    """
+    The same as F(x), but for exponential distributions of times
+    """
+    if (x == 0):
+        return 1.
+    if (x == 1):
+        return 0.69039
+    if (x == 2):
+        return 0.25
+    if (x == 3):
+        return 0.05337
+    if (x == 4):
+        return 0.00661
+    if (x == 5):
+        return 0.00005
+    if (x == 6):
+        return 0.0000
+    return 0
+
 def R_eff(R_out):
     """
     Calculate global reproduction number (for combination households + outside) if reproduction number for interaction outside households is R_out

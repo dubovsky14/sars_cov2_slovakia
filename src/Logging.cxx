@@ -34,6 +34,7 @@ void Logging::DumpCityHistory(const sars_cov2_sk::PopulationCenter &city, bool c
 
     DumpVector(indent+indent, "simulation_days",        city.m_logging_days,                true);
     DumpVector(indent+indent, "unaffected",             city.m_logging_unaffected,          true);
+    DumpVector(indent+indent, "exposed",                city.m_logging_exposed,             true);
     DumpVector(indent+indent, "infected",               city.m_logging_infected,            true);
     DumpVector(indent+indent, "symptomatic",            city.m_logging_symptomatic,         true);
     DumpVector(indent+indent, "asymptomatic",           city.m_logging_asymptomatic,        true);
@@ -108,6 +109,7 @@ void Logging::DumpGlobalVariablesToJson(const vector<PopulationCenter> &cities, 
     if (cities.size() > 0)  {
         vector<unsigned int> logging_days = cities.at(0).m_logging_days;
         vector<unsigned int> logging_unaffected(logging_days.size(), 0);
+        vector<unsigned int> logging_exposed(logging_days.size(), 0);
         vector<unsigned int> logging_infected(logging_days.size(), 0);
         vector<unsigned int> logging_symptomatic(logging_days.size(), 0);
         vector<unsigned int> logging_asymptomatic(logging_days.size(), 0);
@@ -124,6 +126,7 @@ void Logging::DumpGlobalVariablesToJson(const vector<PopulationCenter> &cities, 
         for (const PopulationCenter &city : cities) {
             std::transform(logging_unaffected.begin(),          logging_unaffected.end(),          city.m_logging_unaffected.begin(),          logging_unaffected.begin(),          std::plus<unsigned int>()) ;
             std::transform(logging_infected.begin(),            logging_infected.end(),            city.m_logging_infected.begin(),            logging_infected.begin(),            std::plus<unsigned int>()) ;
+            std::transform(logging_exposed.begin(),             logging_exposed.end(),             city.m_logging_exposed.begin(),             logging_exposed.begin(),             std::plus<unsigned int>()) ;
             std::transform(logging_symptomatic.begin(),         logging_symptomatic.end(),         city.m_logging_symptomatic.begin(),         logging_symptomatic.begin(),         std::plus<unsigned int>()) ;
             std::transform(logging_asymptomatic.begin(),        logging_asymptomatic.end(),        city.m_logging_asymptomatic.begin(),        logging_asymptomatic.begin(),        std::plus<unsigned int>()) ;
             std::transform(logging_infective.begin(),           logging_infective.end(),           city.m_logging_infective.begin(),           logging_infective.begin(),           std::plus<unsigned int>()) ;
@@ -142,6 +145,7 @@ void Logging::DumpGlobalVariablesToJson(const vector<PopulationCenter> &cities, 
 
         DumpVector(indent+indent, "simulation_days",        logging_days,                true);
         DumpVector(indent+indent, "unaffected",             logging_unaffected,          true);
+        DumpVector(indent+indent, "exposed",                logging_exposed,             true);
         DumpVector(indent+indent, "infected",               logging_infected,            true);
         DumpVector(indent+indent, "symptomatic",            logging_symptomatic,         true);
         DumpVector(indent+indent, "asymptomatic",           logging_asymptomatic,        true);

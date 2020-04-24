@@ -224,6 +224,7 @@ void PopulationCenter::SendTravelersToAllCities(vector<PopulationCenter> *cities
 
 void PopulationCenter::SaveTheDayToHistory()    {
     unsigned int unaffected         = 0;
+    unsigned int exposed            = 0;
     unsigned int infected           = 0;
     unsigned int symptomatic        = 0;
     unsigned int asymptomatic       = 0;
@@ -238,6 +239,7 @@ void PopulationCenter::SaveTheDayToHistory()    {
 
     for (const Person *person : m_inhabitants)  {
         if (person->IsUnaffected())     unaffected++;
+        if (person->IsExposed())        exposed++;
         if (person->IsIll())            infected++;
         if (person->IsInfectiveSymptomatic())    symptomatic++;
         if (person->IsInfectiveAsymptomatic())   asymptomatic++;
@@ -264,6 +266,7 @@ void PopulationCenter::SaveTheDayToHistory()    {
 
     m_logging_days          .push_back(Person::GetDay());
     m_logging_unaffected    .push_back(unaffected  );
+    m_logging_exposed       .push_back(exposed     );
     m_logging_infected      .push_back(infected    );
     m_logging_symptomatic   .push_back(symptomatic );
     m_logging_asymptomatic  .push_back(asymptomatic);

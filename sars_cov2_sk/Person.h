@@ -80,6 +80,7 @@ namespace sars_cov2_sk	{
             inline bool IsInfective()      const    {return (IsIll() && !(m_seir_status == enum_exposed));};
             inline bool NeedsHospitalization() const{return (m_seir_status == enum_needs_hospitalization || m_seir_status == enum_critical);};
 
+            inline bool IsExposed()        const        {return m_seir_status == enum_exposed;};
             inline bool IsImmune()         const        {return m_seir_status == enum_immune;};
             inline bool InQuarantine()     const        {return m_in_quarantine;};
             inline bool IsHospitalized()   const        {return m_is_hospitalized;};

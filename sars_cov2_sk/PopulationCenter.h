@@ -34,6 +34,7 @@ namespace sars_cov2_sk	{
             // Keep history of new cases, unaffected, infected, ...
             std::vector<unsigned int> m_logging_days;
             std::vector<unsigned int> m_logging_unaffected;
+            std::vector<unsigned int> m_logging_exposed;
             std::vector<unsigned int> m_logging_infected;
             std::vector<unsigned int> m_logging_symptomatic;
             std::vector<unsigned int> m_logging_asymptomatic;

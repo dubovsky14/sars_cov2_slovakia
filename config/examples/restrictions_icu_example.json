@@ -1,0 +1,19 @@
+{
+    "0":    {
+        "limit_stochastic_interactions": 0.6,
+        "limit_mobility": 0.64,
+        "limit_elderly_stochastic_interactions": 0.33
+    },
+    "240":    {
+        "limit_stochastic_interactions": 1,
+        "limit_mobility": 1,
+        "limit_elderly_stochastic_interactions": 1
+    },
+    "critical": {
+        "turn_on": 400,
+        "turn_off": 250,
+        "limit_stochastic_interactions": 0.2,
+        "limit_mobility": 0.64,
+        "limit_elderly_stochastic_interactions": 0.1
+    }
+}

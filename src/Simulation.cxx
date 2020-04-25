@@ -21,16 +21,6 @@ void sars_cov2_sk::RunSimulation(const std::string &config_address)    {
     InputData::Initialize();
     Restrictions::Initialize();
 
-    //cout << "Testing Restrictions class:\n";
-    //for (int i = 0; i < ConfigParser::ReadIntValue("simulation_days"); i++) {
-    //    Restrictions::UpdateDay(i);
-    //    cout << i
-    //            << "\t" << Restrictions::GetLimitMobility()
-    //            << "\t" << Restrictions::GetLimitElderlyStochasticInteractions()
-    //            << "\t" << Restrictions::GetLimitStochasticInteractions()
-    //            << endl;
-    //}
-    //return;
 
     // Retrieve input data about municipalities
     vector<unsigned int> cities_number_of_citizens = InputData::GetMunicipPopulations();

@@ -57,8 +57,9 @@ Restrictions::Restrictions(const std::string &resctrictions_file)    {
         m_limit_elderly_stochastic_interactions.push_back(current_limit_elderly_stochastic_interactions);
         m_limit_stochastic_interactions.push_back(current_limit_stochastic_interactions);
     }
-
-    InitializeInteligentRestrictions(resctrictions_file);
+    if (resctrictions_file != "")   {
+        InitializeInteligentRestrictions(resctrictions_file);
+    }
 };
 
 void Restrictions::InitializeInteligentRestrictions(const std::string &resctrictions_file)   {
@@ -277,7 +278,7 @@ std::map<std::string, float> *Restrictions::ReadStringFloatDictionary(const std:
         input_file.close();
     }
     else    {
-        return nullptr;
+        throw "JSON file with restrictions not found: " + json_file;
     }
 
     return result;

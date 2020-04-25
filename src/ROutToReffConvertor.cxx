@@ -13,22 +13,22 @@ float sars_cov2_sk::F(int generation)   {
         return 1.;
     }
     if (generation == 1) {
-        return 0.89576;
+        return 0.7058;
     }
     if (generation == 2) {
-        return 0.4345;
+        return 0.28423;
     }
     if (generation == 3) {
-        return 0.11092;
+        return 0.06665;
     }
     if (generation == 4) {
-        return 0.01616;
+        return 0.00891;
     }
     if (generation == 5) {
-        return 0.00156;
+        return 0.00062;
     }
     if (generation == 6) {
-        return 0.00016;
+        return 0.00001;
     }
     return 0;
 };

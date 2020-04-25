@@ -8,38 +8,19 @@ def F(x):
     if (x == 0):
         return 1.
     if (x == 1):
-        return 0.89576
+        return 0.7058
     if (x == 2):
-        return 0.4345
+        return 0.28423
     if (x == 3):
-        return 0.11092
+        return 0.06665
     if (x == 4):
-        return 0.01616
+        return 0.00891
     if (x == 5):
-        return 0.00156
+        return 0.00062
     if (x == 6):
-        return 0.00016
+        return 0.00001
     return 0
 
-def Fexp(x):
-    """
-    The same as F(x), but for exponential distributions of times
-    """
-    if (x == 0):
-        return 1.
-    if (x == 1):
-        return 0.69039
-    if (x == 2):
-        return 0.25
-    if (x == 3):
-        return 0.05337
-    if (x == 4):
-        return 0.00661
-    if (x == 5):
-        return 0.00005
-    if (x == 6):
-        return 0.0000
-    return 0
 
 def R_eff(R_out):
     """

@@ -50,20 +50,27 @@ namespace sars_cov2_sk	{
             // if the restrictions are in place and the number of people in the given state descreases bellow the given threshold, it cancels the restrictions
             void CheckNeedForSmartRestrictions();
 
+            static void Check();
+
         public:
 
             static void Initialize();
 
-            static void Check();
-
+            // Set pointer to vector of persons representing the whole country population. It will be used for smart restrictions
             static void SetPopulationPointer(const std::vector<sars_cov2_sk::Person> *population)   {Check(); s_singleton_instance->m_population = population;};
 
+            // Update resctrictions based on day and in case of smart restrictions count number of people in the state triggering the smart restrictions
+            // and (de)activate smart restrictions accordingly
             static void UpdateDay(int day);
 
+            // Get multiplicative factor by which the mobility is decreased
             static float GetLimitMobility()                         {Check(); return s_singleton_instance->m_today_limit_mobility;};
 
+            // Get multiplicative factor by which the interactions of elderly people are decreased
+            // This is additional factor to "GetLimitStochasticInteractions()", so if both of them are 0.5, the elderly will have 0.5^2 = 0.25 of the normal interactions
             static float GetLimitElderlyStochasticInteractions()    {Check(); return s_singleton_instance->m_today_limit_elderly_stochastic_interactions;};
 
+            // Get multiplicative factor by which the random interactions in city are decreased
             static float GetLimitStochasticInteractions()           {Check(); return s_singleton_instance->m_today_limit_stochastic_interactions;};
 
     };

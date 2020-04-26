@@ -21,8 +21,9 @@ with open(results_file) as json_file:
     immune_total        = np.asarray(data["global"]["immune"])
     new_cases_total     = np.asarray(data["global"]["new_cases"])
     unaffected_total    = np.asarray(data["global"]["unaffected"])
+    new_cases_total     = np.asarray(data["global"]["new_cases"])
 
-    print("day \t\t#infected\texposed\t\tasymptomatic\tsymptomatic\thosp.\t\tcritical\tdead\t\timmune\t\tsusceptible")
+    print("day \t\t#infected\texposed\t\tasymptomatic\tsymptomatic\thosp.\t\tcritical\tdead\t\timmune\t\tsusceptible\tnew_cases")
     for i in range(len(infected_total)):
         print ( str(days_array[i])              + "\t\t" +
                 str(infected_total[i])          + "\t\t" +
@@ -33,7 +34,8 @@ with open(results_file) as json_file:
                 str(critical_total[i])          + "\t\t" +
                 str(dead_total[i])              + "\t\t" +
                 str(immune_total[i])            + "\t\t" +
-                str(unaffected_total[i])        + "\t\t"
+                str(unaffected_total[i])        + "\t\t" +
+                str(new_cases_total[i])            + "\t\t"
                )
 
 

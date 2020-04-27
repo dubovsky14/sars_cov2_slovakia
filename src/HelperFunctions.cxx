@@ -34,6 +34,15 @@ int sars_cov2_sk::RandomExponentialWithProbabilisticRounding(float mean)    {
     return RoundProbabilistic(exponential);
 }
 
+int sars_cov2_sk::RandomNegativeBinomial(int number_of_failures, float probability_of_success)  {
+    return sars_cov2_sk::RandomGeneratorNegativeBinomial::NegativeBinomial(number_of_failures, probability_of_success);
+};
+
+int sars_cov2_sk::RandomNegativeBinomialWithProbabilisticRounding(int number_of_failures, float probability_of_success) {
+    const int negative_binomial = RandomNegativeBinomial(number_of_failures, probability_of_success);
+    return RoundProbabilistic(negative_binomial);
+};
+
 int sars_cov2_sk::RoundProbabilistic(float value) {
     const float decimal_part = value - int(value);
     if (RandomUniform() < decimal_part) {

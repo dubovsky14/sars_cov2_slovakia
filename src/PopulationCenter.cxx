@@ -92,7 +92,12 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
     // Meetings initiated by inhabitants
     for (Person *person : m_inhabitants)    {
         // /2 is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
-        const int interactions = RandomPoisson(Restrictions::GetLimitStochasticInteractions()*average_interactions_per_person/2.);
+        const int interactions = person->IsSuperSpreader()  ?
+                RoundProbabilistic( Restrictions::GetLimitStochasticInteractions()*
+                                    (RandomNegativeBinomial( ConfigParser::GetSuperSpreaderNumberOfFailures(),
+                                                            ConfigParser::GetSuperSpreaderProbabilityOfSuccess())
+                                     - average_interactions_per_person/2.) ) :
+                RandomPoisson(Restrictions::GetLimitStochasticInteractions()*average_interactions_per_person/2.);
 
         for (int i = 0; i < interactions; i++) {
             // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
@@ -140,10 +145,15 @@ void PopulationCenter::SimulateDailySpreadAmongInhabitantsAndTempOccupants(float
 
     // Meetings initiated by temporary occupants
     for (Person *person : m_temporary_occupants)    {
-        // /2 is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
-        const unsigned int interactions = RandomPoisson(Restrictions::GetLimitStochasticInteractions()*average_interactions_per_person/2.);
+        // /2 in Poisson is there in order to not double count meetings (in average 50% of the meetings is intiated by this person, 50% by the other person)
+        const int interactions = person->IsSuperSpreader()  ?
+                RoundProbabilistic( Restrictions::GetLimitStochasticInteractions()*
+                                    (RandomNegativeBinomial( ConfigParser::GetSuperSpreaderNumberOfFailures(),
+                                                            ConfigParser::GetSuperSpreaderProbabilityOfSuccess())
+                                     - average_interactions_per_person/2.) ) :
+                RandomPoisson(Restrictions::GetLimitStochasticInteractions()*average_interactions_per_person/2.);
 
-        for (unsigned int i = 0; i < interactions; i++) {
+        for (int i = 0; i < interactions; i++) {
             // Travelers who visited N cities (including their home city) will initialize 1/N part of their meetings in each city
             if (RandomUniform() < 1./person->GetNumberOfVisitedMunicipalities() && !travellers_increase_number_of_meetings)  {
                 continue;

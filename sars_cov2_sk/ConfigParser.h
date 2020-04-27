@@ -25,6 +25,11 @@ namespace sars_cov2_sk  {
             float m_average_number_of_city_interactions;
             float m_probability_to_remember_city_interactions;
 
+            // superspreaders
+            float m_superspreader_ratio;
+            int   m_superspreader_number_of_failures;
+            float m_superspreader_probability_of_success;
+
             int   m_infected_initial;
 
             // true = number of travellers meetings is the same as for other people, they are just distributed among cities (travelling does not increase the number of total meetings)
@@ -136,6 +141,10 @@ namespace sars_cov2_sk  {
             static sars_cov2_sk::TrackingOption GetTrackingOption()   {Check(); return s_singleton_instance->m_tracking_option;};
 
             static std::string GetRestrictionsFile();
+
+            static float    GetSuperSpreaderRatio()                 {Check(); return s_singleton_instance->m_superspreader_ratio;};
+            static int      GetSuperSpreaderNumberOfFailures()      {Check(); return s_singleton_instance->m_superspreader_number_of_failures;};
+            static float    GetSuperSpreaderProbabilityOfSuccess()  {Check(); return s_singleton_instance->m_superspreader_probability_of_success;};
 
             // If you need to access it only once, this is easier way (but more CPU intensive ...)
             static std::string ReadStringValue(const std::string &key) {Check(); return s_singleton_instance->GetStringValue(key);};;

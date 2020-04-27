@@ -157,6 +157,20 @@ void ConfigParser::InitializeValues()   {
         m_infected_initial = -1;
         m_infected_file                             = GetStringValue("infected_distribution_file");
     }
+
+    // superspreader do not have to be defined
+    try {
+        m_superspreader_ratio = GetFloatValue("superspreader_ratio");
+    }
+    catch (string e)    {
+        m_superspreader_ratio                   = 0.;
+        m_superspreader_number_of_failures      = 15;
+        m_superspreader_probability_of_success  = 0.1;
+    }
+    if (m_superspreader_ratio > 0)  {
+        m_superspreader_number_of_failures      = GetFloatValue("superspreader_number_of_failures");
+        m_superspreader_probability_of_success  = GetFloatValue("superspreader_probability_of_success");
+    }
 };
 
 void ConfigParser::InitializeTravellersMeetingsConstant() {

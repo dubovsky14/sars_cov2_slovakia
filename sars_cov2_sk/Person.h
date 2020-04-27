@@ -20,6 +20,7 @@ namespace sars_cov2_sk	{
             bool        m_in_quarantine;
             bool        m_is_hospitalized;
             bool        m_had_positive_test;
+            bool        m_is_superspreader;
             short int   m_day_of_infection; // the day when the person got infected
             short int   m_date_of_next_status_change;
             std::vector<sars_cov2_sk::Person *>   m_list_of_contacts; // list of met people since got infected
@@ -101,6 +102,8 @@ namespace sars_cov2_sk	{
 
             static inline bool IsElderly(int age_category)  {return age_category >= 6;};
             inline bool IsElderly()         const           {return IsElderly(m_age_category);};
+
+            inline bool IsSuperSpreader()   const           {return m_is_superspreader;};
 
             inline int  GetGeneration()     const           {return m_generation;};
 

@@ -25,6 +25,8 @@ Person::Person() {
     m_had_positive_test = false;
     m_visited_cities_today = 1;
 
+    m_is_superspreader  = RandomUniform() < ConfigParser::GetSuperSpreaderRatio();
+
     m_generation = -1;
 }
 
